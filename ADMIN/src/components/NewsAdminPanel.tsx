@@ -17,9 +17,12 @@ interface Newsletter {
   image_url?: string;
   pdf_url?: string;
   category: string;
+  location?: string;
   published_date: string;
   is_published: boolean;
   featured: boolean;
+  author?: string;
+  tags?: string[];
   type: string;
   views: number;
   created_at: string;
