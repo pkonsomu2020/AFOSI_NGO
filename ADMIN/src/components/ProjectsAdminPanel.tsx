@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2, Save, X, ExternalLink, MoveUp, MoveDown } from 'lucide-react';
+import { Plus, Edit2, Trash2, Save, X, ExternalLink } from 'lucide-react';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { projectsAPI, uploadAPI } from '../services/api';

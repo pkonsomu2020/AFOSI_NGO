@@ -170,9 +170,19 @@ const NewsAdminPanel = () => {
 
     try {
       const dataToSave = {
-        ...formData,
+        title: formData.title,
+        slug: formData.slug || formData.title.toLowerCase().replace(/\s+/g, '-'),
+        excerpt: formData.excerpt,
         content: formData.content || formData.excerpt,
-        type: 'newsletter'
+        published_date: formData.published_date,
+        pdf_url: formData.pdf_url,
+        image_url: formData.image_url,
+        category: formData.category || 'newsletter',
+        location: formData.location,
+        is_published: formData.is_published !== undefined ? formData.is_published : true,
+        featured: formData.featured || false,
+        author: formData.author || 'AFOSI Team',
+        tags: formData.tags || []
       };
 
       if (editingId) {

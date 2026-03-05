@@ -198,7 +198,16 @@ const GalleryAdminPanel = () => {
   const handleSave = async () => {
     try {
       if (editingId) {
-        const response = await galleryAPI.update(editingId, formData);
+        // Ensure category is properly typed
+        const updateData: Partial<{
+          src: string;
+          category: 'programs' | 'events' | 'projects';
+          alt: string;
+        }> = {
+          ...formData,
+          category: formData.category as 'programs' | 'events' | 'projects'
+        };
+        const response = await galleryAPI.update(editingId, updateData);
         setImages(images.map(img => 
           img.id === editingId ? response.data : img
         ));
