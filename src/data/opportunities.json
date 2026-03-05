@@ -1,0 +1,34 @@
+{
+  "opportunities": [
+    {
+      "id": "erp-consultant",
+      "title": "ERP System Consultant",
+      "type": "consulting",
+      "description": "Design and implement a robust ERP system integrating HR, finance, and operations",
+      "location": "Remote/Nairobi",
+      "duration": "3 months",
+      "deadline": "2025-02-15",
+      "manuallyDisabled": false
+    },
+    {
+      "id": "field-officer",
+      "title": "Field Officer (APBET Teacher)",
+      "type": "employment",
+      "description": "Lead Education for Sustainable Development in schools within informal settlements",
+      "location": "Nairobi, Kenya",
+      "duration": "Full-time",
+      "deadline": "2026-03-31",
+      "manuallyDisabled": false
+    },
+    {
+      "id": "external-audit",
+      "title": "External Audit Services",
+      "type": "consulting",
+      "description": "Conduct external audit of financial statements for FY 2025 in compliance with ISA and Kenyan NGO regulations",
+      "location": "Nairobi, Kenya",
+      "duration": "6 weeks",
+      "deadline": "2026-02-27",
+      "manuallyDisabled": false
+    }
+  ]
+}
