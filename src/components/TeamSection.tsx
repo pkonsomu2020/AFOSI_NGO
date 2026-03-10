@@ -22,7 +22,7 @@ const management: TeamMember[] = [
 const coreTeam: TeamMember[] = [
   { name: "Fredrick Ongaki", role: "MEAL Specialist", image: "/ongaki.jpg" },
   { name: "Davin Omollo", role: "Project Associate", image: "/davin.jpg" },
-  { name: "Vanessa Wambui", role: "Data Specialist", image: "/vanessa.jpg" },
+  { name: "Vanessa Wambui", role: "Data Specialist", image: "/vanessa-pic.jpeg" },
   { name: "Prisca Achieng", role: "Program Assistant", image: "/prisca.jpg" },
   { name: "Ivy Awuor", role: "Programs", image: "/ivy.jpg" },
   { name: "Elisha Papa", role: "IT Specialist", image: "/papa.jpg" },
