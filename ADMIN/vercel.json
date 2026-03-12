@@ -1,0 +1,24 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/opportunities/:path*",
+      "destination": "/api/opportunities"
+    },
+    {
+      "source": "/api/gallery/:path*",
+      "destination": "/api/gallery"
+    },
+    {
+      "source": "/api/news/:path*",
+      "destination": "/api/news"
+    },
+    {
+      "source": "/api/projects/:path*",
+      "destination": "/api/projects"
+    },
+    {
+      "source": "/api/auth/:path*",
+      "destination": "/api/auth"
+    }
+  ]
+}

@@ -1,4 +1,5 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// Use relative URLs for Vercel serverless functions
+const API_BASE_URL = '/api';
 
 // Get auth token from localStorage
 const getAuthToken = () => {
@@ -43,19 +44,19 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
 // Auth API
 export const authAPI = {
   login: (email: string, password: string) => 
-    fetchAPI('/auth/login', {
+    fetchAPI('/auth', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     }),
   
-  verify: () => fetchAPI('/auth/verify'),
+  verify: () => fetchAPI('/auth'),
 };
 
 // Opportunities API
 export const opportunitiesAPI = {
   getAll: () => fetchAPI('/opportunities'),
   
-  getById: (id: string) => fetchAPI(`/opportunities/${id}`),
+  getById: (id: string) => fetchAPI(`/opportunities?id=${id}`),
   
   create: (data: {
     title: string;
@@ -77,16 +78,16 @@ export const opportunitiesAPI = {
     duration: string;
     deadline: string;
     manually_disabled: boolean;
-  }>) => fetchAPI(`/opportunities/${id}`, {
+  }>) => fetchAPI(`/opportunities?id=${id}`, {
     method: 'PUT',
     body: JSON.stringify(data),
   }),
   
-  delete: (id: string) => fetchAPI(`/opportunities/${id}`, {
+  delete: (id: string) => fetchAPI(`/opportunities?id=${id}`, {
     method: 'DELETE',
   }),
   
-  toggleStatus: (id: string) => fetchAPI(`/opportunities/${id}/toggle`, {
+  toggleStatus: (id: string) => fetchAPI(`/opportunities?id=${id}&action=toggle`, {
     method: 'PATCH',
   }),
 };
@@ -98,7 +99,7 @@ export const galleryAPI = {
     return fetchAPI(`/gallery${query}`);
   },
   
-  getById: (id: string) => fetchAPI(`/gallery/${id}`),
+  getById: (id: string) => fetchAPI(`/gallery?id=${id}`),
   
   create: (data: {
     src: string;
@@ -113,12 +114,12 @@ export const galleryAPI = {
     src: string;
     category: 'programs' | 'events' | 'projects';
     alt: string;
-  }>) => fetchAPI(`/gallery/${id}`, {
+  }>) => fetchAPI(`/gallery?id=${id}`, {
     method: 'PUT',
     body: JSON.stringify(data),
   }),
   
-  delete: (id: string) => fetchAPI(`/gallery/${id}`, {
+  delete: (id: string) => fetchAPI(`/gallery?id=${id}`, {
     method: 'DELETE',
   }),
 };
@@ -193,12 +194,12 @@ export const newsAPI = {
     if (params?.offset) queryParams.append('offset', String(params.offset));
     
     const query = queryParams.toString();
-    return fetchAPI(`/news/admin/all${query ? `?${query}` : ''}`);
+    return fetchAPI(`/news?admin=all${query ? `&${query}` : ''}`);
   },
   
-  getById: (id: string) => fetchAPI(`/news/admin/${id}`),
+  getById: (id: string) => fetchAPI(`/news?id=${id}`),
   
-  getStats: () => fetchAPI('/news/admin/stats'),
+  getStats: () => fetchAPI('/news?stats=true'),
   
   create: (data: {
     title: string;
@@ -213,7 +214,7 @@ export const newsAPI = {
     featured?: boolean;
     author?: string;
     tags?: string[];
-  }) => fetchAPI('/news/admin', {
+  }) => fetchAPI('/news', {
     method: 'POST',
     body: JSON.stringify(data),
   }),
@@ -231,20 +232,20 @@ export const newsAPI = {
     featured: boolean;
     author: string;
     tags: string[];
-  }>) => fetchAPI(`/news/admin/${id}`, {
+  }>) => fetchAPI(`/news?id=${id}`, {
     method: 'PUT',
     body: JSON.stringify(data),
   }),
   
-  delete: (id: string) => fetchAPI(`/news/admin/${id}`, {
+  delete: (id: string) => fetchAPI(`/news?id=${id}`, {
     method: 'DELETE',
   }),
   
-  togglePublish: (id: string) => fetchAPI(`/news/admin/${id}/toggle-publish`, {
+  togglePublish: (id: string) => fetchAPI(`/news?id=${id}&action=toggle-publish`, {
     method: 'PATCH',
   }),
   
-  toggleFeatured: (id: string) => fetchAPI(`/news/admin/${id}/toggle-featured`, {
+  toggleFeatured: (id: string) => fetchAPI(`/news?id=${id}&action=toggle-featured`, {
     method: 'PATCH',
   }),
 };
@@ -260,7 +261,7 @@ export const projectsAPI = {
     return fetchAPI(`/projects${query ? `?${query}` : ''}`);
   },
   
-  getById: (id: string) => fetchAPI(`/projects/${id}`),
+  getById: (id: string) => fetchAPI(`/projects?id=${id}`),
   
   create: (data: {
     title: string;
@@ -291,16 +292,16 @@ export const projectsAPI = {
     is_external: boolean;
     is_featured: boolean;
     display_order: number;
-  }>) => fetchAPI(`/projects/${id}`, {
+  }>) => fetchAPI(`/projects?id=${id}`, {
     method: 'PUT',
     body: JSON.stringify(data),
   }),
   
-  delete: (id: string) => fetchAPI(`/projects/${id}`, {
+  delete: (id: string) => fetchAPI(`/projects?id=${id}`, {
     method: 'DELETE',
   }),
   
-  toggleFeatured: (id: string) => fetchAPI(`/projects/${id}/toggle-featured`, {
+  toggleFeatured: (id: string) => fetchAPI(`/projects?id=${id}&action=toggle-featured`, {
     method: 'PATCH',
   }),
 };
