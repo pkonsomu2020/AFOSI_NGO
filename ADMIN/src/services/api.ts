@@ -124,65 +124,118 @@ export const galleryAPI = {
   }),
 };
 
-// Upload API
+// Upload API - Direct to Supabase (supports large files)
 export const uploadAPI = {
   uploadImage: async (file: File) => {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    const url = `${API_BASE_URL}/upload`;
-    const token = getAuthToken();
-    
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          ...(token && { 'Authorization': `Bearer ${token}` }),
-        },
-        // Don't set Content-Type header - browser will set it with boundary
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Upload failed');
-      }
-
-      return data;
-    } catch (error) {
-      console.error('Upload Error:', error);
-      throw error;
+    // For large files, upload directly to Supabase
+    if (file.size > 5 * 1024 * 1024) { // > 5MB
+      return uploadDirectToSupabase(file);
     }
+
+    // For small files, use serverless function
+    const reader = new FileReader();
+    const base64Promise = new Promise<string>((resolve, reject) => {
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+    const base64 = await base64Promise;
+
+    const response = await fetchAPI('/upload', {
+      method: 'POST',
+      body: JSON.stringify({
+        file: base64,
+        fileName: file.name,
+        fileType: file.type
+      }),
+    });
+
+    return response;
   },
 
   uploadFile: async (formData: FormData) => {
-    const url = `${API_BASE_URL}/upload`;
-    const token = getAuthToken();
+    const file = formData.get('file') as File;
     
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          ...(token && { 'Authorization': `Bearer ${token}` }),
-        },
-        // Don't set Content-Type header - browser will set it with boundary
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Upload failed');
-      }
-
-      return data;
-    } catch (error) {
-      console.error('Upload Error:', error);
-      throw error;
+    if (!file) {
+      throw new Error('No file provided');
     }
+
+    // For large files, upload directly to Supabase
+    if (file.size > 5 * 1024 * 1024) { // > 5MB
+      return uploadDirectToSupabase(file);
+    }
+
+    // For small files, use serverless function
+    const reader = new FileReader();
+    const base64Promise = new Promise<string>((resolve, reject) => {
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+    const base64 = await base64Promise;
+
+    const response = await fetchAPI('/upload', {
+      method: 'POST',
+      body: JSON.stringify({
+        file: base64,
+        fileName: file.name,
+        fileType: file.type
+      }),
+    });
+
+    return response;
   },
 };
+
+// Direct upload to Supabase for large files (up to 100MB)
+async function uploadDirectToSupabase(file: File) {
+  const SUPABASE_URL = 'https://pmigmljjnyucethipdtk.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtaWdtbGpqbnl1Y2V0aGlwZHRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MTU4NjMsImV4cCI6MjA4NzE5MTg2M30.E-AnMPDiMK6PeMZAIWWtk3gD1nGDMx46RBnHdto8nJc';
+
+  const timestamp = Date.now();
+  const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+  const filePath = `${timestamp}-${sanitizedFileName}`;
+
+  try {
+    // Upload directly to Supabase Storage
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await fetch(
+      `${SUPABASE_URL}/storage/v1/object/afosi-files/${filePath}`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+        body: file,
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Upload failed');
+    }
+
+    // Get public URL
+    const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/afosi-files/${filePath}`;
+
+    return {
+      success: true,
+      data: {
+        url: publicUrl,
+        path: filePath,
+        fileName: sanitizedFileName
+      },
+      message: 'File uploaded successfully'
+    };
+  } catch (error: any) {
+    console.error('Direct upload error:', error);
+    throw new Error(error.message || 'Upload failed');
+  }
+}
 
 // News API
 export const newsAPI = {
