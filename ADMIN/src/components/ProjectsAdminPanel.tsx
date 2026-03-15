@@ -72,7 +72,9 @@ const ProjectsAdminPanel = () => {
     try {
       setUploadingImage(true);
       const response = await uploadAPI.uploadImage(file);
-      setFormData({ ...formData, image_url: response.url });
+      const url = response?.data?.url || response?.url;
+      if (!url) throw new Error('No URL returned from upload');
+      setFormData({ ...formData, image_url: url });
     } catch (error) {
       console.error('Upload error:', error);
       alert('Failed to upload image');

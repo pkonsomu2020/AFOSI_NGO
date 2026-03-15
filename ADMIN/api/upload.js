@@ -9,7 +9,7 @@ const supabase = createClient(
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: '10mb', // Max file size
+      sizeLimit: '150mb', // Support up to 100MB files (base64 adds ~33% overhead)
     },
   },
 };
@@ -45,10 +45,10 @@ export default async function handler(req, res) {
 
     // Check file size (base64 is ~33% larger than original)
     const fileSizeInMB = (file.length * 0.75) / (1024 * 1024);
-    if (fileSizeInMB > 10) {
+    if (fileSizeInMB > 100) {
       return res.status(413).json({
         success: false,
-        message: `File too large (${fileSizeInMB.toFixed(2)}MB). Maximum size is 10MB.`
+        message: `File too large (${fileSizeInMB.toFixed(2)}MB). Maximum size is 100MB.`
       });
     }
 

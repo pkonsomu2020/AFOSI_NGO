@@ -99,7 +99,7 @@ const NewsAdminPanel = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const maxSize = 20 * 1024 * 1024; // 20MB for images
+    const maxSize = 20 * 1024 * 1024;
     if (file.size > maxSize) {
       alert('Image size must be less than 20MB');
       return;
@@ -111,11 +111,12 @@ const NewsAdminPanel = () => {
       uploadFormData.append('file', file);
 
       const response = await uploadAPI.uploadFile(uploadFormData);
-      
-      if (response.success && response.url) {
-        setFormData({ ...formData, image_url: response.url });
+      const url = response?.data?.url || response?.url;
+
+      if (url) {
+        setFormData({ ...formData, image_url: url });
       } else {
-        throw new Error('Upload failed');
+        throw new Error('Upload failed - no URL returned');
       }
     } catch (err: any) {
       console.error('Error uploading image:', err);
@@ -134,7 +135,7 @@ const NewsAdminPanel = () => {
       return;
     }
 
-    const maxSize = 100 * 1024 * 1024; // 100MB for PDFs
+    const maxSize = 100 * 1024 * 1024;
     if (file.size > maxSize) {
       alert('PDF size must be less than 100MB');
       return;
@@ -146,11 +147,12 @@ const NewsAdminPanel = () => {
       uploadFormData.append('file', file);
 
       const response = await uploadAPI.uploadFile(uploadFormData);
-      
-      if (response.success && response.url) {
-        setFormData({ ...formData, pdf_url: response.url });
+      const url = response?.data?.url || response?.url;
+
+      if (url) {
+        setFormData({ ...formData, pdf_url: url });
       } else {
-        throw new Error('Upload failed');
+        throw new Error('Upload failed - no URL returned');
       }
     } catch (err: any) {
       console.error('Error uploading PDF:', err);
