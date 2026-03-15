@@ -20,7 +20,16 @@ export default async function handler(req, res) {
     return;
   }
 
-  if (req.method === 'POST' && req.url === '/api/auth/login') {
+  if (req.method === 'GET') {
+    // Token verification - just return success if Authorization header exists
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    if (!token) {
+      return res.status(401).json({ success: false, message: 'No token provided' });
+    }
+    return res.status(200).json({ success: true, message: 'Token valid' });
+  }
+
+  if (req.method === 'POST') {
     try {
       const { email, password } = req.body;
 
@@ -61,6 +70,6 @@ export default async function handler(req, res) {
       });
     }
   } else {
-    res.status(404).json({ success: false, message: 'Not found' });
+    res.status(405).json({ success: false, message: 'Method not allowed' });
   }
 }
