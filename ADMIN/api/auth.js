@@ -1,19 +1,19 @@
 import { createClient } from '@supabase/supabase-js';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_KEY
 );
 
+const JWT_SECRET = process.env.JWT_SECRET || 'afosi-ngo-super-secret-jwt-key-2026';
+
 export default async function handler(req, res) {
-  // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization'
-  );
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization');
 
   if (req.method === 'OPTIONS') {
     res.status(200).end();
@@ -21,55 +21,71 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'GET') {
-    // Token verification - just return success if Authorization header exists
     const token = req.headers.authorization?.replace('Bearer ', '');
     if (!token) {
       return res.status(401).json({ success: false, message: 'No token provided' });
     }
-    return res.status(200).json({ success: true, message: 'Token valid' });
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET);
+      return res.status(200).json({ success: true, data: decoded });
+    } catch {
+      return res.status(401).json({ success: false, message: 'Invalid or expired token' });
+    }
   }
 
   if (req.method === 'POST') {
     try {
       const { email, password } = req.body;
 
-      // Query admin_users table
-      const { data, error } = await supabase
+      if (!email || !password) {
+        return res.status(400).json({ success: false, message: 'Email and password are required' });
+      }
+
+      // Fetch admin user
+      const { data: adminUser, error } = await supabase
         .from('admin_users')
         .select('*')
         .eq('email', email)
-        .eq('password', password)
+        .eq('is_active', true)
         .single();
 
-      if (error || !data) {
-        return res.status(401).json({
-          success: false,
-          message: 'Invalid credentials'
-        });
+      if (error || !adminUser) {
+        return res.status(401).json({ success: false, message: 'Invalid credentials' });
       }
 
-      // Generate a simple token (in production, use JWT)
-      const token = Buffer.from(`${email}:${Date.now()}`).toString('base64');
+      // Compare password with bcrypt hash
+      const isValid = await bcrypt.compare(password, adminUser.password_hash);
+      if (!isValid) {
+        return res.status(401).json({ success: false, message: 'Invalid credentials' });
+      }
 
-      res.status(200).json({
+      // Update last login
+      await supabase
+        .from('admin_users')
+        .update({ last_login: new Date().toISOString() })
+        .eq('id', adminUser.id);
+
+      // Generate JWT
+      const token = jwt.sign(
+        { id: adminUser.id, email: adminUser.email, role: adminUser.role },
+        JWT_SECRET,
+        { expiresIn: '24h' }
+      );
+
+      return res.status(200).json({
         success: true,
         data: {
           token,
-          user: {
-            id: data.id,
-            email: data.email,
-            name: data.name
-          }
+          email: adminUser.email,
+          fullName: adminUser.full_name,
+          role: adminUser.role
         }
       });
     } catch (error) {
       console.error('Login error:', error);
-      res.status(500).json({
-        success: false,
-        message: 'Server error'
-      });
+      return res.status(500).json({ success: false, message: 'Server error' });
     }
-  } else {
-    res.status(405).json({ success: false, message: 'Method not allowed' });
   }
+
+  res.status(405).json({ success: false, message: 'Method not allowed' });
 }
