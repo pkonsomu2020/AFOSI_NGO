@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/api/upload",
+      "destination": "/api/upload"
+    },
+    {
       "source": "/api/opportunities/:path*",
       "destination": "/api/opportunities"
     },
