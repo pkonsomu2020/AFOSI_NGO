@@ -111,7 +111,7 @@ const NewsAdminPanel = () => {
       uploadFormData.append('file', file);
 
       const response = await uploadAPI.uploadFile(uploadFormData);
-      const url = response?.data?.url || response?.url;
+      const url = response?.data?.url;
 
       if (url) {
         setFormData({ ...formData, image_url: url });
@@ -147,7 +147,7 @@ const NewsAdminPanel = () => {
       uploadFormData.append('file', file);
 
       const response = await uploadAPI.uploadFile(uploadFormData);
-      const url = response?.data?.url || response?.url;
+      const url = response?.data?.url;
 
       if (url) {
         setFormData({ ...formData, pdf_url: url });
