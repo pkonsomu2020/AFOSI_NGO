@@ -1,28 +1,12 @@
 {
   "rewrites": [
-    {
-      "source": "/api/upload",
-      "destination": "/api/upload"
-    },
-    {
-      "source": "/api/opportunities/:path*",
-      "destination": "/api/opportunities"
-    },
-    {
-      "source": "/api/gallery/:path*",
-      "destination": "/api/gallery"
-    },
-    {
-      "source": "/api/news/:path*",
-      "destination": "/api/news"
-    },
-    {
-      "source": "/api/projects/:path*",
-      "destination": "/api/projects"
-    },
-    {
-      "source": "/api/auth/:path*",
-      "destination": "/api/auth"
-    }
+    { "source": "/api/auth/login", "destination": "/api/auth" },
+    { "source": "/api/auth/verify", "destination": "/api/auth" },
+    { "source": "/api/auth/:path*", "destination": "/api/auth" },
+    { "source": "/api/upload", "destination": "/api/upload" },
+    { "source": "/api/opportunities/:path*", "destination": "/api/opportunities" },
+    { "source": "/api/gallery/:path*", "destination": "/api/gallery" },
+    { "source": "/api/news/:path*", "destination": "/api/news" },
+    { "source": "/api/projects/:path*", "destination": "/api/projects" }
   ]
 }

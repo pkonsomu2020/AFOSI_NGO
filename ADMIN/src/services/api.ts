@@ -44,12 +44,12 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
 // Auth API
 export const authAPI = {
   login: (email: string, password: string) => 
-    fetchAPI('/auth', {
+    fetchAPI('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     }),
   
-  verify: () => fetchAPI('/auth'),
+  verify: () => fetchAPI('/auth/verify'),
 };
 
 // Opportunities API
