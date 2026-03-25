@@ -29,24 +29,27 @@ app.use('/api/', limiter);
 
 // CORS configuration - Allow both main website and admin dashboard
 const allowedOrigins = [
-  'http://localhost:8080',  // Main website (local dev)
-  'http://localhost:3000',  // Admin dashboard (local dev)
-  'http://localhost:3001',  // Admin dashboard (alternate port)
-  'https://afosi.org',      // Production main website
-  'https://www.afosi.org',  // Production main website (www)
-  'https://admin.afosi.org', // Production admin dashboard
+  'http://localhost:8080',
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'https://afosi.org',
+  'https://www.afosi.org',
+  'https://admin.afosi.org',
+  'https://afosi-ngo.vercel.app',
+  'https://afosi-ngo-admin.vercel.app',
   process.env.FRONTEND_URL,
   process.env.ADMIN_URL
 ].filter(Boolean);
 
 const corsOptions = {
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl requests)
+    // Allow requests with no origin (server-to-server, curl, etc.)
     if (!origin) return callback(null, true);
-    
+
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.error(`CORS blocked origin: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
