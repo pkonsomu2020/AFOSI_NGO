@@ -110,7 +110,7 @@ const NewsAdminPanel = () => {
       const uploadFormData = new FormData();
       uploadFormData.append('file', file);
 
-      const response = await uploadAPI.uploadFile(uploadFormData);
+      const response = await uploadAPI.uploadFile(uploadFormData, 'news');
       const url = response?.data?.url;
 
       if (url) {
@@ -146,7 +146,7 @@ const NewsAdminPanel = () => {
       const uploadFormData = new FormData();
       uploadFormData.append('file', file);
 
-      const response = await uploadAPI.uploadFile(uploadFormData);
+      const response = await uploadAPI.uploadFile(uploadFormData, 'news');
       const url = response?.data?.url;
 
       if (url) {

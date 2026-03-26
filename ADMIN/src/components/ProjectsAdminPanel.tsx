@@ -71,7 +71,8 @@ const ProjectsAdminPanel = () => {
 
     try {
       setUploadingImage(true);
-      const response = await uploadAPI.uploadImage(file);
+      const response = await uploadAPI.uploadProjectImage(file);
+      // Projects use afosi-projects bucket
       const url = response?.data?.url;
       if (!url) throw new Error('No URL returned from upload');
       setFormData({ ...formData, image_url: url });

@@ -171,18 +171,9 @@ export const projectsAPI = {
   toggleFeatured: (id: string) => fetchAPI(`/projects/${id}/toggle-featured`, { method: 'PATCH' }),
 };
 
-// Upload API - direct to Supabase for all files
-export const uploadAPI = {
-  uploadImage: async (file: File) => uploadDirectToSupabase(file),
-  uploadFile: async (formData: FormData) => {
-    const file = formData.get('file') as File;
-    if (!file) throw new Error('No file provided');
-    return uploadDirectToSupabase(file);
-  },
-};
-
 // Direct upload to Supabase Storage (supports up to 100MB)
-async function uploadDirectToSupabase(file: File) {
+// Routes to correct bucket based on file type
+async function uploadDirectToSupabase(file: File, bucket: string = 'afosi-images') {
   const SUPABASE_URL = 'https://pmigmljjnyucethipdtk.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtaWdtbGpqbnl1Y2V0aGlwZHRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MTU4NjMsImV4cCI6MjA4NzE5MTg2M30.E-AnMPDiMK6PeMZAIWWtk3gD1nGDMx46RBnHdto8nJc';
 
@@ -191,7 +182,7 @@ async function uploadDirectToSupabase(file: File) {
   const filePath = `${timestamp}-${sanitizedFileName}`;
 
   const response = await fetch(
-    `${SUPABASE_URL}/storage/v1/object/afosi-files/${filePath}`,
+    `${SUPABASE_URL}/storage/v1/object/${bucket}/${filePath}`,
     {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
@@ -207,10 +198,28 @@ async function uploadDirectToSupabase(file: File) {
   return {
     success: true,
     data: {
-      url: `${SUPABASE_URL}/storage/v1/object/public/afosi-files/${filePath}`,
+      url: `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${filePath}`,
       path: filePath,
       fileName: sanitizedFileName
     },
     message: 'File uploaded successfully'
   };
 }
+
+// Upload API - routes to correct bucket by context
+export const uploadAPI = {
+  // Gallery images → afosi-images
+  uploadImage: async (file: File) => uploadDirectToSupabase(file, 'afosi-images'),
+
+  // Generic upload - detects bucket by file type and context
+  uploadFile: async (formData: FormData, context: 'news' | 'projects' | 'gallery' = 'news') => {
+    const file = formData.get('file') as File;
+    if (!file) throw new Error('No file provided');
+    const bucket = context === 'projects' ? 'afosi-projects' : context === 'gallery' ? 'afosi-images' : 'afosi-news';
+    return uploadDirectToSupabase(file, bucket);
+  },
+
+  // Explicit bucket uploads
+  uploadNewsFile: async (file: File) => uploadDirectToSupabase(file, 'afosi-news'),
+  uploadProjectImage: async (file: File) => uploadDirectToSupabase(file, 'afosi-projects'),
+};
