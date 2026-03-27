@@ -149,7 +149,7 @@ const HeroSection = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto mb-10 leading-relaxed"
           >
-            Empowering youth through Health, Education, Environment, Leadership, and Livelihoods—powered by innovative technology and digital solutions
+            Empowering youth through Health, Education, Environment, Leadership, and Livelihoods. Powered by innovative technology and digital solutions.
           </motion.p>
 
           {/* CTA Buttons */}

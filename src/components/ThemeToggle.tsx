@@ -35,13 +35,14 @@ export function ThemeToggle() {
               onClick={() => setIsOpen(false)}
             />
 
-            {/* Dropdown */}
+            {/* Dropdown - centered below button, won't overflow on mobile */}
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="absolute right-0 mt-2 w-40 bg-card border border-border rounded-lg shadow-lg overflow-hidden z-50"
+              className="absolute mt-2 w-36 bg-card border border-border rounded-lg shadow-lg overflow-hidden z-50"
+              style={{ right: 0, maxWidth: '90vw' }}
             >
               {themes.map((t) => {
                 const ThemeIcon = t.icon;

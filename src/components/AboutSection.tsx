@@ -100,11 +100,11 @@ const AboutSection = () => {
               About <span className="text-orange-500">AFOSI</span>
             </h2>
             
-            <p className="text-muted-foreground mb-3 sm:mb-4 leading-relaxed text-base sm:text-lg">
+            <p className="text-muted-foreground mb-3 sm:mb-4 leading-relaxed text-sm sm:text-base">
               Action For Sustainability Initiative (AFOSI) is a lean, technology-backed local NGO addressing challenges across health, education, livelihoods, leadership and governance, climate justice and humanitarian support.
             </p>
             <p className="text-muted-foreground mb-3 sm:mb-4 leading-relaxed text-sm sm:text-base">
-              Our flagship initiatives—Sheria ya Vijana, M.A.T.H, Youth Voices Lab, and YOMA Projects—are implemented through our digital tools, including the Kiongozi Platform, Kenya Youth Climate Hub (KYCH), and Flare Hub startup management platform.
+              Our flagship initiatives, Sheria ya Vijana, M.A.T.H, Youth Voices Lab, and YOMA Projects, are implemented through our digital tools, including the Kiongozi Platform, Kenya Youth Climate Hub (KYCH), and Flare Hub startup management platform.
             </p>
             <p className="text-muted-foreground mb-6 sm:mb-8 leading-relaxed text-sm sm:text-base">
               We adopt a hybrid implementation model combining the community reach and trust of a grassroots NGO with the innovation and agility of social enterprises, creating sustainable impact across Kenya.

@@ -62,4 +62,16 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading;
   }
+
+  /* Fix input visibility in dark mode */
+  input, textarea, select {
+    @apply bg-background text-foreground border-border;
+    color-scheme: light dark;
+  }
+  .dark input, .dark textarea, .dark select {
+    @apply bg-muted text-foreground border-border;
+  }
+  input::placeholder, textarea::placeholder {
+    @apply text-muted-foreground;
+  }
 }

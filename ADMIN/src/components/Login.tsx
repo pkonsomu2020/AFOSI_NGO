@@ -191,7 +191,7 @@ const Login = ({ onLogin }: LoginProps) => {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="admin@afosi.org"
                     required
-                    className="w-full px-4 py-3 pl-12 bg-white border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all text-foreground placeholder:text-muted-foreground"
+                    className="w-full px-4 py-3 pl-12 bg-background border-2 border-border rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all text-foreground placeholder:text-muted-foreground dark:bg-muted dark:text-foreground"
                   />
                   <Mail
                     size={20}
@@ -213,7 +213,7 @@ const Login = ({ onLogin }: LoginProps) => {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
                     required
-                    className="w-full px-4 py-3 pl-12 pr-12 bg-white border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all text-foreground placeholder:text-muted-foreground"
+                    className="w-full px-4 py-3 pl-12 pr-12 bg-background border-2 border-border rounded-xl focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all text-foreground placeholder:text-muted-foreground dark:bg-muted dark:text-foreground"
                   />
                   <Lock
                     size={20}
