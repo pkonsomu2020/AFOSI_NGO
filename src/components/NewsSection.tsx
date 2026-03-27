@@ -37,7 +37,8 @@ const NewsSection = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    newsAPI.getAll({ limit: 6, featured: true })
+    // Fetch latest 6 news items regardless of featured status
+    newsAPI.getAll({ limit: 6 })
       .then(r => setNews(r.data || []))
       .catch(console.error)
       .finally(() => setLoading(false));
@@ -77,9 +78,9 @@ const NewsSection = () => {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-16"
+          className="mb-8"
         >
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold tracking-widest uppercase mb-4">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold tracking-widest uppercase mb-3">
             <Newspaper size={14} />
             Latest Updates
           </span>

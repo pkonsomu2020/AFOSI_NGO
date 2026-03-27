@@ -114,14 +114,15 @@ const ProgramsSection = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    projectsAPI.getAll({ featured: true, limit: 4 })
+    // Fetch latest 4 projects regardless of featured status
+    projectsAPI.getAll({ limit: 4 })
       .then(r => setProjects(r.data || []))
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
 
   return (
-    <section id="programs" className="relative py-24 overflow-hidden bg-background">
+    <section id="programs" className="relative py-16 overflow-hidden bg-background">
       {/* Background accent */}
       <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/5 to-transparent pointer-events-none" />
 
@@ -131,13 +132,13 @@ const ProgramsSection = () => {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-16"
+          className="mb-8"
         >
-          <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold tracking-widest uppercase mb-4">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold tracking-widest uppercase mb-3">
             What We Do
           </span>
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-            <h2 className="text-4xl md:text-6xl font-black text-foreground leading-none">
+            <h2 className="text-4xl md:text-5xl font-black text-foreground leading-none">
               Our <span className="text-primary">Projects</span>
             </h2>
             <Button variant="outline" size="lg" className="group self-start" asChild>
@@ -175,7 +176,7 @@ const ProgramsSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
-          className="mt-16 relative rounded-3xl overflow-hidden bg-gray-950 p-10 md:p-16 text-center"
+          className="mt-10 relative rounded-3xl overflow-hidden bg-gray-950 p-8 md:p-12 text-center"
         >
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-orange-500/20 via-transparent to-transparent pointer-events-none" />
           <div className="relative z-10">
