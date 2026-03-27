@@ -19,64 +19,45 @@ interface NewsArticle {
   type: 'article' | 'newsletter';
 }
 
+const getCategoryColor = (category: string) => {
+  const colors: Record<string, string> = {
+    education: 'bg-blue-100 text-blue-700',
+    community: 'bg-green-100 text-green-700',
+    health: 'bg-red-100 text-red-700',
+    environment: 'bg-emerald-100 text-emerald-700',
+    newsletter: 'bg-orange-100 text-orange-700',
+    report: 'bg-indigo-100 text-indigo-700',
+    general: 'bg-gray-100 text-gray-700',
+  };
+  return colors[category] || colors.general;
+};
+
 const NewsSection = () => {
   const [news, setNews] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchNews();
+    newsAPI.getAll({ limit: 6, featured: true })
+      .then(r => setNews(r.data || []))
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, []);
 
-  const fetchNews = async () => {
-    try {
-      setLoading(true);
-      const response = await newsAPI.getAll({ limit: 6, featured: true });
-      setNews(response.data || []);
-    } catch (error) {
-      console.error('Error fetching news:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      day: 'numeric',
-      month: 'short', 
-      year: 'numeric' 
-    });
-  };
-
-  const getCategoryColor = (category: string) => {
-    const colors: Record<string, string> = {
-      education: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-      community: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-      infrastructure: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
-      health: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-      environment: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
-      newsletter: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
-      report: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400',
-      general: 'bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400',
-    };
-    return colors[category] || colors.general;
-  };
+  const formatDate = (d: string) =>
+    new Date(d).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
 
   if (loading) {
     return (
-      <section id="news" className="py-16 md:py-24 bg-accent/30">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <div className="h-8 w-48 bg-muted animate-pulse mx-auto mb-4 rounded"></div>
-            <div className="h-4 w-96 bg-muted animate-pulse mx-auto rounded"></div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="bg-card rounded-xl overflow-hidden">
-                <div className="h-48 bg-muted animate-pulse"></div>
+      <section id="news" className="py-24 bg-accent/20">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[1,2,3].map(i => (
+              <div key={i} className="rounded-2xl overflow-hidden bg-card border border-border">
+                <div className="h-52 bg-muted animate-pulse" />
                 <div className="p-6 space-y-3">
-                  <div className="h-4 bg-muted animate-pulse rounded"></div>
-                  <div className="h-4 bg-muted animate-pulse rounded w-3/4"></div>
+                  <div className="h-4 bg-muted animate-pulse rounded w-1/3" />
+                  <div className="h-5 bg-muted animate-pulse rounded" />
+                  <div className="h-4 bg-muted animate-pulse rounded w-3/4" />
                 </div>
               </div>
             ))}
@@ -86,144 +67,112 @@ const NewsSection = () => {
     );
   }
 
-  if (news.length === 0) {
-    return null;
-  }
+  if (news.length === 0) return null;
 
   return (
-    <section id="news" className="py-16 md:py-24 bg-accent/30">
+    <section id="news" className="py-24 bg-accent/20 overflow-hidden">
       <div className="container mx-auto px-4 max-w-7xl">
-        {/* Section Header */}
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="mb-16"
         >
-          <div className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full mb-4">
-            <Newspaper className="w-5 h-5 text-primary" />
-            <span className="text-sm font-semibold text-primary">Latest Updates</span>
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold tracking-widest uppercase mb-4">
+            <Newspaper size={14} />
+            Latest Updates
+          </span>
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <h2 className="text-4xl md:text-6xl font-black text-foreground leading-none">
+              News &<br /><span className="text-primary">Newsletters</span>
+            </h2>
+            <Button variant="outline" size="lg" className="group self-start md:self-auto" asChild>
+              <a href="/news">
+                View All
+                <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={16} />
+              </a>
+            </Button>
           </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-foreground mb-4">
-            News & Newsletters
-          </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Stay informed about our latest projects, partnerships, community impact initiatives, and monthly newsletters
-          </p>
         </motion.div>
 
-        {/* News Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-12">
-          {news.map((article, index) => (
+        {/* Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {news.map((article, i) => (
             <motion.article
               key={article.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-card rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group"
+              transition={{ duration: 0.5, delay: i * 0.08 }}
+              whileHover={{ y: -6 }}
+              className="group bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500"
             >
               {/* Image */}
-              <div className="relative h-48 overflow-hidden">
-                <img
+              <div className="relative h-52 overflow-hidden bg-muted">
+                <motion.img
                   src={article.image_url}
                   alt={article.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  className="w-full h-full object-cover"
+                  whileHover={{ scale: 1.08 }}
+                  transition={{ duration: 0.6 }}
                   loading="lazy"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="absolute top-4 left-4 flex gap-2">
-                  <Badge className={`${getCategoryColor(article.category)} font-semibold capitalize`}>
+                  <Badge className={`${getCategoryColor(article.category)} font-semibold capitalize text-xs`}>
                     {article.category}
                   </Badge>
-                  {article.type === 'newsletter' && (
-                    <Badge className="bg-primary text-primary-foreground font-semibold">
-                      <FileText size={12} className="mr-1" />
-                      PDF
+                  {article.pdf_url && (
+                    <Badge className="bg-primary text-white text-xs">
+                      <FileText size={10} className="mr-1" /> PDF
                     </Badge>
                   )}
                 </div>
-                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
 
               {/* Content */}
               <div className="p-6">
-                {/* Meta Info */}
-                <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
-                  <div className="flex items-center gap-1">
-                    <Calendar size={14} />
-                    <span>{formatDate(article.published_date)}</span>
-                  </div>
+                <div className="flex items-center gap-3 text-xs text-muted-foreground mb-3">
+                  <span className="flex items-center gap-1">
+                    <Calendar size={12} />
+                    {formatDate(article.published_date)}
+                  </span>
                   {article.location && (
-                    <div className="flex items-center gap-1">
-                      <MapPin size={14} />
-                      <span>{article.location}</span>
-                    </div>
+                    <span className="flex items-center gap-1">
+                      <MapPin size={12} />
+                      {article.location}
+                    </span>
                   )}
                 </div>
 
-                {/* Title */}
-                <h3 className="text-xl font-heading font-bold text-foreground mb-3 line-clamp-2 group-hover:text-primary transition-colors">
+                <h3 className="text-lg font-bold text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors leading-snug">
                   {article.title}
                 </h3>
-
-                {/* Excerpt */}
-                <p className="text-muted-foreground text-sm leading-relaxed mb-4 line-clamp-3">
+                <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2 mb-4">
                   {article.excerpt}
                 </p>
 
-                {/* Action Links */}
-                <div className="flex items-center gap-3">
-                  {article.pdf_url ? (
-                    <>
-                      <a
-                        href={article.pdf_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-primary font-semibold text-sm hover:gap-3 transition-all"
-                      >
-                        <FileText size={16} />
-                        View PDF
-                      </a>
-                      <span className="text-muted-foreground">|</span>
-                      <a
-                        href={article.pdf_url}
-                        download
-                        className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary font-semibold text-sm transition-colors"
-                      >
-                        <Download size={16} />
-                        Download
-                      </a>
-                    </>
-                  ) : (
-                    <span className="text-sm text-muted-foreground">PDF not available</span>
-                  )}
-                </div>
+                {article.pdf_url ? (
+                  <div className="flex items-center gap-4 pt-2 border-t border-border">
+                    <a href={article.pdf_url} target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 text-primary text-sm font-semibold hover:gap-2.5 transition-all">
+                      <FileText size={14} /> View PDF
+                    </a>
+                    <a href={article.pdf_url} download
+                      className="flex items-center gap-1.5 text-muted-foreground text-sm hover:text-primary transition-colors">
+                      <Download size={14} /> Download
+                    </a>
+                  </div>
+                ) : (
+                  <div className="pt-2 border-t border-border">
+                    <span className="text-xs text-muted-foreground">PDF not available</span>
+                  </div>
+                )}
               </div>
             </motion.article>
           ))}
         </div>
-
-        {/* View All Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="text-center"
-        >
-          <Button
-            variant="outline"
-            size="lg"
-            className="group"
-            asChild
-          >
-            <a href="/news">
-              View All Reports & Newsletters
-              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={18} />
-            </a>
-          </Button>
-        </motion.div>
       </div>
     </section>
   );
