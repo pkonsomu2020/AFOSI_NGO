@@ -1,15 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Cpu, Zap, Network, Brain, Rocket } from "lucide-react";
 
 // Tech-focused words that reveal as you scroll - using orange theme
 const techWords = [
-  { word: "INNOVATION", color: "text-orange-500", icon: Zap },
-  { word: "TECHNOLOGY", color: "text-orange-500", icon: Cpu },
-  { word: "AUTOMATION", color: "text-orange-500", icon: Network },
-  { word: "INTELLIGENCE", color: "text-orange-500", icon: Brain },
-  { word: "SOLUTIONS", color: "text-orange-500", icon: Rocket },
+  { word: "INNOVATION" },
+  { word: "TECHNOLOGY" },
+  { word: "AUTOMATION" },
+  { word: "INTELLIGENCE" },
+  { word: "SOLUTIONS" },
 ];
 
 const HeroSection = () => {
@@ -68,7 +67,7 @@ const HeroSection = () => {
     <section 
       ref={sectionRef}
       id="home" 
-      className="relative min-h-[150vh] flex items-start justify-center overflow-hidden bg-black"
+      className="relative min-h-[100vh] flex items-center justify-center overflow-hidden bg-black"
     >
       {/* Local Video Background - Optimized for smooth playback */}
       <motion.div 
@@ -101,11 +100,10 @@ const HeroSection = () => {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)] pointer-events-none z-10" />
 
       {/* Main Content Container */}
-      <div className="container mx-auto px-4 pt-32 pb-20 relative z-20 sticky top-0">
-        {/* Large Tech Word Display with Scroll Reveal */}
+      <div className="container mx-auto px-4 py-32 relative z-20">
         <motion.div 
           style={{ opacity: textOpacity, y: textY }}
-          className="text-center mb-12"
+          className="text-center"
         >
           {/* Animated Tech Words - Optimized */}
           <div className="relative h-32 md:h-40 flex items-center justify-center mb-8">
@@ -178,40 +176,7 @@ const HeroSection = () => {
           </motion.div>
         </motion.div>
 
-        {/* Tech Stats Floating Cards - AI & NGO Focus */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          className="grid grid-cols-3 gap-4 max-w-3xl mx-auto mt-16"
-        >
-          <motion.div
-            whileHover={{ scale: 1.05, y: -5 }}
-            className="bg-orange-500/10 backdrop-blur-xl border border-orange-500/30 rounded-2xl p-4 text-center shadow-xl"
-          >
-            <Brain className="w-8 h-8 mx-auto mb-2 text-orange-500" />
-            <div className="text-xl font-bold text-orange-500">AI-Driven</div>
-            <div className="text-xs text-slate-300">Impact Solutions</div>
-          </motion.div>
-          
-          <motion.div
-            whileHover={{ scale: 1.05, y: -5 }}
-            className="bg-orange-500/10 backdrop-blur-xl border border-orange-500/30 rounded-2xl p-4 text-center shadow-xl"
-          >
-            <Network className="w-8 h-8 mx-auto mb-2 text-orange-500" />
-            <div className="text-xl font-bold text-orange-500">Community</div>
-            <div className="text-xs text-slate-300">Empowerment</div>
-          </motion.div>
-          
-          <motion.div
-            whileHover={{ scale: 1.05, y: -5 }}
-            className="bg-orange-500/10 backdrop-blur-xl border border-orange-500/30 rounded-2xl p-4 text-center shadow-xl"
-          >
-            <Cpu className="w-8 h-8 mx-auto mb-2 text-orange-500" />
-            <div className="text-xl font-bold text-orange-500">Tech for</div>
-            <div className="text-xs text-slate-300">Social Good</div>
-          </motion.div>
-        </motion.div>
+        {/* Tech Stats Floating Cards - REMOVED */}
       </div>
 
       {/* Scroll Indicator */}
