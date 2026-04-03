@@ -37,8 +37,8 @@ const NewsSection = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch latest 6 news items regardless of featured status
-    newsAPI.getAll({ limit: 6 })
+    // Fetch latest 3 news items
+    newsAPI.getAll({ limit: 3 })
       .then(r => setNews(r.data || []))
       .catch(console.error)
       .finally(() => setLoading(false));
@@ -98,7 +98,7 @@ const NewsSection = () => {
         </motion.div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {news.map((article, i) => (
             <motion.article
               key={article.id}
