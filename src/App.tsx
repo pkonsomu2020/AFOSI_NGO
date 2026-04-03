@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LazyMotion, domAnimation } from "framer-motion";
 import ScrollToHashElement from "@/components/ScrollToHashElement";
+import AccessibilityWidget from "@/components/AccessibilityWidget";
 import Index from "./pages/Index";
 import Gallery from "./pages/Gallery";
 import Opportunities from "./pages/Opportunities";
@@ -24,6 +25,7 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
+        <AccessibilityWidget />
         <BrowserRouter>
           <ScrollToHashElement />
           <Routes>
