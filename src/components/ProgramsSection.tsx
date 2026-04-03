@@ -190,7 +190,7 @@ const ProgramsSection = () => {
               <Button size="lg" className="bg-orange-500 hover:bg-orange-600 text-white rounded-full px-8 shadow-xl shadow-orange-500/30">
                 Become a Partner
               </Button>
-              <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10 rounded-full px-8" asChild>
+              <Button size="lg" variant="outline" className="border-white/20 text-gray-900 bg-white hover:bg-gray-100 rounded-full px-8" asChild>
                 <a href="/projects">View All Projects</a>
               </Button>
             </div>
