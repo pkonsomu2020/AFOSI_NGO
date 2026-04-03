@@ -163,7 +163,7 @@ const HeroSection = () => {
               className="bg-orange-500 hover:bg-orange-600 text-white shadow-2xl shadow-orange-500/50 hover:shadow-orange-500/70 transition-all duration-300 border-0 rounded-full px-8"
               asChild
             >
-              <a href="#services">Explore Solutions</a>
+              <a href="#programs">Explore Solutions</a>
             </Button>
             <Button
               variant="outline"
