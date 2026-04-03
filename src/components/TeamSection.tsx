@@ -31,174 +31,124 @@ const coreTeam: TeamMember[] = [
   { name: "Elizabeth Muthoni", role: "Finance Officer", image: "/muthoni.jpg" },
 ];
 
-const TeamMemberCard = ({ member, delay, featured = false }: { member: TeamMember; delay: number; featured?: boolean }) => (
+const TeamCard = ({ member, delay }: { member: TeamMember; delay: number }) => (
   <motion.div
     initial={{ opacity: 0, y: 30 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
     transition={{ duration: 0.5, delay }}
-    className="group relative"
+    className="group"
   >
-    <div className={`relative bg-card rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-border/50 h-full ${
-      featured ? 'lg:scale-105' : ''
-    }`}>
-      {/* Simple hover overlay */}
-      <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-      <div className="relative p-6 sm:p-8">
-        {/* Image container with rectangle styling */}
-        <div className="relative mb-6">
-          <div className="relative w-full aspect-[4/5] max-w-[200px] mx-auto">
-            {/* Image with rectangle shape */}
-            <div className="relative w-full h-full rounded-xl overflow-hidden border-4 border-background shadow-xl group-hover:scale-105 transition-transform duration-500">
-              <img
-                src={member.image}
-                alt={member.name}
-                className="w-full h-full object-cover object-[center_20%]"
-                onError={(e) => {
-                  e.currentTarget.src = "/placeholder.svg";
-                }}
-              />
-              {/* Overlay on hover */}
-              <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            </div>
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="text-center space-y-2">
-          <h4 className="text-lg sm:text-xl font-heading font-bold text-foreground group-hover:text-primary transition-colors duration-300">
-            {member.name}
-          </h4>
-          <div className="inline-flex items-center justify-center gap-2 px-4 py-1.5 bg-primary/10 rounded-full">
-            <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-            <p className="text-xs sm:text-sm text-primary font-semibold uppercase tracking-wide">
-              {member.role}
-            </p>
-          </div>
-        </div>
-
-        {/* Bottom accent */}
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      </div>
+    {/* Portrait image container */}
+    <div className="relative rounded-2xl overflow-hidden aspect-[3/4] mb-4 shadow-md">
+      <img
+        src={member.image}
+        alt={member.name}
+        className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110"
+        onError={(e) => { e.currentTarget.src = "/placeholder.svg"; }}
+      />
+      {/* Gradient overlay on hover */}
+      <div className="absolute inset-0 bg-gradient-to-t from-orange-600/80 via-orange-500/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
     </div>
+
+    {/* Name & role below image */}
+    <div>
+      <h4 className="text-base font-bold text-foreground group-hover:text-primary transition-colors duration-300 leading-tight">
+        {member.name}
+      </h4>
+      <p className="text-xs font-semibold text-primary uppercase tracking-wider mt-1">
+        {member.role}
+      </p>
+    </div>
+  </motion.div>
+);
+
+const SectionLabel = ({ icon: Icon, label }: { icon: any; label: string }) => (
+  <motion.div
+    initial={{ opacity: 0, x: -20 }}
+    whileInView={{ opacity: 1, x: 0 }}
+    viewport={{ once: true }}
+    className="flex items-center gap-3 mb-8"
+  >
+    <div className="flex items-center gap-2 px-5 py-2.5 bg-primary/10 rounded-full border border-primary/20">
+      <Icon size={18} className="text-primary" />
+      <h3 className="text-base font-bold text-foreground uppercase tracking-wider">{label}</h3>
+    </div>
+    <div className="flex-1 h-px bg-border" />
   </motion.div>
 );
 
 const TeamSection = () => {
   return (
-    <section id="team" className="relative py-20 sm:py-24 lg:py-32 overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-background" />
-      
-      <div className="container mx-auto px-4 sm:px-6 max-w-7xl relative z-10">
-        {/* Section Header */}
+    <section id="team" className="relative py-20 overflow-hidden bg-background">
+      <div className="container mx-auto px-4 max-w-7xl">
+
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16 sm:mb-20"
+          className="mb-16"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-6">
-            <Users size={20} className="text-primary" />
-            <span className="text-sm font-semibold text-primary uppercase tracking-wider">Our Team</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-foreground mb-4 sm:mb-6">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold tracking-widest uppercase mb-3">
+            Our Team
+          </span>
+          <h2 className="text-4xl md:text-5xl font-black text-foreground leading-tight">
             Meet the People Behind{" "}
-            <span className="text-primary">
-              Our Mission
-            </span>
+            <span className="text-primary">Our Mission</span>
           </h2>
-          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            A passionate team of professionals dedicated to driving sustainable change and creating lasting impact in communities
+          <p className="text-muted-foreground mt-3 max-w-xl text-sm sm:text-base">
+            A passionate team of professionals dedicated to driving sustainable change and creating lasting impact in communities.
           </p>
         </motion.div>
 
         {/* Board Members */}
-        <div className="mb-16 sm:mb-20">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="flex items-center justify-center gap-3 mb-10 sm:mb-12"
-          >
-            <div className="flex items-center gap-3 px-6 py-3 bg-primary/10 rounded-full border border-primary/20">
-              <Award size={24} className="text-primary" />
-              <h3 className="text-xl sm:text-2xl font-heading font-bold text-foreground">
-                Board Members
-              </h3>
-            </div>
-          </motion.div>
-          <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            {boardMembers.map((member, i) => (
-              <TeamMemberCard key={member.name} member={member} delay={i * 0.1} featured={i === 0} />
+        <div className="mb-14">
+          <SectionLabel icon={Award} label="Board Members" />
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+            {boardMembers.map((m, i) => (
+              <TeamCard key={m.name} member={m} delay={i * 0.08} />
             ))}
           </div>
         </div>
 
         {/* Management */}
-        <div className="mb-16 sm:mb-20">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="flex items-center justify-center gap-3 mb-10 sm:mb-12"
-          >
-            <div className="flex items-center gap-3 px-6 py-3 bg-primary/10 rounded-full border border-primary/20">
-              <Briefcase size={24} className="text-primary" />
-              <h3 className="text-xl sm:text-2xl font-heading font-bold text-foreground">
-                Management Team
-              </h3>
-            </div>
-          </motion.div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto">
-            {management.map((member, i) => (
-              <TeamMemberCard key={member.name} member={member} delay={i * 0.1} featured />
+        <div className="mb-14">
+          <SectionLabel icon={Briefcase} label="Management Team" />
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+            {management.map((m, i) => (
+              <TeamCard key={m.name} member={m} delay={i * 0.08} />
             ))}
           </div>
         </div>
 
         {/* Core Team */}
-        <div>
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="flex items-center justify-center gap-3 mb-10 sm:mb-12"
-          >
-            <div className="flex items-center gap-3 px-6 py-3 bg-primary/10 rounded-full border border-primary/20">
-              <Users size={24} className="text-primary" />
-              <h3 className="text-xl sm:text-2xl font-heading font-bold text-foreground">
-                Core Team
-              </h3>
-            </div>
-          </motion.div>
-          <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            {coreTeam.map((member, i) => (
-              <TeamMemberCard key={member.name} member={member} delay={i * 0.1} />
+        <div className="mb-14">
+          <SectionLabel icon={Users} label="Core Team" />
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+            {coreTeam.map((m, i) => (
+              <TeamCard key={m.name} member={m} delay={i * 0.06} />
             ))}
           </div>
         </div>
 
-        {/* Bottom CTA */}
+        {/* CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mt-16 sm:mt-20 text-center"
+          className="text-center pt-4"
         >
-          <div className="inline-flex flex-col items-center gap-4 px-8 py-6 bg-primary/5 rounded-2xl border border-border/50">
-            <p className="text-base sm:text-lg text-muted-foreground max-w-xl">
-              Want to join our mission? We're always looking for passionate individuals to make a difference.
-            </p>
-            <a 
-              href="/opportunities" 
-              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-full font-semibold hover:shadow-xl transition-all duration-300 hover:scale-105"
-            >
-              <Users size={18} />
-              View Opportunities
-            </a>
-          </div>
+          <p className="text-muted-foreground mb-4 text-sm">
+            Want to join our mission? We're always looking for passionate individuals.
+          </p>
+          <a
+            href="/opportunities"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-full font-semibold hover:bg-orange-600 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300"
+          >
+            <Users size={16} />
+            View Opportunities
+          </a>
         </motion.div>
       </div>
     </section>
