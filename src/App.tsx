@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LazyMotion, domAnimation } from "framer-motion";
 import ScrollToHashElement from "@/components/ScrollToHashElement";
 import AccessibilityWidget from "@/components/AccessibilityWidget";
+import ChatWidget from "@/components/ChatWidget";
 import Index from "./pages/Index";
 import Gallery from "./pages/Gallery";
 import Opportunities from "./pages/Opportunities";
@@ -27,7 +28,9 @@ const App = () => (
         <Sonner />
         <AccessibilityWidget />
         <BrowserRouter>
+          <ChatWidget />
           <ScrollToHashElement />
+
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/gallery" element={<Gallery />} />
