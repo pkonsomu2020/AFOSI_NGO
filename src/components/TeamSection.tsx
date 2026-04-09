@@ -28,7 +28,7 @@ const departments = [
       { name: "Elisha Papa", role: "IT Specialist", image: "/TEAMS/papa.jpg" },
       { name: "Virginia Kerubo", role: "Communications Lead", image: "/TEAMS/virginia.jpg" },
       { name: "Joe Liban", role: "IT & Communication", image: "/placeholder.svg" },
-      { name: "Peter Onsomu", role: "IT & Communication", image: "/TEAMS/Peter Onsomu.jpeg" },
+      { name: "Peter Onsomu", role: "IT & Communication", image: "/TEAMS/Peter Onsomu.jpg" },
     ],
   },
   {
