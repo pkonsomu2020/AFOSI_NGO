@@ -62,22 +62,33 @@ const departments = [
 ];
 
 // Portrait card — same design as board/management
-const TeamCard = ({ member }: { member: TeamMember }) => (
-  <div className="group flex-shrink-0 w-44">
-    <div className="relative rounded-2xl overflow-hidden aspect-[3/4] mb-3 shadow-md">
-      <img
-        src={member.image}
-        alt={member.name}
-        className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110"
-        onError={(e) => { e.currentTarget.src = "/placeholder.svg"; }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-orange-600/80 via-orange-500/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+const TeamCard = ({ member }: { member: TeamMember }) => {
+  const [imgError, setImgError] = useState(false);
+  const initials = member.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();
+
+  return (
+    <div className="group flex-shrink-0 w-44">
+      <div className="relative rounded-2xl overflow-hidden aspect-[3/4] mb-3 shadow-md bg-gradient-to-br from-orange-100 to-orange-200 dark:from-orange-900/30 dark:to-orange-800/20">
+        {!imgError ? (
+          <img
+            src={member.image}
+            alt={member.name}
+            className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <span className="text-4xl font-black text-orange-500/60">{initials}</span>
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-orange-600/80 via-orange-500/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      </div>
+      <h4 className="text-sm font-bold text-foreground group-hover:text-primary transition-colors leading-tight">
+        {member.name}
+      </h4>
     </div>
-    <h4 className="text-sm font-bold text-foreground group-hover:text-primary transition-colors leading-tight">
-      {member.name}
-    </h4>
-  </div>
-);
+  );
+};
 
 // Infinite auto-scroll marquee (same pattern as PartnersSection)
 const AutoCarousel = ({ members }: { members: TeamMember[] }) => {
