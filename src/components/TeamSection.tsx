@@ -28,7 +28,7 @@ const departments = [
       { name: "Elisha Papa", role: "IT Specialist", image: "/TEAMS/papa.jpg" },
       { name: "Virginia Kerubo", role: "Communications Lead", image: "/TEAMS/virginia.jpg" },
       { name: "Joe Liban", role: "IT & Communication", image: "/placeholder.svg" },
-      { name: "Peter Onsomu", role: "IT & Communication", image: "/placeholder.svg" },
+      { name: "Peter Onsomu", role: "IT & Communication", image: "/TEAMS/Peter Onsomu.jpeg" },
     ],
   },
   {
@@ -76,9 +76,6 @@ const TeamCard = ({ member }: { member: TeamMember }) => (
     <h4 className="text-sm font-bold text-foreground group-hover:text-primary transition-colors leading-tight">
       {member.name}
     </h4>
-    <p className="text-xs font-semibold text-primary uppercase tracking-wider mt-0.5">
-      {member.role}
-    </p>
   </div>
 );
 
