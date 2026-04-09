@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Users, Award, Briefcase, ChevronDown, Monitor, BarChart2, DollarSign, Layers } from "lucide-react";
 
 interface TeamMember {
@@ -82,44 +82,23 @@ const TeamCard = ({ member }: { member: TeamMember }) => (
   </div>
 );
 
-// Auto-scrolling carousel for departments with many members
+// Infinite auto-scroll marquee (same pattern as PartnersSection)
 const AutoCarousel = ({ members }: { members: TeamMember[] }) => {
-  const [index, setIndex] = useState(0);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  useEffect(() => {
-    timerRef.current = setInterval(() => {
-      setIndex(prev => (prev + 1) % members.length);
-    }, 3500);
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [members.length]);
-
   return (
     <div className="relative overflow-hidden">
-      <div
-        className="flex gap-5 transition-transform duration-1000 ease-in-out"
-        style={{ transform: `translateX(-${index * 196}px)` }}
+      <motion.div
+        className="flex gap-5"
+        animate={{ x: [0, -(members.length * 196)] }}
+        transition={{ duration: members.length * 4, repeat: Infinity, ease: "linear" }}
       >
-        {/* Triple the array for seamless loop feel */}
+        {/* Triple for seamless loop */}
         {[...members, ...members, ...members].map((m, i) => (
           <TeamCard key={`${m.name}-${i}`} member={m} />
         ))}
-      </div>
+      </motion.div>
       {/* Fade edges */}
       <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-background to-transparent pointer-events-none z-10" />
       <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-background to-transparent pointer-events-none z-10" />
-      {/* Dots */}
-      <div className="flex gap-1.5 justify-center mt-4">
-        {members.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setIndex(i)}
-            className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-              i === index % members.length ? "bg-primary w-4" : "bg-border"
-            }`}
-          />
-        ))}
-      </div>
     </div>
   );
 };
