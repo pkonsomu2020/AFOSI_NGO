@@ -35,3 +35,6 @@ dist-ssr
 
 # Documentation files (except README.md)
 MD FILES/
+
+# Sensitive admin route files
+backend/routes/admin.js
