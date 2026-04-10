@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LazyMotion, domAnimation } from "framer-motion";
 import ScrollToHashElement from "@/components/ScrollToHashElement";
 import AccessibilityWidget from "@/components/AccessibilityWidget";
+import PageLoader from "@/components/PageLoader";
 import ChatWidget from "@/components/ChatWidget";
 import Index from "./pages/Index";
 import Gallery from "./pages/Gallery";
@@ -26,6 +27,7 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
+        <PageLoader />
         <AccessibilityWidget />
         <BrowserRouter>
           <ChatWidget />
