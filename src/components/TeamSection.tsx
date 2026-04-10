@@ -22,13 +22,15 @@ const management: TeamMember[] = [
 
 const departments = [
   {
-    name: "IT & Communication",
-    icon: Monitor,
+    name: "Programs Department",
+    icon: Layers,
     members: [
-      { name: "Elisha Papa", role: "IT Specialist", image: "/TEAMS/papa.jpg" },
-      { name: "Virginia Kerubo", role: "Communications Lead", image: "/TEAMS/virginia.jpg" },
-      { name: "Joe Liban", role: "IT & Communication", image: "/placeholder.svg" },
-      { name: "Peter Onsomu", role: "IT & Communication", image: "/TEAMS/Peter Onsomu.jpg" },
+      { name: "Prisca Achieng", role: "Program Assistant", image: "/TEAMS/prisca.jpg" },
+      { name: "Davin Omollo", role: "Project Associate", image: "/TEAMS/davin.jpg" },
+      { name: "Ivy Awuor", role: "Programs", image: "/TEAMS/ivy.jpg" },
+      { name: "Felix Omondi", role: "Programs", image: "/TEAMS/FELIX OMONDI.png" },
+      { name: "Magdaline Watahi", role: "Programs", image: "/TEAMS/magda.jpg" },
+      { name: "Barbra Wanjiku", role: "Programs", image: "/TEAMS/Barbra Wanjiru.jpeg" },
     ],
   },
   {
@@ -40,23 +42,21 @@ const departments = [
     ],
   },
   {
+    name: "IT & Communication",
+    icon: Monitor,
+    members: [
+      { name: "Elisha Papa", role: "IT Specialist", image: "/TEAMS/papa.jpg" },
+      { name: "Virginia Kerubo", role: "Communications Lead", image: "/TEAMS/virginia.jpg" },
+      { name: "Joe Liban", role: "IT & Communication", image: "/placeholder.svg" },
+      { name: "Peter Onsomu", role: "IT & Communication", image: "/TEAMS/Peter Onsomu.jpg" },
+    ],
+  },
+  {
     name: "Finance Department",
     icon: DollarSign,
     members: [
       { name: "Elizabeth Muthoni", role: "Finance Officer", image: "/TEAMS/muthoni.jpg" },
       { name: "Titus", role: "Finance", image: "/placeholder.svg" },
-    ],
-  },
-  {
-    name: "Programs Department",
-    icon: Layers,
-    members: [
-      { name: "Prisca Achieng", role: "Program Assistant", image: "/TEAMS/prisca.jpg" },
-      { name: "Davin Omollo", role: "Project Associate", image: "/TEAMS/davin.jpg" },
-      { name: "Ivy Awuor", role: "Programs", image: "/TEAMS/ivy.jpg" },
-      { name: "Felix Omondi", role: "Programs", image: "/TEAMS/FELIX OMONDI.png" },
-      { name: "Magdaline Watahi", role: "Programs", image: "/TEAMS/magda.jpg" },
-      { name: "Barbra Wanjiku", role: "Programs", image: "/TEAMS/Barbra Wanjiru.jpeg" },
     ],
   },
 ];
