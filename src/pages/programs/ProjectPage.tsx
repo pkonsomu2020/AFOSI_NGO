@@ -79,46 +79,45 @@ const ProjectPage = ({ slug, fallbackTitle, fallbackImage, fallbackBadge, fallba
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* HERO — split layout */}
-      <section className="min-h-screen grid lg:grid-cols-2 pt-20">
-        {/* Left — text */}
-        <div className="flex flex-col justify-center px-8 sm:px-12 lg:px-16 py-16 relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
-          <div className="relative z-10 max-w-xl">
-            <Link to="/projects" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-10 group text-sm font-medium transition-colors">
-              <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-              Back to Projects
-            </Link>
+      {/* HERO — full-width image, navbar floats over it, no text */}
+      <section className="relative h-[55vh] overflow-hidden">
+        <img src={image} alt={title} className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-black/50" />
+        {/* Back button */}
+        <div className="absolute bottom-6 left-6 z-10">
+          <Link to="/projects" className="inline-flex items-center gap-2 text-white/80 hover:text-white group text-sm font-semibold transition-colors">
+            <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+            Back to Projects
+          </Link>
+        </div>
+        {/* Badge */}
+        <div className="absolute bottom-6 right-6 z-10">
+          <span className={`text-xs font-bold tracking-widest uppercase px-3 py-1.5 rounded-full text-white ${fallbackBadgeColor}`}>
+            {fallbackBadge}
+          </span>
+        </div>
+      </section>
 
-            <div className="flex items-center gap-2 mb-6">
-              <div className="w-8 h-px bg-primary" />
-              <span className={`text-xs font-bold tracking-widest uppercase px-3 py-1 rounded-full text-white ${fallbackBadgeColor}`}>
-                {fallbackBadge}
-              </span>
-            </div>
+      {/* BODY — title + all content */}
+      <div id="content">
 
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black text-foreground leading-none mb-6 tracking-tight">
-              {title}
-            </h1>
+        {/* Title & excerpt */}
+        <section className="py-16 border-b border-border">
+          <div className="container mx-auto px-6 max-w-6xl">
+            <Reveal>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-8 h-px bg-primary" />
+                <span className="text-xs font-bold tracking-widest uppercase text-primary">{fallbackBadge}</span>
+              </div>
+              <h1 className="text-4xl md:text-6xl font-black text-foreground leading-tight mb-5">{title}</h1>
+              {excerpt && (
+                <p className="text-lg text-muted-foreground leading-relaxed font-light max-w-3xl">{excerpt}</p>
+              )}
+            </Reveal>
 
-            {excerpt && (
-              <p className="text-lg text-muted-foreground leading-relaxed mb-10 font-light max-w-lg">
-                {excerpt}
-              </p>
-            )}
-
-            <div className="flex flex-wrap gap-4">
-              <a href="#content" className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-full font-semibold text-sm hover:bg-orange-600 transition-colors">
-                Explore Program <ArrowRight size={16} />
-              </a>
-              <a href="/#contact" className="inline-flex items-center gap-2 border border-border text-foreground px-6 py-3 rounded-full font-semibold text-sm hover:border-primary hover:text-primary transition-colors">
-                Get Involved
-              </a>
-            </div>
-
-            {/* Stats inline */}
+            {/* Stats */}
             {(project?.beneficiaries || project?.duration) && (
-              <div className="flex gap-8 mt-12 pt-8 border-t border-border">
+              <Reveal delay={0.1} className="flex flex-wrap gap-8 mt-10 pt-8 border-t border-border">
                 {project?.beneficiaries && (
                   <div>
                     <div className="text-3xl font-black text-primary">{project.beneficiaries}</div>
@@ -131,24 +130,15 @@ const ProjectPage = ({ slug, fallbackTitle, fallbackImage, fallbackBadge, fallba
                     <div className="text-xs text-muted-foreground uppercase tracking-wider mt-1">Duration</div>
                   </div>
                 )}
-              </div>
+                <div className="flex items-end gap-4 ml-auto">
+                  <a href="/#contact" className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-full font-semibold text-sm hover:bg-orange-600 transition-colors">
+                    Get Involved <ArrowRight size={16} />
+                  </a>
+                </div>
+              </Reveal>
             )}
           </div>
-        </div>
-
-        {/* Right — image */}
-        <div className="relative min-h-[50vh] lg:min-h-0 overflow-hidden">
-          <img
-            src={image}
-            alt={title}
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-background/20 lg:to-background/10" />
-        </div>
-      </section>
-
-      {/* CONTENT */}
-      <div id="content">
+        </section>
 
         {/* Why It Matters */}
         {project?.why_it_matters && (
@@ -302,8 +292,7 @@ const ProjectPage = ({ slug, fallbackTitle, fallbackImage, fallbackBadge, fallba
         )}
 
         {/* CTA */}
-        <section className="py-24 bg-gray-950 border-t border-border relative overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-orange-500/15 via-transparent to-transparent pointer-events-none" />
+        <section className="py-24 bg-gray-950 border-t border-border relative overflow-hidden">          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-orange-500/15 via-transparent to-transparent pointer-events-none" />
           <div className="container mx-auto px-6 max-w-4xl text-center relative z-10">
             <Reveal>
               <div className="flex items-center justify-center gap-2 mb-6">
