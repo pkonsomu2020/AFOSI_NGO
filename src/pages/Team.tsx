@@ -119,7 +119,7 @@ const Team = () => {
       <Navbar />
       <ScrollToTop />
 
-      <div className="container mx-auto px-4 max-w-7xl pt-32 pb-20">
+      <div className="container mx-auto px-6 sm:px-8 max-w-7xl pt-32 pb-20">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
