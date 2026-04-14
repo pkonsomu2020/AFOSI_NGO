@@ -67,34 +67,37 @@ const ProjectPage = ({ slug, fallbackTitle, fallbackImage, fallbackBadge, fallba
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Hero */}
-      <section className="relative h-[50vh] sm:h-[60vh] overflow-hidden">
+      {/* Hero — clean full image, no text overlay */}
+      <section className="relative h-[45vh] sm:h-[55vh] overflow-hidden mt-20">
         <img src={image} alt={title} className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-black/65" />
-        <div className="absolute inset-0 flex items-end">
-          <div className="container mx-auto px-6 pb-12">
-            <Link to="/projects" className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 group">
-              <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-              <span className="text-sm font-semibold">Back to Projects</span>
-            </Link>
-            <div className="flex items-center gap-3 mb-4">
-              <span className={`px-3 py-1.5 rounded-full text-white text-xs font-bold ${fallbackBadgeColor}`}>
-                {fallbackBadge}
-              </span>
-            </div>
-            <h1 className="text-4xl md:text-6xl font-black text-white mb-3 leading-tight">{title}</h1>
-            {excerpt && <p className="text-lg text-white/90 max-w-3xl">{excerpt}</p>}
-          </div>
+        <div className="absolute inset-0 bg-black/40" />
+        {/* Back button only */}
+        <div className="absolute top-6 left-6">
+          <Link to="/projects" className="inline-flex items-center gap-2 text-white/90 hover:text-white bg-black/30 backdrop-blur-sm px-4 py-2 rounded-full transition-all group">
+            <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+            <span className="text-sm font-semibold">Back to Projects</span>
+          </Link>
+        </div>
+        {/* Badge bottom-left */}
+        <div className="absolute bottom-6 left-6">
+          <span className={`px-3 py-1.5 rounded-full text-white text-xs font-bold ${fallbackBadgeColor}`}>
+            {fallbackBadge}
+          </span>
         </div>
       </section>
 
-      <section className="py-16 md:py-20">
-        <div className="container mx-auto px-6 max-w-5xl space-y-12">
+      <section className="py-12 md:py-16">
+        <div className="container mx-auto px-6 max-w-5xl">
 
+          {/* Title & excerpt in body */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-12 pb-10 border-b border-border">
+            <h1 className="text-4xl md:text-6xl font-black text-foreground mb-4 leading-tight">{title}</h1>
+            {excerpt && <p className="text-lg text-muted-foreground max-w-3xl leading-relaxed">{excerpt}</p>}
+          </motion.div>
           {/* Stats */}
           {(project?.beneficiaries || project?.duration) && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12">
               {project?.beneficiaries && (
                 <div className="bg-primary/10 rounded-2xl p-5 border border-primary/20">
                   <div className="text-2xl font-black text-primary mb-1">{project.beneficiaries}</div>
