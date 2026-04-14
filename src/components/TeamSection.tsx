@@ -238,15 +238,12 @@ const TeamSection = () => {
           <StaticGrid members={management} />
         </div>
 
-        {/* Core Team — 1 rep per department summary */}
+        {/* Core Team — 1 rep per department, same card design */}
         <div className="mb-14">
-          <div className="flex items-center justify-between mb-6">
-            <SectionLabel icon={Users} label="Core Team" />
-          </div>
+          <SectionLabel icon={Users} label="Core Team" />
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-            {departments.map((dept) => {
+            {departments.map((dept, i) => {
               const rep = dept.members[0];
-              const Icon = dept.icon;
               return (
                 <motion.a
                   key={dept.name}
@@ -254,19 +251,11 @@ const TeamSection = () => {
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
+                  transition={{ delay: i * 0.08 }}
                   className="group block"
                 >
-                  <div className="relative rounded-2xl overflow-hidden aspect-[3/4] mb-3 shadow-md">
-                    <TeamCard member={rep} />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-                    <div className="absolute bottom-0 left-0 right-0 p-3">
-                      <div className="flex items-center gap-1.5">
-                        <Icon size={12} className="text-orange-400" />
-                        <span className="text-white text-xs font-bold truncate">{dept.name}</span>
-                      </div>
-                      <span className="text-white/60 text-xs">{dept.members.length} members</span>
-                    </div>
-                  </div>
+                  <TeamCard member={rep} />
+                  <p className="text-xs text-muted-foreground mt-1">{dept.name} · {dept.members.length} members</p>
                 </motion.a>
               );
             })}
