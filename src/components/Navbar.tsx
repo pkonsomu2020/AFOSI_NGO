@@ -9,7 +9,7 @@ const navLinks = [
   { label: "Home", href: "#home" },
   { label: "About", href: "#about" },
   { label: "Pillars", href: "#pillars" },
-  { label: "Team", href: "#team" },
+  { label: "Team", href: "/team" },
   { label: "Partners", href: "#partners" },
   { label: "Projects", href: "#programs" },
   { label: "Contact", href: "#contact" },
@@ -105,19 +105,21 @@ const Navbar = () => {
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
-    
+
+    // External page links (not hash anchors)
+    if (!href.startsWith('#')) {
+      navigate(href);
+      setMobileOpen(false);
+      return;
+    }
+
     if (isHomePage) {
-      // On homepage, just scroll to section
       const sectionId = href.substring(1);
       const element = document.getElementById(sectionId);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
-      }
+      if (element) element.scrollIntoView({ behavior: "smooth" });
     } else {
-      // On other pages, navigate to homepage with hash
       navigate(`/${href}`);
     }
-    
     setMobileOpen(false);
   };
 
