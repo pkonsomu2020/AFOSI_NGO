@@ -17,6 +17,7 @@ import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
 import WeLeadProject from "./pages/programs/WeLeadProject";
 import RoboticsCoding from "./pages/programs/RoboticsCoding";
+import Team from "./pages/Team";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -43,6 +44,7 @@ const App = () => (
             <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/programs/we-lead" element={<WeLeadProject />} />
             <Route path="/programs/robotics-coding" element={<RoboticsCoding />} />
+            <Route path="/team" element={<Team />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

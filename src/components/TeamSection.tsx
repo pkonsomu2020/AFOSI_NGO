@@ -238,13 +238,38 @@ const TeamSection = () => {
           <StaticGrid members={management} />
         </div>
 
-        {/* Core Team — Department Dropdowns */}
+        {/* Core Team — 1 rep per department summary */}
         <div className="mb-14">
-          <SectionLabel icon={Users} label="Core Team" />
-          <div className="space-y-3">
-            {departments.map((dept, i) => (
-              <DepartmentAccordion key={dept.name} dept={dept} defaultOpen={i === 0} />
-            ))}
+          <div className="flex items-center justify-between mb-6">
+            <SectionLabel icon={Users} label="Core Team" />
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+            {departments.map((dept) => {
+              const rep = dept.members[0];
+              const Icon = dept.icon;
+              return (
+                <motion.a
+                  key={dept.name}
+                  href="/team"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="group block"
+                >
+                  <div className="relative rounded-2xl overflow-hidden aspect-[3/4] mb-3 shadow-md">
+                    <TeamCard member={rep} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-3">
+                      <div className="flex items-center gap-1.5">
+                        <Icon size={12} className="text-orange-400" />
+                        <span className="text-white text-xs font-bold truncate">{dept.name}</span>
+                      </div>
+                      <span className="text-white/60 text-xs">{dept.members.length} members</span>
+                    </div>
+                  </div>
+                </motion.a>
+              );
+            })}
           </div>
         </div>
 
@@ -253,16 +278,19 @@ const TeamSection = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center pt-4"
+          className="text-center pt-4 flex flex-col sm:flex-row gap-4 justify-center"
         >
-          <p className="text-muted-foreground mb-4 text-sm">
-            Want to join our mission? We're always looking for passionate individuals.
-          </p>
           <a
-            href="/opportunities"
+            href="/team"
             className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-full font-semibold hover:bg-orange-600 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300"
           >
             <Users size={16} />
+            Meet the Full Team
+          </a>
+          <a
+            href="/opportunities"
+            className="inline-flex items-center gap-2 px-6 py-3 border border-border text-foreground rounded-full font-semibold hover:border-primary hover:text-primary transition-all duration-300"
+          >
             View Opportunities
           </a>
         </motion.div>
