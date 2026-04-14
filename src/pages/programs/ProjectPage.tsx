@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, CheckCircle2, Globe, Target, Lightbulb, Users } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Globe, Target, Lightbulb, Users, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -35,6 +35,18 @@ interface ProjectPageProps {
   fallbackBadgeColor: string;
 }
 
+const Reveal = ({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 28 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] }}
+    className={className}
+  >
+    {children}
+  </motion.div>
+);
+
 const ProjectPage = ({ slug, fallbackTitle, fallbackImage, fallbackBadge, fallbackBadgeColor }: ProjectPageProps) => {
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
@@ -67,167 +79,259 @@ const ProjectPage = ({ slug, fallbackTitle, fallbackImage, fallbackBadge, fallba
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Hero — clean full image, no text overlay */}
-      <section className="relative h-[45vh] sm:h-[55vh] overflow-hidden mt-20">
-        <img src={image} alt={title} className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-black/40" />
-        {/* Back button only */}
-        <div className="absolute top-6 left-6">
-          <Link to="/projects" className="inline-flex items-center gap-2 text-white/90 hover:text-white bg-black/30 backdrop-blur-sm px-4 py-2 rounded-full transition-all group">
-            <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-            <span className="text-sm font-semibold">Back to Projects</span>
-          </Link>
+      {/* HERO — split layout */}
+      <section className="min-h-screen grid lg:grid-cols-2 pt-20">
+        {/* Left — text */}
+        <div className="flex flex-col justify-center px-8 sm:px-12 lg:px-16 py-16 relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
+          <div className="relative z-10 max-w-xl">
+            <Link to="/projects" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-10 group text-sm font-medium transition-colors">
+              <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+              Back to Projects
+            </Link>
+
+            <div className="flex items-center gap-2 mb-6">
+              <div className="w-8 h-px bg-primary" />
+              <span className={`text-xs font-bold tracking-widest uppercase px-3 py-1 rounded-full text-white ${fallbackBadgeColor}`}>
+                {fallbackBadge}
+              </span>
+            </div>
+
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black text-foreground leading-none mb-6 tracking-tight">
+              {title}
+            </h1>
+
+            {excerpt && (
+              <p className="text-lg text-muted-foreground leading-relaxed mb-10 font-light max-w-lg">
+                {excerpt}
+              </p>
+            )}
+
+            <div className="flex flex-wrap gap-4">
+              <a href="#content" className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-full font-semibold text-sm hover:bg-orange-600 transition-colors">
+                Explore Program <ArrowRight size={16} />
+              </a>
+              <a href="/#contact" className="inline-flex items-center gap-2 border border-border text-foreground px-6 py-3 rounded-full font-semibold text-sm hover:border-primary hover:text-primary transition-colors">
+                Get Involved
+              </a>
+            </div>
+
+            {/* Stats inline */}
+            {(project?.beneficiaries || project?.duration) && (
+              <div className="flex gap-8 mt-12 pt-8 border-t border-border">
+                {project?.beneficiaries && (
+                  <div>
+                    <div className="text-3xl font-black text-primary">{project.beneficiaries}</div>
+                    <div className="text-xs text-muted-foreground uppercase tracking-wider mt-1">Beneficiaries</div>
+                  </div>
+                )}
+                {project?.duration && (
+                  <div>
+                    <div className="text-3xl font-black text-primary">{project.duration}</div>
+                    <div className="text-xs text-muted-foreground uppercase tracking-wider mt-1">Duration</div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
-        {/* Badge bottom-left */}
-        <div className="absolute bottom-6 left-6">
-          <span className={`px-3 py-1.5 rounded-full text-white text-xs font-bold ${fallbackBadgeColor}`}>
-            {fallbackBadge}
-          </span>
+
+        {/* Right — image */}
+        <div className="relative min-h-[50vh] lg:min-h-0 overflow-hidden">
+          <img
+            src={image}
+            alt={title}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-background/20 lg:to-background/10" />
         </div>
       </section>
 
-      <section className="py-12 md:py-16">
-        <div className="container mx-auto px-6 max-w-5xl">
+      {/* CONTENT */}
+      <div id="content">
 
-          {/* Title & excerpt in body */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-12 pb-10 border-b border-border">
-            <h1 className="text-4xl md:text-6xl font-black text-foreground mb-4 leading-tight">{title}</h1>
-            {excerpt && <p className="text-lg text-muted-foreground max-w-3xl leading-relaxed">{excerpt}</p>}
-          </motion.div>
-          {/* Stats */}
-          {(project?.beneficiaries || project?.duration) && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12">
-              {project?.beneficiaries && (
-                <div className="bg-primary/10 rounded-2xl p-5 border border-primary/20">
-                  <div className="text-2xl font-black text-primary mb-1">{project.beneficiaries}</div>
-                  <p className="text-muted-foreground text-xs">Beneficiaries</p>
+        {/* Why It Matters */}
+        {project?.why_it_matters && (
+          <section className="py-20 border-t border-border">
+            <div className="container mx-auto px-6 max-w-6xl grid lg:grid-cols-3 gap-12 items-start">
+              <Reveal>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-6 h-px bg-primary" />
+                  <span className="text-xs font-bold tracking-widest uppercase text-primary">Why It Matters</span>
                 </div>
-              )}
-              {project?.duration && (
-                <div className="bg-primary/10 rounded-2xl p-5 border border-primary/20">
-                  <div className="text-2xl font-black text-primary mb-1">{project.duration}</div>
-                  <p className="text-muted-foreground text-xs">Duration</p>
+                <h2 className="text-3xl font-black text-foreground leading-tight">The Problem We're Solving</h2>
+              </Reveal>
+              <Reveal delay={0.1} className="lg:col-span-2">
+                <p className="text-lg text-muted-foreground leading-relaxed font-light">{project.why_it_matters}</p>
+              </Reveal>
+            </div>
+          </section>
+        )}
+
+        {/* What We Do */}
+        {project?.what_we_do?.filter(Boolean).length > 0 && (
+          <section className="py-20 bg-muted/30 border-t border-border">
+            <div className="container mx-auto px-6 max-w-6xl">
+              <Reveal className="mb-12">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-6 h-px bg-primary" />
+                  <span className="text-xs font-bold tracking-widest uppercase text-primary">What We Do</span>
                 </div>
-              )}
-            </motion.div>
-          )}
-
-          {/* Why It Matters */}
-          {project?.why_it_matters && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <div className="flex items-center gap-3 mb-4">
-                <Target className="text-primary" size={24} />
-                <h2 className="text-2xl font-black text-foreground">Why It Matters</h2>
-              </div>
-              <p className="text-muted-foreground leading-relaxed">{project.why_it_matters}</p>
-            </motion.div>
-          )}
-
-          {/* What We Do */}
-          {project?.what_we_do?.filter(Boolean).length > 0 && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <div className="flex items-center gap-3 mb-4">
-                <Lightbulb className="text-primary" size={24} />
-                <h2 className="text-2xl font-black text-foreground">What We Do</h2>
-              </div>
-              <div className="space-y-3">
+                <h2 className="text-3xl font-black text-foreground">Our Core Activities</h2>
+              </Reveal>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 {project.what_we_do.filter(Boolean).map((item, i) => (
-                  <div key={i} className="flex items-start gap-3">
-                    <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                    <p className="text-muted-foreground">{item}</p>
-                  </div>
+                  <Reveal key={i} delay={i * 0.07}>
+                    <div className="bg-background rounded-2xl p-6 border border-border hover:border-primary/40 hover:shadow-lg transition-all duration-300 h-full">
+                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                        <span className="text-primary font-black text-sm">{String(i + 1).padStart(2, '0')}</span>
+                      </div>
+                      <p className="text-foreground text-sm leading-relaxed">{item}</p>
+                    </div>
+                  </Reveal>
                 ))}
               </div>
-            </motion.div>
-          )}
+            </div>
+          </section>
+        )}
 
-          {/* Key Solutions */}
-          {project?.key_solutions && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <div className="flex items-center gap-3 mb-4">
-                <Lightbulb className="text-primary" size={24} />
-                <h2 className="text-2xl font-black text-foreground">Key Solutions & Programs</h2>
-              </div>
-              <div className="bg-card rounded-2xl p-6 border border-border">
-                <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{project.key_solutions}</p>
-              </div>
-            </motion.div>
-          )}
+        {/* Key Solutions */}
+        {project?.key_solutions && (
+          <section className="py-20 border-t border-border">
+            <div className="container mx-auto px-6 max-w-6xl grid lg:grid-cols-3 gap-12 items-start">
+              <Reveal>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-6 h-px bg-primary" />
+                  <span className="text-xs font-bold tracking-widest uppercase text-primary">Key Solutions</span>
+                </div>
+                <h2 className="text-3xl font-black text-foreground leading-tight">Programs & Platforms</h2>
+              </Reveal>
+              <Reveal delay={0.1} className="lg:col-span-2">
+                <div className="bg-muted/40 rounded-2xl p-8 border border-border">
+                  <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{project.key_solutions}</p>
+                </div>
+              </Reveal>
+            </div>
+          </section>
+        )}
 
-          {/* Who It Serves */}
-          {project?.who_it_serves && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <div className="flex items-center gap-3 mb-4">
-                <Users className="text-primary" size={24} />
-                <h2 className="text-2xl font-black text-foreground">Who It Serves</h2>
-              </div>
-              <p className="text-muted-foreground leading-relaxed">{project.who_it_serves}</p>
-            </motion.div>
-          )}
+        {/* Who It Serves */}
+        {project?.who_it_serves && (
+          <section className="py-20 bg-gray-950 border-t border-border">
+            <div className="container mx-auto px-6 max-w-6xl grid lg:grid-cols-3 gap-12 items-start">
+              <Reveal>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-6 h-px bg-orange-400" />
+                  <span className="text-xs font-bold tracking-widest uppercase text-orange-400">Who It Serves</span>
+                </div>
+                <h2 className="text-3xl font-black text-white leading-tight">Our Beneficiaries</h2>
+              </Reveal>
+              <Reveal delay={0.1} className="lg:col-span-2">
+                <p className="text-gray-300 text-lg leading-relaxed font-light">{project.who_it_serves}</p>
+              </Reveal>
+            </div>
+          </section>
+        )}
 
-          {/* Impact */}
-          {project?.impact?.filter(Boolean).length > 0 && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <h2 className="text-2xl font-black text-foreground mb-4">Impact</h2>
-              <div className="bg-primary/5 rounded-2xl p-6 border border-primary/20 space-y-3">
+        {/* Impact */}
+        {project?.impact?.filter(Boolean).length > 0 && (
+          <section className="py-20 border-t border-border">
+            <div className="container mx-auto px-6 max-w-6xl">
+              <Reveal className="mb-12">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-6 h-px bg-primary" />
+                  <span className="text-xs font-bold tracking-widest uppercase text-primary">Impact</span>
+                </div>
+                <h2 className="text-3xl font-black text-foreground">Expected Outcomes</h2>
+              </Reveal>
+              <div className="space-y-4">
                 {project.impact.filter(Boolean).map((item, i) => (
-                  <div key={i} className="flex items-start gap-3">
-                    <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                    <p className="text-muted-foreground">{item}</p>
-                  </div>
+                  <Reveal key={i} delay={i * 0.06}>
+                    <div className="flex items-start gap-5 p-6 bg-muted/30 rounded-2xl border border-border hover:border-primary/30 transition-colors">
+                      <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0 mt-0.5">
+                        <CheckCircle2 size={16} className="text-white" />
+                      </div>
+                      <p className="text-foreground leading-relaxed">{item}</p>
+                    </div>
+                  </Reveal>
                 ))}
               </div>
-            </motion.div>
-          )}
+            </div>
+          </section>
+        )}
 
-          {/* Partners */}
-          {project?.partners?.filter(Boolean).length > 0 && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <div className="flex items-center gap-3 mb-4">
-                <Globe className="text-primary" size={24} />
-                <h2 className="text-2xl font-black text-foreground">Partners</h2>
-              </div>
-              <div className="bg-card rounded-2xl p-6 border border-border">
+        {/* Partners */}
+        {project?.partners?.filter(Boolean).length > 0 && (
+          <section className="py-20 bg-muted/30 border-t border-border">
+            <div className="container mx-auto px-6 max-w-6xl">
+              <Reveal className="mb-10">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-6 h-px bg-primary" />
+                  <span className="text-xs font-bold tracking-widest uppercase text-primary">Partners</span>
+                </div>
+                <h2 className="text-3xl font-black text-foreground">Who We Work With</h2>
+              </Reveal>
+              <Reveal delay={0.1}>
                 <div className="flex flex-wrap gap-3">
-                  {project.partners.filter(Boolean).map(p => (
-                    <span key={p} className="px-3 py-1.5 bg-primary/10 text-primary text-sm font-semibold rounded-full">{p}</span>
+                  {project.partners.filter(Boolean).map((p, i) => (
+                    <span key={i} className="px-4 py-2 bg-background border border-border text-foreground text-sm font-medium rounded-full hover:border-primary hover:text-primary transition-colors">
+                      {p}
+                    </span>
                   ))}
                 </div>
-              </div>
-            </motion.div>
-          )}
-
-          {/* Highlights */}
-          {project?.highlights?.filter(Boolean).length > 0 && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <h2 className="text-2xl font-black text-foreground mb-4">Highlights</h2>
-              <div className="flex flex-wrap gap-3">
-                {project.highlights.filter(Boolean).map((h, i) => (
-                  <span key={i} className="px-4 py-2 bg-primary/10 text-primary font-semibold rounded-full text-sm">{h}</span>
-                ))}
-              </div>
-            </motion.div>
-          )}
-
-          {/* CTA */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            className="text-center bg-primary/10 rounded-2xl p-10 border border-primary/20">
-            <h3 className="text-2xl font-black text-foreground mb-3">Get Involved</h3>
-            {project?.call_to_action && (
-              <p className="text-muted-foreground mb-6 max-w-xl mx-auto">{project.call_to_action}</p>
-            )}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-primary text-white rounded-full px-8" asChild>
-                <a href="/#contact">Contact Us</a>
-              </Button>
-              <Button variant="outline" size="lg" className="rounded-full px-8" asChild>
-                <Link to="/projects">View All Projects</Link>
-              </Button>
+              </Reveal>
             </div>
-          </motion.div>
-        </div>
-      </section>
+          </section>
+        )}
+
+        {/* Highlights */}
+        {project?.highlights?.filter(Boolean).length > 0 && (
+          <section className="py-16 border-t border-border">
+            <div className="container mx-auto px-6 max-w-6xl">
+              <Reveal>
+                <div className="flex flex-wrap gap-3">
+                  {project.highlights.filter(Boolean).map((h, i) => (
+                    <span key={i} className="px-4 py-2 bg-primary/10 text-primary font-semibold rounded-full text-sm border border-primary/20">
+                      {h}
+                    </span>
+                  ))}
+                </div>
+              </Reveal>
+            </div>
+          </section>
+        )}
+
+        {/* CTA */}
+        <section className="py-24 bg-gray-950 border-t border-border relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-orange-500/15 via-transparent to-transparent pointer-events-none" />
+          <div className="container mx-auto px-6 max-w-4xl text-center relative z-10">
+            <Reveal>
+              <div className="flex items-center justify-center gap-2 mb-6">
+                <div className="w-6 h-px bg-orange-400" />
+                <span className="text-xs font-bold tracking-widest uppercase text-orange-400">Get Involved</span>
+                <div className="w-6 h-px bg-orange-400" />
+              </div>
+              <h2 className="text-4xl md:text-5xl font-black text-white mb-4 leading-tight">
+                Be Part of the Change
+              </h2>
+              {project?.call_to_action && (
+                <p className="text-gray-400 text-lg mb-10 max-w-2xl mx-auto leading-relaxed font-light">
+                  {project.call_to_action}
+                </p>
+              )}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button size="lg" className="bg-orange-500 hover:bg-orange-600 text-white rounded-full px-10 shadow-xl shadow-orange-500/30" asChild>
+                  <a href="/#contact">Contact Us</a>
+                </Button>
+                <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10 rounded-full px-10" asChild>
+                  <Link to="/projects">View All Projects</Link>
+                </Button>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+      </div>
+
       <Footer />
     </div>
   );
