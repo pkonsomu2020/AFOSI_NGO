@@ -164,12 +164,9 @@ export default function AccessibilityWidget() {
       <button
         onClick={() => setOpen(true)}
         aria-label="Open accessibility menu"
-        className="fixed bottom-6 left-6 z-[9999] w-14 h-14 rounded-full bg-orange-500 hover:bg-orange-600 text-white shadow-2xl shadow-orange-500/40 flex items-center justify-center transition-all duration-300 hover:scale-110"
+        className="fixed bottom-6 left-6 z-[9999] w-16 h-16 rounded-full bg-orange-500 hover:bg-orange-600 shadow-2xl shadow-orange-500/40 flex items-center justify-center transition-all duration-300 hover:scale-110"
       >
-        <svg viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7">
-          <circle cx="12" cy="4" r="2" />
-          <path d="M19 7H5a1 1 0 000 2h5.5l-1.8 5.4A2 2 0 0010.6 17H8v4h2v-3h4v3h2v-4h-2.6l1.4-4.2 1.7 3.4A1 1 0 0018 17h1v-2h-.5l-2-4H19a1 1 0 000-2z" />
-        </svg>
+        <img src="/icons8-accessibility-96.png" alt="Accessibility" className="w-10 h-10" />
       </button>
 
       {/* Panel */}

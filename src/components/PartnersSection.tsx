@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
 
 const partners = [
   { name: "We Lead", logo: "/we_lead_logo.png" },
@@ -13,16 +14,25 @@ const partners = [
   { name: "CSA", logo: "/csa_logo.png" },
 ];
 
-const LogoCard = ({ partner }: { partner: typeof partners[0] }) => (
-  <div className="flex-shrink-0 w-44 h-24 mx-4 bg-background rounded-xl flex items-center justify-center p-5 border border-border hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 group">
-    <img
-      src={partner.logo}
-      alt={partner.name}
-      className="max-w-full max-h-full object-contain grayscale group-hover:grayscale-0 opacity-60 group-hover:opacity-100 transition-all duration-300"
-      onError={(e) => { e.currentTarget.src = "/placeholder.svg"; }}
-    />
-  </div>
-);
+const LogoCard = ({ partner }: { partner: typeof partners[0] }) => {
+  const [imgError, setImgError] = useState(false);
+  return (
+    <div className="flex-shrink-0 w-44 h-24 mx-4 bg-background rounded-xl flex items-center justify-center p-5 border border-border hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 group">
+      {!imgError ? (
+        <img
+          src={partner.logo}
+          alt={partner.name}
+          className="max-w-full max-h-full object-contain grayscale group-hover:grayscale-0 opacity-60 group-hover:opacity-100 transition-all duration-300"
+          onError={() => setImgError(true)}
+        />
+      ) : (
+        <span className="text-sm font-bold text-muted-foreground group-hover:text-primary transition-colors tracking-wide">
+          {partner.name}
+        </span>
+      )}
+    </div>
+  );
+};
 
 const PartnersSection = () => {
   return (
