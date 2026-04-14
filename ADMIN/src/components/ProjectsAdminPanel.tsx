@@ -17,6 +17,15 @@ interface Project {
   is_external: boolean;
   is_featured: boolean;
   display_order: number;
+  slug?: string;
+  excerpt?: string;
+  why_it_matters?: string;
+  what_we_do?: string[];
+  key_solutions?: string;
+  who_it_serves?: string;
+  impact?: string[];
+  partners?: string[];
+  call_to_action?: string;
   created_at?: string;
   updated_at?: string;
 }
@@ -42,10 +51,15 @@ const ProjectsAdminPanel = () => {
     is_external: false,
     is_featured: false,
     display_order: 0,
-    has_subpage: false,
-    excerpt: '',
-    full_content: '',
     slug: '',
+    excerpt: '',
+    why_it_matters: '',
+    what_we_do: ['', '', ''],
+    key_solutions: '',
+    who_it_serves: '',
+    impact: ['', '', ''],
+    partners: [''],
+    call_to_action: '',
   });
 
   useEffect(() => {
@@ -98,10 +112,15 @@ const ProjectsAdminPanel = () => {
       is_external: false,
       is_featured: false,
       display_order: projects.length + 1,
-      has_subpage: false,
-      excerpt: '',
-      full_content: '',
       slug: '',
+      excerpt: '',
+      why_it_matters: '',
+      what_we_do: ['', '', ''],
+      key_solutions: '',
+      who_it_serves: '',
+      impact: ['', '', ''],
+      partners: [''],
+      call_to_action: '',
     });
   };
 
@@ -119,10 +138,15 @@ const ProjectsAdminPanel = () => {
       is_external: project.is_external,
       is_featured: project.is_featured,
       display_order: project.display_order,
-      has_subpage: (project as any).has_subpage || false,
-      excerpt: (project as any).excerpt || '',
-      full_content: (project as any).full_content || '',
-      slug: (project as any).slug || '',
+      slug: project.slug || '',
+      excerpt: project.excerpt || '',
+      why_it_matters: project.why_it_matters || '',
+      what_we_do: project.what_we_do?.length ? project.what_we_do : ['', '', ''],
+      key_solutions: project.key_solutions || '',
+      who_it_serves: project.who_it_serves || '',
+      impact: project.impact?.length ? project.impact : ['', '', ''],
+      partners: project.partners?.length ? project.partners : [''],
+      call_to_action: project.call_to_action || '',
     });
   };
 
@@ -191,10 +215,15 @@ const ProjectsAdminPanel = () => {
       is_external: false,
       is_featured: false,
       display_order: 0,
-      has_subpage: false,
-      excerpt: '',
-      full_content: '',
       slug: '',
+      excerpt: '',
+      why_it_matters: '',
+      what_we_do: ['', '', ''],
+      key_solutions: '',
+      who_it_serves: '',
+      impact: ['', '', ''],
+      partners: [''],
+      call_to_action: '',
     });
   };
 
@@ -350,76 +379,170 @@ const ProjectsAdminPanel = () => {
               />
             </div>
 
-            {/* Has Subpage Toggle */}
+            {/* Slug */}
             <div className="md:col-span-2">
-              <label className="flex items-center gap-3 p-4 border border-border rounded-md bg-muted/30 cursor-pointer hover:bg-muted/50 transition-colors">
+              <label className="block text-sm font-medium mb-2">URL Slug (for subpage link)</label>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">/programs/</span>
                 <input
-                  type="checkbox"
-                  checked={formData.has_subpage}
-                  onChange={(e) => setFormData({ ...formData, has_subpage: e.target.checked })}
-                  className="w-5 h-5"
+                  type="text"
+                  value={formData.slug}
+                  onChange={(e) => setFormData({ ...formData, slug: e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') })}
+                  className="flex-1 px-3 py-2 border border-border rounded-md bg-background"
+                  placeholder="project-name"
                 />
-                <div>
-                  <span className="text-sm font-medium">Create Dedicated Subpage</span>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Enable this to create a detailed project page with full content. The main projects page will show only an excerpt.
-                  </p>
-                </div>
-              </label>
+              </div>
             </div>
 
-            {/* Conditional Subpage Fields */}
-            {formData.has_subpage && (
-              <>
-                {/* Slug */}
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium mb-2">URL Slug</label>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground">/projects/</span>
+            {/* Excerpt */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-2">2. What This Project Is About (Excerpt)</label>
+              <textarea
+                value={formData.excerpt}
+                onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
+                className="w-full px-3 py-2 border border-border rounded-md bg-background"
+                rows={3}
+                placeholder="Concise 2–3 line description: what it does, who it serves, main goal"
+              />
+            </div>
+
+            {/* Why It Matters */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-2">3. Why It Matters</label>
+              <textarea
+                value={formData.why_it_matters}
+                onChange={(e) => setFormData({ ...formData, why_it_matters: e.target.value })}
+                className="w-full px-3 py-2 border border-border rounded-md bg-background"
+                rows={3}
+                placeholder="The problem the project solves and why it is important today"
+              />
+            </div>
+
+            {/* What We Do */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-2">4. What We Do (bullet points)</label>
+              <div className="space-y-2">
+                {formData.what_we_do.map((item, i) => (
+                  <div key={i} className="flex gap-2">
                     <input
                       type="text"
-                      value={formData.slug}
-                      onChange={(e) => setFormData({ ...formData, slug: e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') })}
+                      value={item}
+                      onChange={(e) => {
+                        const updated = [...formData.what_we_do];
+                        updated[i] = e.target.value;
+                        setFormData({ ...formData, what_we_do: updated });
+                      }}
                       className="flex-1 px-3 py-2 border border-border rounded-md bg-background"
-                      placeholder="project-name"
+                      placeholder={`Activity ${i + 1}`}
                     />
+                    {formData.what_we_do.length > 1 && (
+                      <Button variant="ghost" size="sm" onClick={() => setFormData({ ...formData, what_we_do: formData.what_we_do.filter((_, idx) => idx !== i) })}>
+                        <X size={16} />
+                      </Button>
+                    )}
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Auto-generated from title if left empty. Use lowercase letters, numbers, and hyphens only.
-                  </p>
-                </div>
+                ))}
+                <Button variant="outline" size="sm" onClick={() => setFormData({ ...formData, what_we_do: [...formData.what_we_do, ''] })}>
+                  <Plus size={16} className="mr-2" /> Add Activity
+                </Button>
+              </div>
+            </div>
 
-                {/* Excerpt */}
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium mb-2">Excerpt (Short Description)</label>
-                  <textarea
-                    value={formData.excerpt}
-                    onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-                    className="w-full px-3 py-2 border border-border rounded-md bg-background"
-                    rows={3}
-                    placeholder="Brief description shown on project cards (recommended: 150-200 characters)"
-                  />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {formData.excerpt.length} characters
-                  </p>
-                </div>
+            {/* Key Solutions */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-2">5. Key Solutions & Programs</label>
+              <textarea
+                value={formData.key_solutions}
+                onChange={(e) => setFormData({ ...formData, key_solutions: e.target.value })}
+                className="w-full px-3 py-2 border border-border rounded-md bg-background"
+                rows={4}
+                placeholder="Sub-platforms or programs (e.g. Kiongozi Platform — A digital platform connecting youth...)"
+              />
+            </div>
 
-                {/* Full Content */}
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium mb-2">Full Content (Detailed Description)</label>
-                  <textarea
-                    value={formData.full_content}
-                    onChange={(e) => setFormData({ ...formData, full_content: e.target.value })}
-                    className="w-full px-3 py-2 border border-border rounded-md bg-background"
-                    rows={8}
-                    placeholder="Detailed project description shown on the dedicated subpage. Include all relevant information, features, impact, and details."
-                  />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    This content will be displayed on the project's dedicated page
-                  </p>
-                </div>
-              </>
-            )}
+            {/* Who It Serves */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-2">6. Who It Serves</label>
+              <textarea
+                value={formData.who_it_serves}
+                onChange={(e) => setFormData({ ...formData, who_it_serves: e.target.value })}
+                className="w-full px-3 py-2 border border-border rounded-md bg-background"
+                rows={3}
+                placeholder="Primary beneficiaries: youth aged 18–35, youth-led organizations, marginalized groups..."
+              />
+            </div>
+
+            {/* Impact */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-2">7. Impact (bullet points)</label>
+              <div className="space-y-2">
+                {formData.impact.map((item, i) => (
+                  <div key={i} className="flex gap-2">
+                    <input
+                      type="text"
+                      value={item}
+                      onChange={(e) => {
+                        const updated = [...formData.impact];
+                        updated[i] = e.target.value;
+                        setFormData({ ...formData, impact: updated });
+                      }}
+                      className="flex-1 px-3 py-2 border border-border rounded-md bg-background"
+                      placeholder={`Impact outcome ${i + 1}`}
+                    />
+                    {formData.impact.length > 1 && (
+                      <Button variant="ghost" size="sm" onClick={() => setFormData({ ...formData, impact: formData.impact.filter((_, idx) => idx !== i) })}>
+                        <X size={16} />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+                <Button variant="outline" size="sm" onClick={() => setFormData({ ...formData, impact: [...formData.impact, ''] })}>
+                  <Plus size={16} className="mr-2" /> Add Impact
+                </Button>
+              </div>
+            </div>
+
+            {/* Partners */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-2">8. Partners</label>
+              <div className="space-y-2">
+                {formData.partners.map((p, i) => (
+                  <div key={i} className="flex gap-2">
+                    <input
+                      type="text"
+                      value={p}
+                      onChange={(e) => {
+                        const updated = [...formData.partners];
+                        updated[i] = e.target.value;
+                        setFormData({ ...formData, partners: updated });
+                      }}
+                      className="flex-1 px-3 py-2 border border-border rounded-md bg-background"
+                      placeholder="Partner name"
+                    />
+                    {formData.partners.length > 1 && (
+                      <Button variant="ghost" size="sm" onClick={() => setFormData({ ...formData, partners: formData.partners.filter((_, idx) => idx !== i) })}>
+                        <X size={16} />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+                <Button variant="outline" size="sm" onClick={() => setFormData({ ...formData, partners: [...formData.partners, ''] })}>
+                  <Plus size={16} className="mr-2" /> Add Partner
+                </Button>
+              </div>
+            </div>
+
+            {/* Call to Action */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-2">9. Call to Action</label>
+              <textarea
+                value={formData.call_to_action}
+                onChange={(e) => setFormData({ ...formData, call_to_action: e.target.value })}
+                className="w-full px-3 py-2 border border-border rounded-md bg-background"
+                rows={2}
+                placeholder="e.g. Join — Become part of the movement. Partner — Collaborate with us."
+              />
+            </div>
 
             {/* Highlights */}
             <div className="md:col-span-2">
