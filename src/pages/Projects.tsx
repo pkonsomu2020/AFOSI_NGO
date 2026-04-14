@@ -34,24 +34,88 @@ interface Project {
   slug?: string;
 }
 
+const staticProjects: Project[] = [
+  {
+    id: "we-lead",
+    title: "We Lead",
+    description: "Strengthening the influence and position of young women whose sexual and reproductive health and rights are neglected the most.",
+    image_url: "/PROJECT-IMAGES/welead-project.jpg",
+    icon: "Users",
+    beneficiaries: "500+",
+    duration: "Ongoing",
+    highlights: ["Young women living with HIV", "Women with disabilities", "Displacement-affected youth"],
+    link: "/programs/we-lead",
+    is_external: false,
+    is_featured: true,
+    display_order: 1,
+  },
+  {
+    id: "math-project",
+    title: "The M.A.T.H Project",
+    description: "Mazingira, Afya, Tumaini, na Haki yetu — Education for Sustainable Development in 60 APBET schools in Kibera and Mukuru.",
+    image_url: "/afosi_pad2.jpg",
+    icon: "Leaf",
+    beneficiaries: "10,000+",
+    duration: "2025–2028",
+    highlights: ["60 APBET schools targeted", "ESD Policy advocacy", "Youth climate innovation"],
+    link: "/programs/math-project",
+    is_external: false,
+    is_featured: true,
+    display_order: 2,
+  },
+  {
+    id: "sheria-ya-vijana",
+    title: "Sheria Ya Vijana",
+    description: "Empowering youth in Nairobi and Kwale to lead Kenya's twin green and digital transition through skills, leadership, and policy engagement.",
+    image_url: "/afosi_pad3.jpg",
+    icon: "Rocket",
+    beneficiaries: "5,875",
+    duration: "Ongoing",
+    highlights: ["Kiongozi AI platform", "Green & digital apprenticeships", "Youth-led enterprise grants"],
+    link: "/programs/sheria-ya-vijana",
+    is_external: false,
+    is_featured: true,
+    display_order: 3,
+  },
+  {
+    id: "yoma",
+    title: "YOMA — Youth Agency Marketplace",
+    description: "A digital marketplace creating pathways to improve youth employability through learning, earning, and climate innovation across Kenya.",
+    image_url: "/afosi_pad1.jpg",
+    icon: "Lightbulb",
+    beneficiaries: "69,000",
+    duration: "Ongoing",
+    highlights: ["Youth Climate Innovation Challenge", "Digital skills pathways", "YOMA Hub in Nairobi"],
+    link: "/programs/yoma",
+    is_external: false,
+    is_featured: true,
+    display_order: 4,
+  },
+  {
+    id: "youth-voices-lab",
+    title: "Youth Voices Lab",
+    description: "Unheard to Influential — harnessing AI and digital advocacy to give voice to marginalized young women in Mukuru, Nairobi.",
+    image_url: "/afosi_pad.jpg",
+    icon: "Users",
+    beneficiaries: "150+",
+    duration: "12 months",
+    highlights: ["AI-driven storytelling tools", "Policy advocacy training", "15 intervention countries"],
+    link: "/programs/youth-voices-lab",
+    is_external: false,
+    is_featured: true,
+    display_order: 5,
+  },
+];
+
 const Projects = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [projects, setProjects] = useState<Project[]>(staticProjects);
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const response = await projectsAPI.getAll();
-        setProjects(response.data || []);
-      } catch (error) {
-        console.error('Error fetching projects:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProjects();
+    projectsAPI.getAll()
+      .then(r => { if (r.data?.length) setProjects(r.data); })
+      .catch(() => {});
   }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -98,12 +162,7 @@ const Projects = () => {
       {/* Projects Grid */}
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4 max-w-7xl">
-          {loading ? (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">Loading projects...</p>
-            </div>
-          ) : (
-            <div className="grid sm:grid-cols-2 gap-6 sm:gap-8">
+          <div className="grid sm:grid-cols-2 gap-6 sm:gap-8">
               {projects.map((project, i) => {
                 const Icon = iconMap[project.icon] || Lightbulb;
                 return (
@@ -191,7 +250,6 @@ const Projects = () => {
                 );
               })}
             </div>
-          )}
 
           {/* CTA Section */}
           <motion.div

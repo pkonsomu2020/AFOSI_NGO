@@ -1,0 +1,70 @@
+PROJECT WRITE-UP
+YOMA
+Youth Agency Marketplace
+1. Project Title
+YOMA - Youth Agency Marketplace
+
+2. What This Project Is About
+YOMA is a digital marketplace that opens up a world of opportunities to young people. It is a partnership ecosystem, enabled by technology, that creates pathways to improve youth employability. Through a unique digital identity, young people seamlessly navigate opportunities to learn, earn, and impact their environment and communities.
+
+Implemented in Kenya by STEM Impact Center Kenya in consortium with Fablab (Kisumu) and Tech Kidz Africa (Mombasa), and funded by UNICEF under the Generation Unlimited (GenU) initiative, YOMA Kenya is being scaled to reach 69,000 young people across Nairobi, Kisumu, and Mombasa. A key solution under YOMA is the Youth Climate Innovation Challenge (YCIC) - a structured incubation programme targeting youth-led climate innovations, particularly from informal settlements.
+
+3. Why It Matters
+Kenya's youth population constitutes 76.2% of the total population, yet 64.4% of young people face unemployment. Young people - especially those in informal settlements and underserved communities - are locked out of digital, economic, and climate-smart opportunities due to a fragmented development landscape, limited access to skills training, and insufficient support for entrepreneurship.
+
+Informal settlements in Kenya's urban centres face compounding climate vulnerabilities: poor waste management, water scarcity, energy insecurity, flooding, and inadequate sanitation. Young people in these communities are disproportionately affected yet are often excluded from decision-making and innovation spaces. YOMA disrupts this by placing youth at the centre - equipping them with digital identities, skills, climate innovation support, and connections to real opportunities.
+
+4. What We Do
+? Establish and operate a youth-led YOMA Hub in Kenya, serving as a central coordination point for skills development, mentorship, entrepreneurship, and climate innovation.
+? Scale the YOMA digital platform to engage 69,000 young people across Nairobi, Kisumu, and Mombasa with tailored learning and earning opportunities.
+? Facilitate digital skills training for 7,000 young people through structured pathways aligned to employment, entrepreneurship, and the green economy.
+? Develop and advertise 2,000 job and internship opportunities, linking at least 500 youth to meaningful employment through the YOMA ecosystem.
+? Design and run the Youth Climate Innovation Challenge (YCIC) - a three-stage innovation programme identifying, incubating, and funding the most promising youth-led climate solutions from informal settlements.
+? Provide mentorship, capacity building, and seed funding to finalists of the YCIC, supporting their journey from idea to implementation.
+? Onboard at least 10 new strategic partners to enrich the YOMA ecosystem with diverse resources, opportunities, and networks.
+
+5. Key Solutions and Programmes
+Youth Climate Innovation Challenge (YCIC)
+The YCIC is YOMA's flagship climate solution, co-created through a participatory session held on 7th February 2025 with 31 youth innovators, climate activists, government agencies, and development partners. The challenge is structured in three stages:
+
+StageActivityOutcomeStage 1Online Training & Capacity Support; Submission of business casesTop 30 innovators selected from 200 validated applicantsStage 2Intensive Bootcamps, 1:1 Mentoring & Prototype RefinementTop 30 progress through workshops and prototypingStage 3Incubation, Acceleration & Seed FundingFinal 5 most promising innovators incubated and funded
+The YCIC focuses on five thematic areas identified through the co-creation session:
+? Flood Resilience and Urban Drainage
+? Sustainable Waste Management and Circular Economy
+? Water, Sanitation, and Hygiene (WASH) Solutions
+? Renewable Energy and Sustainable Infrastructure
+? Climate Education and Community Awareness
+
+YOMA Digital Platform
+The YOMA digital platform connects youth to learning, earning, and impact opportunities through a unique digital identity. It hosts skills pathways, job listings, mentorship programmes, and innovation challenges. The platform is being scaled from 29,000 to 69,000 users in Kenya, with an AI-powered job matching system, a localized incentive and rewards structure, and career guidance tools.
+
+Youth-Led YOMA Hub
+A physical and virtual hybrid hub based in Nairobi (with satellite presence in Kisumu and Mombasa) serving as the operational anchor of the YOMA ecosystem in Kenya. The hub offers co-working spaces, mentorship, training, and a collaborative environment for youth-driven projects - including the YCIC incubation programme.
+
+Digital Skills Pathways
+Three structured pathways supporting youth in accessing employment and entrepreneurship: a Digital Skills Pathway (online freelancing, coding, BPO), a Public Sector Pathway (government internships and placements), and a Climate Pathway (green jobs, tree nurseries, eco-entrepreneurship aligned to Kenya's 1 Million Green Army initiative).
+
+6. Who It Serves
+? Young people aged 15-35 in Nairobi, Kisumu, and Mombasa - with at least 20% of climate innovation participants drawn from informal settlements.
+? Young women and marginalized youth, with gender equity mainstreamed across all programme components.
+? Youth-led organisations, social innovators, and aspiring entrepreneurs in the green and digital economy.
+? Young people not in education, employment, or training (NEET), including those in informal settlements facing climate vulnerability.
+
+7. Impact
+TargetOutcome69,000 Youth RegisteredExpanded access to digital skills, jobs, and climate opportunities7,000 Digitally TrainedYouth equipped for employment and entrepreneurship in the digital economy2,000 Job OpportunitiesDiverse job and internship listings across sectors on the YOMA platform500 Youth PlacedYoung people linked to tangible employment or internship roles200 Climate InnovationsYouth climate solutions shortlisted and supported through the YCIC5 Innovations IncubatedMost promising climate innovations receiving seed funding and acceleration10 New PartnersEcosystem partners onboarded to expand youth opportunities
+By equipping youth with digital identities, marketable skills, and climate innovation support, YOMA contributes to Kenya's National Climate Change Action Plan (NCCAP), the Bottom-Up Economic Transformation Agenda (BETA), and the global Generation Unlimited mission of reaching the world's 1.8 billion young people with opportunities.
+
+8. Partners
+UNICEF   •   STEM Impact Center Kenya   •   Fablab Kisumu   •   Tech Kidz Africa
+
+NETFUND   •   KeNIA   •   GIZ   •   Kenya Girl Guides Association   •   Kenya Scouts Association
+
+State Dept. for Youth Affairs   •   State Dept. for Environment & Climate Change   •   KIRDI   •   Rockefeller Foundation
+
+9. Call to Action
+JOIN
+Register on the YOMA platform and unlock your futurePARTNER
+Collaborate with YOMA to expand youth impact across KenyaINNOVATE
+Submit your climate innovation through the YCIC challenge
+STEM Impact Center Kenya  |  12 Masaba Rd, Upperhill, Nairobi
+Prepared by: Eric Nyamwaro  |  STEM Impact Center Kenya

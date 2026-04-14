@@ -15,6 +15,10 @@ import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
 import WeLeadProject from "./pages/programs/WeLeadProject";
 import RoboticsCoding from "./pages/programs/RoboticsCoding";
+import MathProject from "./pages/programs/MathProject";
+import SheriaYaVijana from "./pages/programs/SheriaYaVijana";
+import YomaProject from "./pages/programs/YomaProject";
+import YouthVoicesLab from "./pages/programs/YouthVoicesLab";
 import Team from "./pages/Team";
 import NotFound from "./pages/NotFound";
 
@@ -40,6 +44,10 @@ const App = () => (
             <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/programs/we-lead" element={<WeLeadProject />} />
             <Route path="/programs/robotics-coding" element={<RoboticsCoding />} />
+            <Route path="/programs/math-project" element={<MathProject />} />
+            <Route path="/programs/sheria-ya-vijana" element={<SheriaYaVijana />} />
+            <Route path="/programs/yoma" element={<YomaProject />} />
+            <Route path="/programs/youth-voices-lab" element={<YouthVoicesLab />} />
             <Route path="/team" element={<Team />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
