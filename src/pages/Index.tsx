@@ -1,5 +1,6 @@
 import { useOptimizedScroll } from "@/hooks/useOptimizedScroll";
 import Navbar from "@/components/Navbar";
+import PageLoader from "@/components/PageLoader";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
 import PillarsSection from "@/components/PillarsSection";
@@ -17,6 +18,7 @@ const Index = () => {
   
   return (
     <div className="min-h-screen bg-background">
+      <PageLoader />
       <Navbar />
       <HeroSection />
       <AboutSection />
