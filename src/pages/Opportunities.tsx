@@ -710,11 +710,15 @@ const Opportunities = () => {
     }
   };
 
-  // Memoize filtered opportunities to prevent unnecessary recalculations
+  // Filter out expired/closed opportunities automatically, then apply type filter
   const filtered = useMemo(() => {
+    const active = opportunities.filter((o) => {
+      const status = getOpportunityStatus(o.deadline, o.manuallyDisabled);
+      return status === 'open';
+    });
     return activeFilter === "all"
-      ? opportunities
-      : opportunities.filter((o) => o.type === activeFilter);
+      ? active
+      : active.filter((o) => o.type === activeFilter);
   }, [activeFilter, opportunities]);
 
   if (loading) {
@@ -815,6 +819,29 @@ const Opportunities = () => {
             {filtered.length} {filtered.length === 1 ? "opportunity" : "opportunities"} available
           </span>
         </div>
+
+        {/* Empty state */}
+        {filtered.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center py-20 bg-card rounded-2xl border border-border"
+          >
+            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-5">
+              <Briefcase size={28} className="text-muted-foreground" />
+            </div>
+            <h3 className="text-xl font-bold text-foreground mb-2">No Open Positions Right Now</h3>
+            <p className="text-muted-foreground max-w-md mx-auto text-sm leading-relaxed">
+              There are no job openings at the moment. We regularly post new opportunities — check back soon or follow us on social media to be the first to know.
+            </p>
+            <a
+              href="/#contact"
+              className="inline-flex items-center gap-2 mt-6 px-6 py-3 bg-primary text-white rounded-full font-semibold text-sm hover:bg-orange-600 transition-colors"
+            >
+              Send Us Your CV
+            </a>
+          </motion.div>
+        )}
 
         {/* Cards */}
         <div className="space-y-4 sm:space-y-6">
