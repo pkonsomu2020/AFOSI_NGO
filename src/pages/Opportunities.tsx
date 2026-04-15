@@ -834,12 +834,6 @@ const Opportunities = () => {
             <p className="text-muted-foreground max-w-md mx-auto text-sm leading-relaxed">
               There are no job openings at the moment. We regularly post new opportunities — check back soon or follow us on social media to be the first to know.
             </p>
-            <a
-              href="/#contact"
-              className="inline-flex items-center gap-2 mt-6 px-6 py-3 bg-primary text-white rounded-full font-semibold text-sm hover:bg-orange-600 transition-colors"
-            >
-              Send Us Your CV
-            </a>
           </motion.div>
         )}
 
