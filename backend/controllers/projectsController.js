@@ -119,41 +119,43 @@ export const createProject = async (req, res) => {
       is_external,
       is_featured,
       display_order,
-      has_subpage,
       excerpt,
-      full_content,
-      slug
+      slug,
+      why_it_matters,
+      what_we_do,
+      key_solutions,
+      who_it_serves,
+      impact,
+      partners,
+      call_to_action
     } = req.body;
 
-    // Validation
     if (!title || !description) {
-      return res.status(400).json({
-        success: false,
-        message: 'Title and description are required'
-      });
+      return res.status(400).json({ success: false, message: 'Title and description are required' });
     }
 
-    // Generate slug if not provided
     const projectSlug = slug || title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 
     const { data, error } = await supabase
       .from('projects')
       .insert([{
-        title,
-        description,
-        image_url,
+        title, description, image_url,
         icon: icon || 'Lightbulb',
-        beneficiaries,
-        duration,
+        beneficiaries, duration,
         highlights: highlights || [],
         link,
         is_external: is_external || false,
         is_featured: is_featured || false,
         display_order: display_order || 0,
-        has_subpage: has_subpage || false,
-        excerpt: excerpt || description.substring(0, 200) + '...',
-        full_content: full_content || description,
-        slug: projectSlug
+        excerpt: excerpt || '',
+        slug: projectSlug,
+        why_it_matters: why_it_matters || null,
+        what_we_do: what_we_do?.filter(Boolean) || [],
+        key_solutions: key_solutions || null,
+        who_it_serves: who_it_serves || null,
+        impact: impact?.filter(Boolean) || [],
+        partners: partners?.filter(Boolean) || [],
+        call_to_action: call_to_action || null,
       }])
       .select()
       .single();
