@@ -58,7 +58,7 @@ const departments = [
     icon: DollarSign,
     members: [
       { name: "Elizabeth Muthoni", role: "Finance Officer", image: "/TEAMS/muthoni.jpg" },
-      { name: "Titus", role: "Finance", image: "/titus.jpeg" },
+      { name: "Titus", role: "Finance", image: "/TEAMS/titus.jpeg" },
     ],
   },
 ];
