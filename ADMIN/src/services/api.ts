@@ -50,6 +50,7 @@ export const authAPI = {
 export const opportunitiesAPI = {
   getAll: () => fetchAPI('/opportunities'),
   getById: (id: string) => fetchAPI(`/opportunities/${id}`),
+  getBySlug: (slug: string) => fetchAPI(`/opportunities/slug/${slug}`),
   create: (data: {
     title: string;
     type: 'employment' | 'consulting';
@@ -57,6 +58,9 @@ export const opportunitiesAPI = {
     location: string;
     duration: string;
     deadline: string;
+    slug?: string;
+    full_description?: string;
+    apply_link?: string;
   }) => fetchAPI('/opportunities', { method: 'POST', body: JSON.stringify(data) }),
   update: (id: string, data: Partial<{
     title: string;
@@ -66,6 +70,9 @@ export const opportunitiesAPI = {
     duration: string;
     deadline: string;
     manually_disabled: boolean;
+    slug: string;
+    full_description: string;
+    apply_link: string;
   }>) => fetchAPI(`/opportunities/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   delete: (id: string) => fetchAPI(`/opportunities/${id}`, { method: 'DELETE' }),
   toggleStatus: (id: string) => fetchAPI(`/opportunities/${id}/toggle`, { method: 'PATCH' }),

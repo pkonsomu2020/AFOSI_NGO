@@ -47,6 +47,30 @@ export const getAllOpportunities = async (req, res) => {
   }
 };
 
+// Get single opportunity by slug
+export const getOpportunityBySlug = async (req, res) => {
+  try {
+    const { slug } = req.params;
+
+    const { data, error } = await supabase
+      .from('opportunities')
+      .select('*')
+      .eq('slug', slug)
+      .single();
+
+    if (error) throw error;
+
+    if (!data) {
+      return res.status(404).json({ success: false, message: 'Opportunity not found' });
+    }
+
+    res.json({ success: true, data });
+  } catch (error) {
+    console.error('Error fetching opportunity by slug:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch opportunity', error: error.message });
+  }
+};
+
 // Get single opportunity
 export const getOpportunityById = async (req, res) => {
   try {
@@ -81,10 +105,14 @@ export const getOpportunityById = async (req, res) => {
   }
 };
 
+// Helper: generate slug from title
+const generateSlug = (title) =>
+  title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').trim();
+
 // Create new opportunity
 export const createOpportunity = async (req, res) => {
   try {
-    const { title, type, description, location, duration, deadline } = req.body;
+    const { title, type, description, location, duration, deadline, full_description, apply_link, slug } = req.body;
 
     // Validation
     if (!title || !type || !description || !location || !duration || !deadline) {
@@ -94,12 +122,14 @@ export const createOpportunity = async (req, res) => {
       });
     }
 
-    if (!['employment', 'consulting'].includes(type)) {
+    if (!['employment', 'consulting', 'volunteering'].includes(type)) {
       return res.status(400).json({
         success: false,
-        message: 'Type must be either employment or consulting'
+        message: 'Type must be either employment, consulting, or volunteering'
       });
     }
+
+    const finalSlug = slug || generateSlug(title);
 
     const { data, error } = await supabase
       .from('opportunities')
@@ -110,6 +140,9 @@ export const createOpportunity = async (req, res) => {
         location,
         duration,
         deadline,
+        full_description: full_description || null,
+        apply_link: apply_link || null,
+        slug: finalSlug,
         manually_disabled: false
       }])
       .select()
@@ -136,7 +169,7 @@ export const createOpportunity = async (req, res) => {
 export const updateOpportunity = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, type, description, location, duration, deadline, manually_disabled } = req.body;
+    const { title, type, description, location, duration, deadline, manually_disabled, full_description, apply_link, slug } = req.body;
 
     const updateData = {};
     if (title !== undefined) updateData.title = title;
@@ -146,6 +179,9 @@ export const updateOpportunity = async (req, res) => {
     if (duration !== undefined) updateData.duration = duration;
     if (deadline !== undefined) updateData.deadline = deadline;
     if (manually_disabled !== undefined) updateData.manually_disabled = manually_disabled;
+    if (full_description !== undefined) updateData.full_description = full_description;
+    if (apply_link !== undefined) updateData.apply_link = apply_link;
+    if (slug !== undefined) updateData.slug = slug;
 
     const { data, error } = await supabase
       .from('opportunities')

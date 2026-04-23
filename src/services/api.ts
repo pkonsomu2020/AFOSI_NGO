@@ -30,8 +30,8 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
 // Opportunities API
 export const opportunitiesAPI = {
   getAll: () => fetchAPI('/opportunities'),
-  
   getById: (id: string) => fetchAPI(`/opportunities/${id}`),
+  getBySlug: (slug: string) => fetchAPI(`/opportunities/slug/${slug}`),
 };
 
 // Gallery API

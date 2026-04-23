@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   MapPin, Clock, CalendarDays, ArrowLeft, Briefcase, Users, 
-  ChevronDown, ChevronUp, FileText, CheckCircle2, AlertCircle,
+  FileText, CheckCircle2, AlertCircle,
   Building2, Shield, Lock
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,7 @@ import {
 } from "@/utils/opportunityHelpers";
 import { opportunitiesAPI } from "@/services/api";
 
-type OpportunityType = "consulting" | "employment";
+type OpportunityType = "consulting" | "employment" | "volunteering";
 type OpportunityStatus = "open" | "closed";
 
 interface OpportunityData {
@@ -30,6 +30,7 @@ interface OpportunityData {
   duration: string;
   deadline: string;
   manuallyDisabled: boolean;
+  slug?: string;
 }
 
 interface Opportunity extends OpportunityData {
@@ -634,6 +635,7 @@ opportunities[3].fullContent = <AssistantFinanceContent />;
 const typeConfig: Record<OpportunityType, { label: string; color: string }> = {
   consulting: { label: "Consulting", color: "bg-secondary text-secondary-foreground" },
   employment: { label: "Employment", color: "bg-primary text-primary-foreground" },
+  volunteering: { label: "Volunteering/Mentorship", color: "bg-green-500 text-white" },
 };
 
 const statusConfig: Record<OpportunityStatus, { label: string; color: string; icon: React.ReactNode }> = {
@@ -653,11 +655,11 @@ const filters: { value: "all" | OpportunityType; label: string }[] = [
   { value: "all", label: "All Opportunities" },
   { value: "employment", label: "Employment" },
   { value: "consulting", label: "Consulting" },
+  { value: "volunteering", label: "Volunteering/Mentorship" },
 ];
 
 const Opportunities = () => {
   const [activeFilter, setActiveFilter] = useState<"all" | OpportunityType>("all");
-  const [expandedId, setExpandedId] = useState<string | null>(null);
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -683,6 +685,7 @@ const Opportunities = () => {
         duration: opp.duration,
         deadline: opp.deadline,
         manuallyDisabled: opp.manually_disabled,
+        slug: opp.slug,
         fullContent: getFullContent(opp.id)
       }));
       
@@ -845,8 +848,7 @@ const Opportunities = () => {
               const status = getOpportunityStatus(opp.deadline, opp.manuallyDisabled);
               const statusConf = statusConfig[status];
               const deadlineInfo = getDeadlineStatus(opp.deadline);
-              const isExpanded = expandedId === opp.id;
-              const canExpand = status === 'open'; // Only allow expanding if opportunity is open
+              const canExpand = status === 'open';
 
               return (
                 <motion.div
@@ -951,20 +953,19 @@ const Opportunities = () => {
                       </div>
                     </div>
 
-                    {/* Expandable details - Only for open opportunities */}
+                    {/* Action buttons */}
                     <div className="flex flex-wrap gap-2 sm:gap-3">
                       {canExpand ? (
                         <>
-                          <button
-                            onClick={() => setExpandedId(isExpanded ? null : opp.id)}
+                          <Link
+                            to={`/opportunities/${opp.slug || opp.id}`}
                             className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg text-sm font-semibold transition-all"
                           >
-                            <span className="hidden xs:inline">{isExpanded ? "Hide Details" : "View Full Details"}</span>
-                            <span className="xs:hidden">{isExpanded ? "Hide" : "Details"}</span>
-                            {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                          </button>
+                            <span className="hidden xs:inline">View Full Details</span>
+                            <span className="xs:hidden">Details</span>
+                          </Link>
                           <Button variant="hero" size="lg" className="text-sm sm:text-base" asChild>
-                            <a href={`mailto:info@afosi.org?subject=Application: ${opp.title}`}>
+                            <a href={opp.slug ? `/opportunities/${opp.slug}` : `mailto:info@afosi.org?subject=Application: ${opp.title}`}>
                               Apply Now
                             </a>
                           </Button>
@@ -979,45 +980,6 @@ const Opportunities = () => {
                       )}
                     </div>
 
-                    <AnimatePresence>
-                      {isExpanded && canExpand && (
-                        <motion.div
-                          initial={{ opacity: 0, scaleY: 0.95 }}
-                          animate={{ opacity: 1, scaleY: 1 }}
-                          exit={{ opacity: 0, scaleY: 0.95 }}
-                          transition={{ duration: 0.3, ease: "easeInOut" }}
-                          style={{ 
-                            transformOrigin: 'top',
-                            willChange: 'transform, opacity'
-                          }}
-                          className="overflow-hidden"
-                        >
-                          <div className="border-t border-border mt-4 sm:mt-6 pt-4 sm:pt-6">
-                            <div className="text-sm sm:text-base">
-                              {opp.fullContent}
-                            </div>
-                            
-                            <div className="mt-6 sm:mt-8 bg-primary/5 rounded-xl p-4 sm:p-6 border border-primary/20">
-                              <h4 className="text-base sm:text-lg font-heading font-bold text-foreground mb-3">How to Apply</h4>
-                              <p className="text-sm sm:text-base text-muted-foreground mb-4">
-                                Interested candidates meeting the above requirements should submit their application via email:
-                              </p>
-                              <div className="space-y-2 mb-4 text-sm">
-                                <p><strong>Deadline:</strong> {formatDeadline(opp.deadline)}</p>
-                                <p><strong>Days Remaining:</strong> {getDaysUntilDeadline(opp.deadline)} days</p>
-                                <p><strong>Submit to:</strong> info@afosi.org</p>
-                                <p className="text-muted-foreground">Include your CV, cover letter, and references</p>
-                              </div>
-                              <Button variant="hero" size="lg" className="w-full sm:w-auto" asChild>
-                                <a href={`mailto:info@afosi.org?subject=Application: ${opp.title}`}>
-                                  Submit Application
-                                </a>
-                              </Button>
-                            </div>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
                   </div>
                 </motion.div>
               );

@@ -17,12 +17,15 @@ import {
 interface OpportunityData {
   id: string;
   title: string;
-  type: "consulting" | "employment";
+  type: "consulting" | "employment" | "volunteering";
   description: string;
   location: string;
   duration: string;
   deadline: string;
   manually_disabled: boolean;
+  slug?: string;
+  full_description?: string;
+  apply_link?: string;
 }
 
 const OpportunitiesAdminPanel = () => {
@@ -83,6 +86,9 @@ const OpportunitiesAdminPanel = () => {
           location: formData.location || '',
           duration: formData.duration || '',
           deadline: formData.deadline || '',
+          slug: formData.slug || '',
+          full_description: formData.full_description || '',
+          apply_link: formData.apply_link || '',
         });
         setOpportunities([response.data, ...opportunities]);
         setIsAddingNew(false);
@@ -189,7 +195,11 @@ const OpportunitiesAdminPanel = () => {
                   <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
                     <div className="flex-1">
                       <div className="flex flex-wrap items-center gap-2 mb-2">
-                        <Badge className={opp.type === 'consulting' ? 'bg-secondary' : 'bg-primary'}>
+                        <Badge className={
+                          opp.type === 'consulting' ? 'bg-secondary' : 
+                          opp.type === 'volunteering' ? 'bg-green-500 text-white' : 
+                          'bg-primary'
+                        }>
                           {opp.type}
                         </Badge>
                         <Badge className={status === 'open' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}>
@@ -276,73 +286,152 @@ const OpportunityForm = ({
   onSave: () => void;
   onCancel: () => void;
 }) => {
+  // Auto-generate slug from title
+  const generateSlug = (title: string) =>
+    title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').trim();
+
+  const handleTitleChange = (title: string) => {
+    const updates: Partial<OpportunityData> = { ...data, title };
+    // Only auto-fill slug if it hasn't been manually edited
+    if (!data.slug || data.slug === generateSlug(data.title || '')) {
+      updates.slug = generateSlug(title);
+    }
+    onChange(updates);
+  };
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
+      {/* Row 1: Title + Type */}
       <div className="grid md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-semibold mb-2">Title</label>
+          <label className="block text-sm font-semibold mb-2">Title *</label>
           <input
             type="text"
             value={data.title || ''}
-            onChange={(e) => onChange({ ...data, title: e.target.value })}
-            className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary"
-            placeholder="Job Title"
+            onChange={(e) => handleTitleChange(e.target.value)}
+            className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary bg-background"
+            placeholder="e.g. District Coordinator — CGP Project"
           />
         </div>
         <div>
-          <label className="block text-sm font-semibold mb-2">Type</label>
+          <label className="block text-sm font-semibold mb-2">Type *</label>
           <select
             value={data.type || 'employment'}
-            onChange={(e) => onChange({ ...data, type: e.target.value as "consulting" | "employment" })}
-            className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary"
+            onChange={(e) => onChange({ ...data, type: e.target.value as "consulting" | "employment" | "volunteering" })}
+            className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary bg-background"
           >
             <option value="employment">Employment</option>
             <option value="consulting">Consulting</option>
+            <option value="volunteering">Volunteering/Mentorship</option>
           </select>
         </div>
       </div>
+
+      {/* Row 2: Short Description */}
       <div>
-        <label className="block text-sm font-semibold mb-2">Description</label>
+        <label className="block text-sm font-semibold mb-2">Short Description * <span className="text-muted-foreground font-normal">(shown on listing card)</span></label>
         <textarea
           value={data.description || ''}
           onChange={(e) => onChange({ ...data, description: e.target.value })}
-          className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary"
-          rows={3}
-          placeholder="Brief description"
+          className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary bg-background"
+          rows={2}
+          placeholder="Brief one-line summary of the role"
         />
       </div>
+
+      {/* Row 3: Location, Duration, Deadline */}
       <div className="grid md:grid-cols-3 gap-4">
         <div>
-          <label className="block text-sm font-semibold mb-2">Location</label>
+          <label className="block text-sm font-semibold mb-2">Location *</label>
           <input
             type="text"
             value={data.location || ''}
             onChange={(e) => onChange({ ...data, location: e.target.value })}
-            className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary"
+            className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary bg-background"
             placeholder="Nairobi, Kenya"
           />
         </div>
         <div>
-          <label className="block text-sm font-semibold mb-2">Duration</label>
+          <label className="block text-sm font-semibold mb-2">Duration *</label>
           <input
             type="text"
             value={data.duration || ''}
             onChange={(e) => onChange({ ...data, duration: e.target.value })}
-            className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary"
-            placeholder="Full-time"
+            className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary bg-background"
+            placeholder="Full-time / 3 months"
           />
         </div>
         <div>
-          <label className="block text-sm font-semibold mb-2">Deadline</label>
+          <label className="block text-sm font-semibold mb-2">Deadline *</label>
           <input
             type="date"
             value={data.deadline || ''}
             onChange={(e) => onChange({ ...data, deadline: e.target.value })}
-            className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary"
+            className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary bg-background"
           />
         </div>
       </div>
-      <div className="flex gap-2 pt-4">
+
+      {/* Row 4: Slug + Apply Link */}
+      <div className="grid md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-semibold mb-2">
+            URL Slug
+            <span className="text-muted-foreground font-normal ml-1">(auto-generated from title)</span>
+          </label>
+          <div className="flex items-center gap-0">
+            <span className="px-3 py-2 bg-muted border border-r-0 border-border rounded-l-lg text-xs text-muted-foreground whitespace-nowrap">
+              /opportunities/
+            </span>
+            <input
+              type="text"
+              value={data.slug || ''}
+              onChange={(e) => onChange({ ...data, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
+              className="flex-1 px-4 py-2 border border-border rounded-r-lg focus:ring-2 focus:ring-primary bg-background text-sm"
+              placeholder="district-coordinator-cgp-project"
+            />
+          </div>
+          <p className="text-xs text-muted-foreground mt-1">
+            Full URL: afosi.org/opportunities/{data.slug || 'your-slug'}
+          </p>
+        </div>
+        <div>
+          <label className="block text-sm font-semibold mb-2">
+            Apply Link
+            <span className="text-muted-foreground font-normal ml-1">(external URL or mailto)</span>
+          </label>
+          <input
+            type="text"
+            value={data.apply_link || ''}
+            onChange={(e) => onChange({ ...data, apply_link: e.target.value })}
+            className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary bg-background"
+            placeholder="https://... or mailto:info@afosi.org"
+          />
+          <p className="text-xs text-muted-foreground mt-1">
+            Leave blank to hide the Apply button
+          </p>
+        </div>
+      </div>
+
+      {/* Row 5: Full Description */}
+      <div>
+        <label className="block text-sm font-semibold mb-2">
+          Full Description
+          <span className="text-muted-foreground font-normal ml-1">(HTML supported — shown on the detail subpage)</span>
+        </label>
+        <textarea
+          value={data.full_description || ''}
+          onChange={(e) => onChange({ ...data, full_description: e.target.value })}
+          className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary bg-background font-mono text-sm"
+          rows={14}
+          placeholder={`Paste the full job description here. HTML is supported, for example:\n\n<h2>About the Role</h2>\n<p>...</p>\n\n<h3>Key Responsibilities</h3>\n<ul>\n  <li>Plan and implement project activities</li>\n  <li>Coordinate with local stakeholders</li>\n</ul>\n\n<h3>Requirements</h3>\n<ul>\n  <li>Bachelor's degree in relevant field</li>\n  <li>3+ years experience</li>\n</ul>`}
+        />
+        <p className="text-xs text-muted-foreground mt-1">
+          Use HTML tags like &lt;h2&gt;, &lt;h3&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;strong&gt; to structure the content.
+        </p>
+      </div>
+
+      <div className="flex gap-2 pt-2">
         <Button onClick={onSave} className="flex items-center gap-2">
           <Save size={16} />
           Save

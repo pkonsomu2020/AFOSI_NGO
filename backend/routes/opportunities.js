@@ -2,6 +2,7 @@ import express from 'express';
 import {
   getAllOpportunities,
   getOpportunityById,
+  getOpportunityBySlug,
   createOpportunity,
   updateOpportunity,
   deleteOpportunity,
@@ -11,6 +12,7 @@ import {
 const router = express.Router();
 
 router.get('/', getAllOpportunities);
+router.get('/slug/:slug', getOpportunityBySlug);
 router.get('/:id', getOpportunityById);
 router.post('/', createOpportunity);
 router.put('/:id', updateOpportunity);
