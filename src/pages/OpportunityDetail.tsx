@@ -39,30 +39,35 @@ const OpportunityDetail = () => {
   useEffect(() => {
     if (!slug) return;
     setLoading(true);
+    console.log('🔍 OpportunityDetail: Looking for opportunity with slug/id:', slug);
     
     // Try to determine if the parameter is a UUID (ID) or a slug
     const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
+    console.log('🔍 OpportunityDetail: Is UUID?', isUUID);
     
     const fetchOpportunity = async () => {
       try {
         let response;
         if (isUUID) {
           // If it's a UUID, use getById
+          console.log('🔍 OpportunityDetail: Fetching by ID:', slug);
           response = await opportunitiesAPI.getById(slug);
         } else {
           // If it's a slug, try getBySlug first
           try {
+            console.log('🔍 OpportunityDetail: Fetching by slug:', slug);
             response = await opportunitiesAPI.getBySlug(slug);
           } catch (slugError) {
             // If slug fails, try treating it as an ID (fallback)
-            console.log('Slug lookup failed, trying as ID:', slugError);
+            console.log('🔍 OpportunityDetail: Slug lookup failed, trying as ID:', slugError);
             response = await opportunitiesAPI.getById(slug);
           }
         }
+        console.log('🔍 OpportunityDetail: Successfully fetched opportunity:', response.data);
         setOpportunity(response.data);
       } catch (error) {
-        console.error('Failed to fetch opportunity:', error);
-        setError("Opportunity not found.");
+        console.error('🔍 OpportunityDetail: Failed to fetch opportunity:', error);
+        setError(`Opportunity not found. Debug info: ${error.message}`);
       } finally {
         setLoading(false);
       }
