@@ -53,7 +53,7 @@ export const opportunitiesAPI = {
   getBySlug: (slug: string) => fetchAPI(`/opportunities/slug/${slug}`),
   create: (data: {
     title: string;
-    type: 'employment' | 'consulting';
+    type: 'employment' | 'consulting' | 'volunteering';
     description: string;
     location: string;
     duration: string;
@@ -64,7 +64,7 @@ export const opportunitiesAPI = {
   }) => fetchAPI('/opportunities', { method: 'POST', body: JSON.stringify(data) }),
   update: (id: string, data: Partial<{
     title: string;
-    type: 'employment' | 'consulting';
+    type: 'employment' | 'consulting' | 'volunteering';
     description: string;
     location: string;
     duration: string;
