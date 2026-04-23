@@ -21,10 +21,26 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { id, action } = req.query;
+    const { id, action, slug } = req.query;
+
+    // GET single opportunity by slug
+    if (req.method === 'GET' && slug) {
+      const { data, error } = await supabase
+        .from('opportunities')
+        .select('*')
+        .eq('slug', slug)
+        .single();
+
+      if (error) throw error;
+
+      return res.status(200).json({
+        success: true,
+        data
+      });
+    }
 
     // GET all opportunities
-    if (req.method === 'GET' && !id) {
+    if (req.method === 'GET' && !id && !slug) {
       const { data, error } = await supabase
         .from('opportunities')
         .select('*')

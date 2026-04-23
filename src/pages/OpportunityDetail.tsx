@@ -43,14 +43,32 @@ const OpportunityDetail = () => {
     // Try to determine if the parameter is a UUID (ID) or a slug
     const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
     
-    const apiCall = isUUID 
-      ? opportunitiesAPI.getById(slug)
-      : opportunitiesAPI.getBySlug(slug);
+    const fetchOpportunity = async () => {
+      try {
+        let response;
+        if (isUUID) {
+          // If it's a UUID, use getById
+          response = await opportunitiesAPI.getById(slug);
+        } else {
+          // If it's a slug, try getBySlug first
+          try {
+            response = await opportunitiesAPI.getBySlug(slug);
+          } catch (slugError) {
+            // If slug fails, try treating it as an ID (fallback)
+            console.log('Slug lookup failed, trying as ID:', slugError);
+            response = await opportunitiesAPI.getById(slug);
+          }
+        }
+        setOpportunity(response.data);
+      } catch (error) {
+        console.error('Failed to fetch opportunity:', error);
+        setError("Opportunity not found.");
+      } finally {
+        setLoading(false);
+      }
+    };
     
-    apiCall
-      .then((res) => setOpportunity(res.data))
-      .catch(() => setError("Opportunity not found."))
-      .finally(() => setLoading(false));
+    fetchOpportunity();
   }, [slug]);
 
   if (loading) {
