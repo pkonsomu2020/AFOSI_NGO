@@ -114,15 +114,14 @@ export const createOpportunity = async (req, res) => {
   try {
     const { 
       title, type, description, location, duration, deadline, 
-      full_description, apply_link, slug,
-      overview, about_role, responsibilities, requirements, benefits, how_to_apply
+      full_description, apply_link, slug
     } = req.body;
 
     // Validation
     if (!title || !type || !description || !location || !duration || !deadline) {
       return res.status(400).json({
         success: false,
-        message: 'All fields are required'
+        message: 'All fields are required: title, type, description, location, duration, deadline'
       });
     }
 
@@ -148,13 +147,6 @@ export const createOpportunity = async (req, res) => {
         apply_link: apply_link || null,
         slug: finalSlug,
         manually_disabled: false,
-        // New structured fields
-        overview: overview || null,
-        about_role: about_role || null,
-        responsibilities: responsibilities || null,
-        requirements: requirements || null,
-        benefits: benefits || null,
-        how_to_apply: how_to_apply || null
       }])
       .select()
       .single();
@@ -182,8 +174,7 @@ export const updateOpportunity = async (req, res) => {
     const { id } = req.params;
     const { 
       title, type, description, location, duration, deadline, manually_disabled, 
-      full_description, apply_link, slug,
-      overview, about_role, responsibilities, requirements, benefits, how_to_apply
+      full_description, apply_link, slug
     } = req.body;
 
     const updateData = {};
@@ -194,16 +185,9 @@ export const updateOpportunity = async (req, res) => {
     if (duration !== undefined) updateData.duration = duration;
     if (deadline !== undefined) updateData.deadline = deadline;
     if (manually_disabled !== undefined) updateData.manually_disabled = manually_disabled;
-    if (full_description !== undefined) updateData.full_description = full_description;
-    if (apply_link !== undefined) updateData.apply_link = apply_link;
+    if (full_description !== undefined) updateData.full_description = full_description || null;
+    if (apply_link !== undefined) updateData.apply_link = apply_link || null;
     if (slug !== undefined) updateData.slug = slug;
-    // New structured fields
-    if (overview !== undefined) updateData.overview = overview;
-    if (about_role !== undefined) updateData.about_role = about_role;
-    if (responsibilities !== undefined) updateData.responsibilities = responsibilities;
-    if (requirements !== undefined) updateData.requirements = requirements;
-    if (benefits !== undefined) updateData.benefits = benefits;
-    if (how_to_apply !== undefined) updateData.how_to_apply = how_to_apply;
 
     const { data, error } = await supabase
       .from('opportunities')
