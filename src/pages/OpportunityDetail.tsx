@@ -19,7 +19,7 @@ import { opportunitiesAPI } from "@/services/api";
 interface OpportunityDetail {
   id: string;
   title: string;
-  type: "consulting" | "employment";
+  type: "consulting" | "employment" | "volunteering";
   description: string;
   location: string;
   duration: string;
@@ -108,9 +108,15 @@ const OpportunityDetail = () => {
           >
             {/* Badges */}
             <div className="flex flex-wrap gap-2 mb-4">
-              <Badge className={opportunity.type === "consulting" ? "bg-secondary text-secondary-foreground" : "bg-primary text-primary-foreground"}>
+              <Badge className={
+                opportunity.type === "consulting" ? "bg-secondary text-secondary-foreground" : 
+                opportunity.type === "volunteering" ? "bg-green-500 text-white" : 
+                "bg-primary text-primary-foreground"
+              }>
                 <Briefcase size={12} className="mr-1" />
-                {opportunity.type === "consulting" ? "Consulting" : "Employment"}
+                {opportunity.type === "consulting" ? "Consulting" : 
+                 opportunity.type === "volunteering" ? "Volunteering/Mentorship" : 
+                 "Employment"}
               </Badge>
               <Badge className={isOpen ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"}>
                 {isOpen ? <CheckCircle2 size={12} className="mr-1" /> : <Lock size={12} className="mr-1" />}

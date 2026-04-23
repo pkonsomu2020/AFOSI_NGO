@@ -398,17 +398,17 @@ const OpportunityForm = ({
         <div>
           <label className="block text-sm font-semibold mb-2">
             Apply Link
-            <span className="text-muted-foreground font-normal ml-1">(external URL or mailto)</span>
+            <span className="text-muted-foreground font-normal ml-1">(Google Forms, Microsoft Forms, or external URL)</span>
           </label>
           <input
             type="text"
             value={data.apply_link || ''}
             onChange={(e) => onChange({ ...data, apply_link: e.target.value })}
             className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary bg-background"
-            placeholder="https://... or mailto:info@afosi.org"
+            placeholder="https://forms.google.com/... or https://forms.office.com/..."
           />
           <p className="text-xs text-muted-foreground mt-1">
-            Leave blank to hide the Apply button
+            Leave blank to hide the Apply button. Use Google Forms, Microsoft Forms, or other external application links.
           </p>
         </div>
       </div>

@@ -56,6 +56,15 @@ export default async function handler(req, res) {
 
     // POST create opportunity
     if (req.method === 'POST') {
+      // Validate opportunity type
+      const { type } = req.body;
+      if (type && !['employment', 'consulting', 'volunteering'].includes(type)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Type must be either employment, consulting, or volunteering'
+        });
+      }
+
       const { data, error } = await supabase
         .from('opportunities')
         .insert([req.body])
@@ -72,6 +81,15 @@ export default async function handler(req, res) {
 
     // PUT update opportunity
     if (req.method === 'PUT' && id) {
+      // Validate opportunity type if provided
+      const { type } = req.body;
+      if (type && !['employment', 'consulting', 'volunteering'].includes(type)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Type must be either employment, consulting, or volunteering'
+        });
+      }
+
       const { data, error } = await supabase
         .from('opportunities')
         .update(req.body)
