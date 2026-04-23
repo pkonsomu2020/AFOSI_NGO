@@ -16,6 +16,170 @@ import {
 } from "@/utils/opportunityHelpers";
 import { opportunitiesAPI } from "@/services/api";
 
+// HTML Content Parser Component
+const HTMLContent = ({ htmlString }: { htmlString: string }) => {
+  // Parse HTML string into React components
+  const parseHTMLToReact = (html: string) => {
+    // Create a temporary div to parse HTML
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    
+    const elements: JSX.Element[] = [];
+    let elementIndex = 0;
+    
+    // Process each child node
+    Array.from(tempDiv.childNodes).forEach((node) => {
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        const element = node as Element;
+        const key = `element-${elementIndex++}`;
+        
+        switch (element.tagName.toLowerCase()) {
+          case 'h1':
+            elements.push(
+              <h1 key={key} className="text-3xl font-bold text-foreground mt-8 mb-6 pb-3 border-b-2 border-primary">
+                {element.textContent}
+              </h1>
+            );
+            break;
+            
+          case 'h2':
+            elements.push(
+              <h2 key={key} className="text-2xl font-bold text-foreground mt-8 mb-4 pb-2 border-b-2 border-primary">
+                {element.textContent}
+              </h2>
+            );
+            break;
+            
+          case 'h3':
+            elements.push(
+              <h3 key={key} className="text-xl font-semibold text-foreground mt-6 mb-3">
+                {element.textContent}
+              </h3>
+            );
+            break;
+            
+          case 'h4':
+            elements.push(
+              <h4 key={key} className="text-lg font-semibold text-foreground mt-4 mb-2">
+                {element.textContent}
+              </h4>
+            );
+            break;
+            
+          case 'p':
+            // Handle paragraphs with potential strong tags
+            const pContent = Array.from(element.childNodes).map((child, idx) => {
+              if (child.nodeType === Node.TEXT_NODE) {
+                return child.textContent;
+              } else if (child.nodeType === Node.ELEMENT_NODE) {
+                const childElement = child as Element;
+                if (childElement.tagName.toLowerCase() === 'strong') {
+                  return <strong key={idx} className="font-semibold text-foreground">{childElement.textContent}</strong>;
+                }
+                return childElement.textContent;
+              }
+              return '';
+            });
+            
+            elements.push(
+              <p key={key} className="text-muted-foreground leading-relaxed mb-4">
+                {pContent}
+              </p>
+            );
+            break;
+            
+          case 'ul':
+            const listItems = Array.from(element.querySelectorAll('li')).map((li, idx) => {
+              // Handle list items with strong tags
+              const liContent = Array.from(li.childNodes).map((child, childIdx) => {
+                if (child.nodeType === Node.TEXT_NODE) {
+                  return child.textContent;
+                } else if (child.nodeType === Node.ELEMENT_NODE) {
+                  const childElement = child as Element;
+                  if (childElement.tagName.toLowerCase() === 'strong') {
+                    return <strong key={childIdx} className="font-semibold text-foreground">{childElement.textContent}</strong>;
+                  }
+                  return childElement.textContent;
+                }
+                return '';
+              });
+              
+              return (
+                <li key={idx} className="flex items-start gap-3 mb-3">
+                  <span className="w-2 h-2 rounded-full bg-primary mt-2 shrink-0" />
+                  <span className="text-muted-foreground leading-relaxed">{liContent}</span>
+                </li>
+              );
+            });
+            
+            elements.push(
+              <ul key={key} className="space-y-2 mb-6">
+                {listItems}
+              </ul>
+            );
+            break;
+            
+          case 'ol':
+            const orderedItems = Array.from(element.querySelectorAll('li')).map((li, idx) => {
+              const liContent = Array.from(li.childNodes).map((child, childIdx) => {
+                if (child.nodeType === Node.TEXT_NODE) {
+                  return child.textContent;
+                } else if (child.nodeType === Node.ELEMENT_NODE) {
+                  const childElement = child as Element;
+                  if (childElement.tagName.toLowerCase() === 'strong') {
+                    return <strong key={childIdx} className="font-semibold text-foreground">{childElement.textContent}</strong>;
+                  }
+                  return childElement.textContent;
+                }
+                return '';
+              });
+              
+              return (
+                <li key={idx} className="flex items-start gap-3 mb-3">
+                  <span className="w-6 h-6 rounded-full bg-primary text-white text-sm font-semibold flex items-center justify-center shrink-0 mt-0.5">
+                    {idx + 1}
+                  </span>
+                  <span className="text-muted-foreground leading-relaxed">{liContent}</span>
+                </li>
+              );
+            });
+            
+            elements.push(
+              <ol key={key} className="space-y-2 mb-6">
+                {orderedItems}
+              </ol>
+            );
+            break;
+            
+          case 'blockquote':
+            elements.push(
+              <blockquote key={key} className="border-l-4 border-primary bg-primary/5 p-4 rounded-r-lg my-6 italic">
+                <p className="text-foreground mb-0">{element.textContent}</p>
+              </blockquote>
+            );
+            break;
+            
+          default:
+            // Fallback for other elements
+            elements.push(
+              <div key={key} className="text-muted-foreground leading-relaxed mb-4">
+                {element.textContent}
+              </div>
+            );
+        }
+      }
+    });
+    
+    return elements;
+  };
+
+  return (
+    <div className="space-y-4">
+      {parseHTMLToReact(htmlString)}
+    </div>
+  );
+};
+
 interface OpportunityDetail {
   id: string;
   title: string;
@@ -214,9 +378,9 @@ const OpportunityDetail = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="opportunity-content prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: opportunity.full_description }}
-          />
+          >
+            <HTMLContent htmlString={opportunity.full_description} />
+          </motion.div>
         ) : (
           <div className="text-center py-16 text-muted-foreground">
             <AlertCircle className="w-10 h-10 mx-auto mb-3 opacity-40" />
