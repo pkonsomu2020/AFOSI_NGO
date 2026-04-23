@@ -32,63 +32,76 @@ interface OpportunityDetail {
   slug: string;
 }
 
-// ─── Section heading keywords → icon + accent color ──────────────────────────
-const SECTION_META: Record<string, { icon: React.ElementType; accent: string }> = {
-  OVERVIEW:                   { icon: FileText,    accent: "border-primary" },
-  "ABOUT THE ROLE":           { icon: Briefcase,   accent: "border-primary" },
-  "ABOUT THE PROJECT":        { icon: Briefcase,   accent: "border-primary" },
-  "ABOUT THE ASSIGNMENT":     { icon: Briefcase,   accent: "border-primary" },
-  "ABOUT US":                 { icon: Users,       accent: "border-primary" },
-  "ABOUT AFOSI":              { icon: Users,       accent: "border-primary" },
-  BACKGROUND:                 { icon: FileText,    accent: "border-primary" },
-  CONTEXT:                    { icon: FileText,    accent: "border-primary" },
-  RESPONSIBILITIES:           { icon: Target,      accent: "border-secondary" },
-  "KEY RESPONSIBILITIES":     { icon: Target,      accent: "border-secondary" },
-  "VOLUNTEER ACTIVITIES":     { icon: Target,      accent: "border-secondary" },
-  "KEY DELIVERABLES":         { icon: Target,      accent: "border-secondary" },
-  "SCOPE OF WORK":            { icon: Target,      accent: "border-secondary" },
-  REQUIREMENTS:               { icon: CheckCircle2, accent: "border-amber-500" },
-  QUALIFICATIONS:             { icon: CheckCircle2, accent: "border-amber-500" },
-  "WHO WE ARE LOOKING FOR":   { icon: Users,       accent: "border-amber-500" },
-  "CONSULTANT REQUIREMENTS":  { icon: CheckCircle2, accent: "border-amber-500" },
-  "REQUIREMENTS & QUALIFICATIONS": { icon: CheckCircle2, accent: "border-amber-500" },
-  BENEFITS:                   { icon: Star,        accent: "border-green-500" },
-  "WHAT WE OFFER":            { icon: Star,        accent: "border-green-500" },
-  "WHAT YOU WILL GAIN":       { icon: Star,        accent: "border-green-500" },
-  "BENEFITS & WHAT WE OFFER": { icon: Star,        accent: "border-green-500" },
-  "HOW TO APPLY":             { icon: ChevronRight, accent: "border-primary" },
-  "APPLICATION PROCESS":      { icon: ChevronRight, accent: "border-primary" },
-  TIMELINE:                   { icon: Clock,       accent: "border-primary" },
-  COMPENSATION:               { icon: Star,        accent: "border-green-500" },
-  REMUNERATION:               { icon: Star,        accent: "border-green-500" },
-};
-
-const KNOWN_HEADINGS = Object.keys(SECTION_META);
+// ─── Icon + accent lookup by keyword ─────────────────────────────────────────
+function getSectionMeta(heading: string): { icon: React.ElementType; accent: string } {
+  const u = heading.toUpperCase();
+  if (/RESPONSIBILIT|ACTIVIT|DELIVERABLE|SCOPE/.test(u)) return { icon: Target,       accent: "border-secondary" };
+  if (/REQUIREMENT|QUALIF|LOOKING FOR|WHO (WE|CAN)/.test(u))  return { icon: CheckCircle2, accent: "border-amber-500" };
+  if (/BENEFIT|OFFER|GAIN|COMPENSATION|REMUNERATION/.test(u)) return { icon: Star,        accent: "border-green-500" };
+  if (/HOW TO APPLY|APPLICATION/.test(u))                      return { icon: ChevronRight, accent: "border-primary" };
+  if (/ABOUT|BACKGROUND|CONTEXT|OVERVIEW/.test(u))             return { icon: Briefcase,   accent: "border-primary" };
+  if (/TIMELINE|SCHEDULE/.test(u))                             return { icon: Clock,       accent: "border-primary" };
+  if (/TEAM|STAFF|PEOPLE|VOLUNTEER/.test(u))                   return { icon: Users,       accent: "border-primary" };
+  return { icon: FileText, accent: "border-primary" };
+}
 
 function toTitleCase(str: string) {
   return str.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
+// ─── Heading detection ────────────────────────────────────────────────────────
+// A line is a heading if it is short, has no sentence-ending punctuation,
+// and is not a bullet point or a long paragraph.
+function isHeadingLine(line: string): boolean {
+  const trimmed = line.trim();
+  if (!trimmed) return false;
+  if (trimmed.length > 80) return false;                        // too long to be a heading
+  if (/^[-•*]\s/.test(trimmed)) return false;                   // bullet point
+  if (/[.!?]$/.test(trimmed)) return false;                     // ends with sentence punctuation
+  if ((trimmed.match(/\s/g) || []).length > 8) return false;    // more than 8 words → paragraph
+  // Must start with a capital letter or be all-caps
+  if (!/^[A-Z]/.test(trimmed)) return false;
+  // Reject lines that look like sentences (contain comma mid-sentence with many words)
+  const wordCount = trimmed.split(/\s+/).length;
+  if (wordCount >= 4 && trimmed.includes(',')) return false;
+  return true;
+}
+
 // ─── Parse plain text into sections ──────────────────────────────────────────
 function parseSections(text: string) {
-  const lines = text.split('\n');
+  const rawLines = text.split('\n');
+  // Pre-pass: collect all lines and mark which are headings
+  // A heading must be followed by non-heading content (prevents treating every short line as heading)
+  const tagged = rawLines.map(raw => ({ raw, line: raw.trim() }));
+
   const sections: { heading: string | null; items: string[] }[] = [];
   let current: { heading: string | null; items: string[] } = { heading: null, items: [] };
 
-  for (const raw of lines) {
-    const line = raw.trim();
+  for (let i = 0; i < tagged.length; i++) {
+    const { line } = tagged[i];
     if (!line) continue;
 
-    const upper = line.toUpperCase().replace(/[:\-–—]+$/, '').trim();
-    const isKnown = KNOWN_HEADINGS.includes(upper);
-    // Also detect ALL-CAPS lines as headings (short, no lowercase)
-    const isAllCaps = line === line.toUpperCase() && line.length > 3 && line.length < 70 && /^[A-Z\s&\/\(\)]+$/.test(line);
+    // Look ahead: next non-empty line
+    let nextLine = '';
+    for (let j = i + 1; j < tagged.length; j++) {
+      if (tagged[j].line) { nextLine = tagged[j].line; break; }
+    }
 
-    if (isKnown || isAllCaps) {
+    const couldBeHeading = isHeadingLine(line);
+    // Confirm as heading only if next line is longer (i.e. it's followed by body text)
+    // OR it's the very last line (edge case) OR next line is also a heading
+    const confirmedHeading = couldBeHeading && (
+      !nextLine ||
+      nextLine.length > line.length ||
+      isHeadingLine(nextLine) ||
+      /^[-•*]\s/.test(nextLine)
+    );
+
+    if (confirmedHeading) {
       if (current.items.length > 0 || current.heading) {
         sections.push(current);
       }
-      current = { heading: upper, items: [] };
+      current = { heading: line.replace(/[:\-–—]+$/, '').trim(), items: [] };
     } else {
       current.items.push(line);
     }
@@ -99,7 +112,7 @@ function parseSections(text: string) {
   return sections;
 }
 
-// ─── Render a single line (bullet or paragraph) ───────────────────────────────
+// ─── Render a single content line ────────────────────────────────────────────
 function renderLine(line: string, idx: number) {
   const isBullet = /^[-•*]\s/.test(line);
   if (isBullet) {
@@ -123,10 +136,10 @@ function renderLine(line: string, idx: number) {
 function renderContent(text: string) {
   const sections = parseSections(text);
 
-  // No headings detected — render as plain paragraphs/bullets
+  // Single block with no headings — plain paragraphs
   if (sections.length === 1 && !sections[0].heading) {
     return (
-      <div className="space-y-3">
+      <div className="space-y-4">
         {sections[0].items.map((line, i) => renderLine(line, i))}
       </div>
     );
@@ -135,40 +148,41 @@ function renderContent(text: string) {
   return (
     <div className="space-y-8">
       {sections.map((section, si) => {
-        const meta = section.heading ? SECTION_META[section.heading] : null;
-        const Icon = meta?.icon;
-        const accent = meta?.accent ?? "border-primary";
+        const { icon: Icon, accent } = section.heading
+          ? getSectionMeta(section.heading)
+          : { icon: FileText, accent: "border-primary" };
 
-        // Determine if items are mostly bullets
         const bulletCount = section.items.filter(l => /^[-•*]\s/.test(l)).length;
-        const mostlyBullets = bulletCount > section.items.length / 2;
+        const mostlyBullets = section.items.length > 0 && bulletCount >= section.items.length / 2;
 
         return (
           <motion.div
             key={si}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: si * 0.05 }}
+            transition={{ duration: 0.3, delay: si * 0.04 }}
           >
+            {/* Section heading */}
             {section.heading && (
               <div className={`flex items-center gap-3 mb-4 pb-3 border-b-2 ${accent}`}>
-                {Icon && <Icon size={20} className="text-primary shrink-0" />}
+                <Icon size={20} className="text-primary shrink-0" />
                 <h2 className="text-xl font-heading font-bold text-foreground">
                   {toTitleCase(section.heading)}
                 </h2>
               </div>
             )}
 
-            {mostlyBullets ? (
-              // Bullet list — styled card
-              <div className="bg-accent/20 rounded-xl p-5 space-y-2">
-                {section.items.map((line, li) => renderLine(line, li))}
-              </div>
-            ) : (
-              // Prose paragraphs
-              <div className="space-y-3 pl-1">
-                {section.items.map((line, li) => renderLine(line, li))}
-              </div>
+            {/* Content */}
+            {section.items.length > 0 && (
+              mostlyBullets ? (
+                <div className="bg-accent/20 rounded-xl p-5 space-y-2.5">
+                  {section.items.map((line, li) => renderLine(line, li))}
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {section.items.map((line, li) => renderLine(line, li))}
+                </div>
+              )
             )}
           </motion.div>
         );
