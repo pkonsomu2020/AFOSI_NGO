@@ -80,7 +80,26 @@ const OpportunitiesAdminPanel = () => {
   const handleSave = async () => {
     try {
       if (editingId) {
-        const response = await opportunitiesAPI.update(editingId, formData);
+        // CRITICAL FIX: Include all structured fields when updating existing opportunities
+        const updateData = {
+          title: formData.title || '',
+          type: formData.type || 'employment',
+          description: formData.description || '',
+          location: formData.location || '',
+          duration: formData.duration || '',
+          deadline: formData.deadline || '',
+          slug: formData.slug || '',
+          full_description: formData.full_description || '',
+          apply_link: formData.apply_link || '',
+          // Include new structured fields
+          overview: formData.overview || '',
+          about_role: formData.about_role || '',
+          responsibilities: formData.responsibilities || '',
+          requirements: formData.requirements || '',
+          benefits: formData.benefits || '',
+          how_to_apply: formData.how_to_apply || '',
+        };
+        const response = await opportunitiesAPI.update(editingId, updateData);
         setOpportunities(opportunities.map(opp => 
           opp.id === editingId ? response.data : opp
         ));
@@ -96,6 +115,13 @@ const OpportunitiesAdminPanel = () => {
           slug: formData.slug || '',
           full_description: formData.full_description || '',
           apply_link: formData.apply_link || '',
+          // Include new structured fields
+          overview: formData.overview || '',
+          about_role: formData.about_role || '',
+          responsibilities: formData.responsibilities || '',
+          requirements: formData.requirements || '',
+          benefits: formData.benefits || '',
+          how_to_apply: formData.how_to_apply || '',
         });
         setOpportunities([response.data, ...opportunities]);
         setIsAddingNew(false);
