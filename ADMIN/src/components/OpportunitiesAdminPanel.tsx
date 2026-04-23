@@ -423,12 +423,37 @@ const OpportunityForm = ({
           value={data.full_description || ''}
           onChange={(e) => onChange({ ...data, full_description: e.target.value })}
           className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary bg-background font-mono text-sm"
-          rows={14}
-          placeholder={`Paste the full job description here. HTML is supported, for example:\n\n<h2>About the Role</h2>\n<p>...</p>\n\n<h3>Key Responsibilities</h3>\n<ul>\n  <li>Plan and implement project activities</li>\n  <li>Coordinate with local stakeholders</li>\n</ul>\n\n<h3>Requirements</h3>\n<ul>\n  <li>Bachelor's degree in relevant field</li>\n  <li>3+ years experience</li>\n</ul>`}
+          rows={16}
+          placeholder={`Use HTML for professional formatting. Example structure:
+
+<h2>About the Role</h2>
+<p>Brief overview of the position...</p>
+
+<h3>Key Responsibilities</h3>
+<ul>
+  <li><strong>Primary Area:</strong> Description of main duties</li>
+  <li><strong>Secondary Area:</strong> Additional responsibilities</li>
+</ul>
+
+<h3>Requirements</h3>
+<ul>
+  <li>Bachelor's degree or equivalent experience</li>
+  <li>2+ years relevant experience</li>
+</ul>
+
+<h3>What We Offer</h3>
+<ul>
+  <li><strong>Impact:</strong> Meaningful work contributing to our mission</li>
+  <li><strong>Growth:</strong> Professional development opportunities</li>
+</ul>`}
         />
-        <p className="text-xs text-muted-foreground mt-1">
-          Use HTML tags like &lt;h2&gt;, &lt;h3&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;strong&gt; to structure the content.
-        </p>
+        <div className="mt-2 text-xs text-muted-foreground space-y-1">
+          <p><strong>HTML Tips:</strong></p>
+          <p>• Use <code>&lt;h2&gt;</code> for main sections, <code>&lt;h3&gt;</code> for subsections</p>
+          <p>• Use <code>&lt;ul&gt;&lt;li&gt;</code> for bullet points, <code>&lt;ol&gt;&lt;li&gt;</code> for numbered lists</p>
+          <p>• Use <code>&lt;strong&gt;</code> for bold text, <code>&lt;p&gt;</code> for paragraphs</p>
+          <p>• Use <code>&lt;blockquote&gt;</code> for highlighted notes or quotes</p>
+        </div>
       </div>
 
       <div className="flex gap-2 pt-2">
