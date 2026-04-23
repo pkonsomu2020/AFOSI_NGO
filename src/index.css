@@ -210,103 +210,186 @@
   }
 }
 
-/* Opportunity Content Styling - Works with dangerouslySetInnerHTML */
-.opportunity-content {
-  @apply text-base leading-7 text-foreground;
+/* Enhanced Prose Styling for Opportunity Content */
+.prose {
+  color: hsl(var(--muted-foreground));
   max-width: none;
 }
 
-.opportunity-content h1 {
-  @apply text-3xl font-bold text-foreground mt-8 mb-6 pb-3;
+.prose h1 {
+  color: hsl(var(--foreground));
+  font-weight: 700;
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
   border-bottom: 2px solid hsl(var(--primary));
+  padding-bottom: 0.75rem;
 }
 
-.opportunity-content h2 {
-  @apply text-2xl font-bold text-foreground mt-8 mb-4 pb-2;
+.prose h2 {
+  color: hsl(var(--foreground));
+  font-weight: 700;
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
   border-bottom: 2px solid hsl(var(--primary));
+  padding-bottom: 0.5rem;
 }
 
-.opportunity-content h3 {
-  @apply text-xl font-semibold text-foreground mt-6 mb-3;
+.prose h3 {
+  color: hsl(var(--foreground));
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
 }
 
-.opportunity-content h4 {
-  @apply text-lg font-semibold text-foreground mt-4 mb-2;
+.prose h4 {
+  color: hsl(var(--foreground));
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
 }
 
-.opportunity-content p {
-  @apply text-muted-foreground leading-relaxed mb-4;
+.prose p {
+  color: hsl(var(--muted-foreground));
+  line-height: 1.75;
+  margin-bottom: 1rem;
 }
 
-.opportunity-content ul {
-  @apply my-4 space-y-2;
+.prose ul {
+  margin: 1rem 0;
+  padding-left: 0;
+  list-style: none;
 }
 
-.opportunity-content ol {
-  @apply my-4 space-y-2;
+.prose ul li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.75;
 }
 
-.opportunity-content li {
-  @apply text-muted-foreground leading-relaxed pl-6 relative;
-}
-
-.opportunity-content ul > li::before {
+.prose ul li::before {
   content: "•";
-  @apply text-primary font-bold absolute left-0 top-0;
+  position: absolute;
+  left: 0;
+  top: 0;
   color: hsl(var(--primary));
+  font-weight: bold;
 }
 
-.opportunity-content ol {
+.prose ol {
+  margin: 1rem 0;
+  padding-left: 0;
+  list-style: none;
   counter-reset: item;
 }
 
-.opportunity-content ol > li {
+.prose ol li {
+  position: relative;
+  padding-left: 2rem;
+  margin-bottom: 0.5rem;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.75;
   counter-increment: item;
-  @apply pl-8;
 }
 
-.opportunity-content ol > li::before {
+.prose ol li::before {
   content: counter(item) ".";
-  @apply text-primary font-bold absolute left-0 top-0;
+  position: absolute;
+  left: 0;
+  top: 0;
   color: hsl(var(--primary));
+  font-weight: bold;
 }
 
-.opportunity-content strong {
-  @apply font-semibold text-foreground;
+.prose strong {
+  color: hsl(var(--foreground));
+  font-weight: 600;
 }
 
-.opportunity-content em {
-  @apply italic;
+.prose em {
+  font-style: italic;
 }
 
-.opportunity-content a {
-  @apply text-primary hover:text-primary/80 underline;
+.prose a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
 }
 
-.opportunity-content blockquote {
-  @apply border-l-4 border-primary bg-primary/5 p-4 rounded-r-lg my-4 italic;
+.prose a:hover {
+  color: hsl(var(--primary));
+  opacity: 0.8;
 }
 
-.opportunity-content code {
-  @apply bg-muted px-2 py-1 rounded text-sm font-mono;
+.prose blockquote {
+  border-left: 4px solid hsl(var(--primary));
+  background-color: hsl(var(--primary) / 0.05);
+  padding: 1rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+  margin: 1.5rem 0;
+  font-style: italic;
 }
 
-.opportunity-content pre {
-  @apply bg-muted p-4 rounded-lg overflow-x-auto my-4;
+.prose blockquote p {
+  color: hsl(var(--foreground));
+  margin: 0;
 }
 
-.opportunity-content hr {
-  @apply border-border my-6;
+.prose code {
+  background-color: hsl(var(--muted));
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
 }
 
-.opportunity-content table {
-  @apply border-collapse border border-border my-4 w-full;
+.prose pre {
+  background-color: hsl(var(--muted));
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1rem 0;
 }
 
-.opportunity-content th {
-  @apply border border-border bg-muted p-3 font-semibold text-left;
+.prose pre code {
+  background-color: transparent;
+  padding: 0;
 }
 
-.opportunity-content td {
-  @apply border border-border p-3;
+.prose hr {
+  border: none;
+  border-top: 1px solid hsl(var(--border));
+  margin: 2rem 0;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.prose th {
+  background-color: hsl(var(--muted));
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  border: 1px solid hsl(var(--border));
+}
+
+.prose td {
+  padding: 0.75rem;
+  border: 1px solid hsl(var(--border));
+}
+
+/* Fallback for opportunity-content class */
+.opportunity-content {
+  @apply prose prose-lg prose-orange max-w-none dark:prose-invert;
 }

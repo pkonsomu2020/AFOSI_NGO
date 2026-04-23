@@ -214,7 +214,25 @@ const OpportunityDetail = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="opportunity-content"
+            className="prose prose-lg prose-orange max-w-none dark:prose-invert"
+            style={{
+              '--tw-prose-body': 'hsl(var(--muted-foreground))',
+              '--tw-prose-headings': 'hsl(var(--foreground))',
+              '--tw-prose-lead': 'hsl(var(--muted-foreground))',
+              '--tw-prose-links': 'hsl(var(--primary))',
+              '--tw-prose-bold': 'hsl(var(--foreground))',
+              '--tw-prose-counters': 'hsl(var(--primary))',
+              '--tw-prose-bullets': 'hsl(var(--primary))',
+              '--tw-prose-hr': 'hsl(var(--border))',
+              '--tw-prose-quotes': 'hsl(var(--foreground))',
+              '--tw-prose-quote-borders': 'hsl(var(--primary))',
+              '--tw-prose-captions': 'hsl(var(--muted-foreground))',
+              '--tw-prose-code': 'hsl(var(--foreground))',
+              '--tw-prose-pre-code': 'hsl(var(--muted-foreground))',
+              '--tw-prose-pre-bg': 'hsl(var(--muted))',
+              '--tw-prose-th-borders': 'hsl(var(--border))',
+              '--tw-prose-td-borders': 'hsl(var(--border))',
+            } as React.CSSProperties}
             dangerouslySetInnerHTML={{ __html: opportunity.full_description }}
           />
         ) : (
