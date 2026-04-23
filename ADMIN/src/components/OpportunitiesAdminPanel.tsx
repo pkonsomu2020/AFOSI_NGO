@@ -26,6 +26,13 @@ interface OpportunityData {
   slug?: string;
   full_description?: string;
   apply_link?: string;
+  // New structured fields
+  overview?: string;
+  about_role?: string;
+  responsibilities?: string;
+  requirements?: string;
+  benefits?: string;
+  how_to_apply?: string;
 }
 
 const OpportunitiesAdminPanel = () => {
@@ -413,47 +420,191 @@ const OpportunityForm = ({
         </div>
       </div>
 
-      {/* Row 5: Full Description */}
-      <div>
+      {/* Row 5: Structured Content Fields */}
+      <div className="space-y-6">
+        <div className="border-t pt-6">
+          <h3 className="text-lg font-semibold text-foreground mb-4">
+            Structured Content (Recommended)
+          </h3>
+          <p className="text-sm text-muted-foreground mb-6">
+            Fill out these structured fields for better formatting and presentation. Leave blank to use the legacy "Full Description" field below.
+          </p>
+        </div>
+
+        {/* Overview */}
+        <div>
+          <label className="block text-sm font-semibold mb-2">
+            Overview
+            <span className="text-muted-foreground font-normal ml-1">(Brief introduction to the opportunity)</span>
+          </label>
+          <textarea
+            value={data.overview || ''}
+            onChange={(e) => onChange({ ...data, overview: e.target.value })}
+            className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary bg-background"
+            rows={3}
+            placeholder="Provide a compelling overview of this opportunity and what makes it unique..."
+          />
+        </div>
+
+        {/* About the Role/Project */}
+        <div>
+          <label className="block text-sm font-semibold mb-2">
+            {data.type === 'volunteering' ? 'About the Project' : 
+             data.type === 'consulting' ? 'About the Assignment' : 
+             'About the Role'}
+            <span className="text-muted-foreground font-normal ml-1">(Detailed description)</span>
+          </label>
+          <textarea
+            value={data.about_role || ''}
+            onChange={(e) => onChange({ ...data, about_role: e.target.value })}
+            className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary bg-background"
+            rows={4}
+            placeholder={
+              data.type === 'volunteering' ? 
+              "Describe the project, its goals, timeline, and impact..." :
+              data.type === 'consulting' ? 
+              "Describe the assignment, objectives, and expected outcomes..." :
+              "Describe the role, its purpose, and how it fits into the organization..."
+            }
+          />
+        </div>
+
+        {/* Responsibilities/Activities */}
+        <div>
+          <label className="block text-sm font-semibold mb-2">
+            {data.type === 'volunteering' ? 'Volunteer Activities' : 
+             data.type === 'consulting' ? 'Key Deliverables' : 
+             'Key Responsibilities'}
+            <span className="text-muted-foreground font-normal ml-1">(One per line)</span>
+          </label>
+          <textarea
+            value={data.responsibilities || ''}
+            onChange={(e) => onChange({ ...data, responsibilities: e.target.value })}
+            className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary bg-background"
+            rows={6}
+            placeholder={
+              data.type === 'volunteering' ? 
+              `Community engagement and outreach
+Environmental education and awareness
+Event planning and coordination
+Mentoring and capacity building` :
+              data.type === 'consulting' ? 
+              `Conduct comprehensive assessment
+Develop strategic recommendations
+Deliver final report and presentation
+Provide implementation roadmap` :
+              `Lead project planning and execution
+Manage team and stakeholder relationships
+Develop and implement strategies
+Monitor progress and report outcomes`
+            }
+          />
+        </div>
+
+        {/* Requirements */}
+        <div>
+          <label className="block text-sm font-semibold mb-2">
+            {data.type === 'volunteering' ? 'Who We Are Looking For' : 
+             data.type === 'consulting' ? 'Consultant Requirements' : 
+             'Requirements & Qualifications'}
+            <span className="text-muted-foreground font-normal ml-1">(One per line)</span>
+          </label>
+          <textarea
+            value={data.requirements || ''}
+            onChange={(e) => onChange({ ...data, requirements: e.target.value })}
+            className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary bg-background"
+            rows={5}
+            placeholder={
+              data.type === 'volunteering' ? 
+              `Passionate about environmental sustainability
+Age 18-35 years
+Strong communication skills
+Commitment to community service
+Available for minimum 3 months` :
+              data.type === 'consulting' ? 
+              `Master's degree in relevant field
+5+ years consulting experience
+Proven track record in organizational development
+Strong analytical and communication skills
+Experience with NGOs/development sector` :
+              `Bachelor's degree or equivalent experience
+3+ years relevant work experience
+Strong leadership and communication skills
+Proficiency in relevant software/tools
+Commitment to organizational mission`
+            }
+          />
+        </div>
+
+        {/* Benefits */}
+        <div>
+          <label className="block text-sm font-semibold mb-2">
+            {data.type === 'volunteering' ? 'What You Will Gain' : 
+             data.type === 'consulting' ? 'What We Offer' : 
+             'Benefits & What We Offer'}
+            <span className="text-muted-foreground font-normal ml-1">(One per line)</span>
+          </label>
+          <textarea
+            value={data.benefits || ''}
+            onChange={(e) => onChange({ ...data, benefits: e.target.value })}
+            className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary bg-background"
+            rows={4}
+            placeholder={
+              data.type === 'volunteering' ? 
+              `Valuable skills development and training
+Certificate of volunteer service
+Networking opportunities with professionals
+Meaningful impact in community development
+Reference letters for future opportunities` :
+              data.type === 'consulting' ? 
+              `Competitive consulting fees
+Flexible working arrangements
+Professional development opportunities
+Access to organizational resources
+Potential for future collaborations` :
+              `Competitive salary and benefits package
+Professional development opportunities
+Flexible working arrangements
+Meaningful work with social impact
+Collaborative and supportive team environment`
+            }
+          />
+        </div>
+
+        {/* How to Apply */}
+        <div>
+          <label className="block text-sm font-semibold mb-2">
+            How to Apply
+            <span className="text-muted-foreground font-normal ml-1">(Application instructions)</span>
+          </label>
+          <textarea
+            value={data.how_to_apply || ''}
+            onChange={(e) => onChange({ ...data, how_to_apply: e.target.value })}
+            className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary bg-background"
+            rows={3}
+            placeholder="To apply, please submit your application through our online form. Include your CV, cover letter, and any relevant documents. Applications will be reviewed on a rolling basis."
+          />
+        </div>
+      </div>
+
+      {/* Legacy Full Description Field */}
+      <div className="border-t pt-6">
+        <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mb-4">
+          <p className="text-sm text-amber-800 dark:text-amber-200">
+            <strong>Legacy Field:</strong> Use the structured fields above for better formatting. This field is kept for backward compatibility.
+          </p>
+        </div>
         <label className="block text-sm font-semibold mb-2">
-          Full Description
-          <span className="text-muted-foreground font-normal ml-1">(HTML supported — shown on the detail subpage)</span>
+          Full Description (Legacy)
+          <span className="text-muted-foreground font-normal ml-1">(Plain text - only use if structured fields above are empty)</span>
         </label>
         <textarea
           value={data.full_description || ''}
           onChange={(e) => onChange({ ...data, full_description: e.target.value })}
           className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary bg-background font-mono text-sm"
-          rows={16}
-          placeholder={`Use HTML for professional formatting. Example structure:
-
-<h2>About the Role</h2>
-<p>Brief overview of the position...</p>
-
-<h3>Key Responsibilities</h3>
-<ul>
-  <li><strong>Primary Area:</strong> Description of main duties</li>
-  <li><strong>Secondary Area:</strong> Additional responsibilities</li>
-</ul>
-
-<h3>Requirements</h3>
-<ul>
-  <li>Bachelor's degree or equivalent experience</li>
-  <li>2+ years relevant experience</li>
-</ul>
-
-<h3>What We Offer</h3>
-<ul>
-  <li><strong>Impact:</strong> Meaningful work contributing to our mission</li>
-  <li><strong>Growth:</strong> Professional development opportunities</li>
-</ul>`}
+          rows={8}
+          placeholder="Legacy field for plain text content. Recommended to use the structured fields above instead."
         />
-        <div className="mt-2 text-xs text-muted-foreground space-y-1">
-          <p><strong>HTML Tips:</strong></p>
-          <p>• Use <code>&lt;h2&gt;</code> for main sections, <code>&lt;h3&gt;</code> for subsections</p>
-          <p>• Use <code>&lt;ul&gt;&lt;li&gt;</code> for bullet points, <code>&lt;ol&gt;&lt;li&gt;</code> for numbered lists</p>
-          <p>• Use <code>&lt;strong&gt;</code> for bold text, <code>&lt;p&gt;</code> for paragraphs</p>
-          <p>• Use <code>&lt;blockquote&gt;</code> for highlighted notes or quotes</p>
-        </div>
       </div>
 
       <div className="flex gap-2 pt-2">

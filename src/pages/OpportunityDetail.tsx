@@ -28,6 +28,13 @@ interface OpportunityDetail {
   full_description: string | null;
   apply_link: string | null;
   slug: string;
+  // New structured fields
+  overview?: string;
+  about_role?: string;
+  responsibilities?: string;
+  requirements?: string;
+  benefits?: string;
+  how_to_apply?: string;
 }
 
 const OpportunityDetail = () => {
@@ -209,7 +216,110 @@ const OpportunityDetail = () => {
 
       {/* Full Description Body */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
-        {opportunity.full_description ? (
+        {/* Check if we have structured content or fallback to full_description */}
+        {(opportunity.overview || opportunity.about_role || opportunity.responsibilities || opportunity.requirements || opportunity.benefits || opportunity.how_to_apply) ? (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="space-y-8"
+          >
+            {/* Overview Section */}
+            {opportunity.overview && (
+              <div>
+                <h2 className="text-2xl font-bold text-foreground mb-4 pb-2 border-b-2 border-primary">
+                  Overview
+                </h2>
+                <div className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                  {opportunity.overview}
+                </div>
+              </div>
+            )}
+
+            {/* About the Role/Project Section */}
+            {opportunity.about_role && (
+              <div>
+                <h2 className="text-2xl font-bold text-foreground mb-4 pb-2 border-b-2 border-primary">
+                  {opportunity.type === 'volunteering' ? 'About the Project' : 
+                   opportunity.type === 'consulting' ? 'About the Assignment' : 
+                   'About the Role'}
+                </h2>
+                <div className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                  {opportunity.about_role}
+                </div>
+              </div>
+            )}
+
+            {/* Responsibilities/Activities Section */}
+            {opportunity.responsibilities && (
+              <div>
+                <h2 className="text-2xl font-bold text-foreground mb-4 pb-2 border-b-2 border-primary">
+                  {opportunity.type === 'volunteering' ? 'Volunteer Activities' : 
+                   opportunity.type === 'consulting' ? 'Key Deliverables' : 
+                   'Key Responsibilities'}
+                </h2>
+                <div className="space-y-3">
+                  {opportunity.responsibilities.split('\n').filter(line => line.trim()).map((item, idx) => (
+                    <div key={idx} className="flex items-start gap-3">
+                      <span className="w-2 h-2 rounded-full bg-primary mt-2 shrink-0" />
+                      <span className="text-muted-foreground leading-relaxed">{item.trim()}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Requirements Section */}
+            {opportunity.requirements && (
+              <div>
+                <h2 className="text-2xl font-bold text-foreground mb-4 pb-2 border-b-2 border-primary">
+                  {opportunity.type === 'volunteering' ? 'Who We Are Looking For' : 
+                   opportunity.type === 'consulting' ? 'Consultant Requirements' : 
+                   'Requirements & Qualifications'}
+                </h2>
+                <div className="space-y-3">
+                  {opportunity.requirements.split('\n').filter(line => line.trim()).map((item, idx) => (
+                    <div key={idx} className="flex items-start gap-3">
+                      <span className="w-2 h-2 rounded-full bg-primary mt-2 shrink-0" />
+                      <span className="text-muted-foreground leading-relaxed">{item.trim()}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Benefits Section */}
+            {opportunity.benefits && (
+              <div>
+                <h2 className="text-2xl font-bold text-foreground mb-4 pb-2 border-b-2 border-primary">
+                  {opportunity.type === 'volunteering' ? 'What You Will Gain' : 
+                   opportunity.type === 'consulting' ? 'What We Offer' : 
+                   'Benefits & What We Offer'}
+                </h2>
+                <div className="space-y-3">
+                  {opportunity.benefits.split('\n').filter(line => line.trim()).map((item, idx) => (
+                    <div key={idx} className="flex items-start gap-3">
+                      <span className="w-2 h-2 rounded-full bg-primary mt-2 shrink-0" />
+                      <span className="text-muted-foreground leading-relaxed">{item.trim()}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* How to Apply Section */}
+            {opportunity.how_to_apply && (
+              <div>
+                <h2 className="text-2xl font-bold text-foreground mb-4 pb-2 border-b-2 border-primary">
+                  How to Apply
+                </h2>
+                <div className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                  {opportunity.how_to_apply}
+                </div>
+              </div>
+            )}
+          </motion.div>
+        ) : opportunity.full_description ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

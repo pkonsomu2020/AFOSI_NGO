@@ -61,6 +61,12 @@ export const opportunitiesAPI = {
     slug?: string;
     full_description?: string;
     apply_link?: string;
+    overview?: string;
+    about_role?: string;
+    responsibilities?: string;
+    requirements?: string;
+    benefits?: string;
+    how_to_apply?: string;
   }) => fetchAPI('/opportunities', { method: 'POST', body: JSON.stringify(data) }),
   update: (id: string, data: Partial<{
     title: string;
@@ -73,6 +79,12 @@ export const opportunitiesAPI = {
     slug: string;
     full_description: string;
     apply_link: string;
+    overview: string;
+    about_role: string;
+    responsibilities: string;
+    requirements: string;
+    benefits: string;
+    how_to_apply: string;
   }>) => fetchAPI(`/opportunities/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   delete: (id: string) => fetchAPI(`/opportunities/${id}`, { method: 'DELETE' }),
   toggleStatus: (id: string) => fetchAPI(`/opportunities/${id}/toggle`, { method: 'PATCH' }),
