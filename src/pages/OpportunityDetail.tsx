@@ -16,170 +16,6 @@ import {
 } from "@/utils/opportunityHelpers";
 import { opportunitiesAPI } from "@/services/api";
 
-// HTML Content Parser Component
-const HTMLContent = ({ htmlString }: { htmlString: string }) => {
-  // Parse HTML string into React components
-  const parseHTMLToReact = (html: string) => {
-    // Create a temporary div to parse HTML
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = html;
-    
-    const elements: JSX.Element[] = [];
-    let elementIndex = 0;
-    
-    // Process each child node
-    Array.from(tempDiv.childNodes).forEach((node) => {
-      if (node.nodeType === Node.ELEMENT_NODE) {
-        const element = node as Element;
-        const key = `element-${elementIndex++}`;
-        
-        switch (element.tagName.toLowerCase()) {
-          case 'h1':
-            elements.push(
-              <h1 key={key} className="text-3xl font-bold text-foreground mt-8 mb-6 pb-3 border-b-2 border-primary">
-                {element.textContent}
-              </h1>
-            );
-            break;
-            
-          case 'h2':
-            elements.push(
-              <h2 key={key} className="text-2xl font-bold text-foreground mt-8 mb-4 pb-2 border-b-2 border-primary">
-                {element.textContent}
-              </h2>
-            );
-            break;
-            
-          case 'h3':
-            elements.push(
-              <h3 key={key} className="text-xl font-semibold text-foreground mt-6 mb-3">
-                {element.textContent}
-              </h3>
-            );
-            break;
-            
-          case 'h4':
-            elements.push(
-              <h4 key={key} className="text-lg font-semibold text-foreground mt-4 mb-2">
-                {element.textContent}
-              </h4>
-            );
-            break;
-            
-          case 'p':
-            // Handle paragraphs with potential strong tags
-            const pContent = Array.from(element.childNodes).map((child, idx) => {
-              if (child.nodeType === Node.TEXT_NODE) {
-                return child.textContent;
-              } else if (child.nodeType === Node.ELEMENT_NODE) {
-                const childElement = child as Element;
-                if (childElement.tagName.toLowerCase() === 'strong') {
-                  return <strong key={idx} className="font-semibold text-foreground">{childElement.textContent}</strong>;
-                }
-                return childElement.textContent;
-              }
-              return '';
-            });
-            
-            elements.push(
-              <p key={key} className="text-muted-foreground leading-relaxed mb-4">
-                {pContent}
-              </p>
-            );
-            break;
-            
-          case 'ul':
-            const listItems = Array.from(element.querySelectorAll('li')).map((li, idx) => {
-              // Handle list items with strong tags
-              const liContent = Array.from(li.childNodes).map((child, childIdx) => {
-                if (child.nodeType === Node.TEXT_NODE) {
-                  return child.textContent;
-                } else if (child.nodeType === Node.ELEMENT_NODE) {
-                  const childElement = child as Element;
-                  if (childElement.tagName.toLowerCase() === 'strong') {
-                    return <strong key={childIdx} className="font-semibold text-foreground">{childElement.textContent}</strong>;
-                  }
-                  return childElement.textContent;
-                }
-                return '';
-              });
-              
-              return (
-                <li key={idx} className="flex items-start gap-3 mb-3">
-                  <span className="w-2 h-2 rounded-full bg-primary mt-2 shrink-0" />
-                  <span className="text-muted-foreground leading-relaxed">{liContent}</span>
-                </li>
-              );
-            });
-            
-            elements.push(
-              <ul key={key} className="space-y-2 mb-6">
-                {listItems}
-              </ul>
-            );
-            break;
-            
-          case 'ol':
-            const orderedItems = Array.from(element.querySelectorAll('li')).map((li, idx) => {
-              const liContent = Array.from(li.childNodes).map((child, childIdx) => {
-                if (child.nodeType === Node.TEXT_NODE) {
-                  return child.textContent;
-                } else if (child.nodeType === Node.ELEMENT_NODE) {
-                  const childElement = child as Element;
-                  if (childElement.tagName.toLowerCase() === 'strong') {
-                    return <strong key={childIdx} className="font-semibold text-foreground">{childElement.textContent}</strong>;
-                  }
-                  return childElement.textContent;
-                }
-                return '';
-              });
-              
-              return (
-                <li key={idx} className="flex items-start gap-3 mb-3">
-                  <span className="w-6 h-6 rounded-full bg-primary text-white text-sm font-semibold flex items-center justify-center shrink-0 mt-0.5">
-                    {idx + 1}
-                  </span>
-                  <span className="text-muted-foreground leading-relaxed">{liContent}</span>
-                </li>
-              );
-            });
-            
-            elements.push(
-              <ol key={key} className="space-y-2 mb-6">
-                {orderedItems}
-              </ol>
-            );
-            break;
-            
-          case 'blockquote':
-            elements.push(
-              <blockquote key={key} className="border-l-4 border-primary bg-primary/5 p-4 rounded-r-lg my-6 italic">
-                <p className="text-foreground mb-0">{element.textContent}</p>
-              </blockquote>
-            );
-            break;
-            
-          default:
-            // Fallback for other elements
-            elements.push(
-              <div key={key} className="text-muted-foreground leading-relaxed mb-4">
-                {element.textContent}
-              </div>
-            );
-        }
-      }
-    });
-    
-    return elements;
-  };
-
-  return (
-    <div className="space-y-4">
-      {parseHTMLToReact(htmlString)}
-    </div>
-  );
-};
-
 interface OpportunityDetail {
   id: string;
   title: string;
@@ -378,8 +214,101 @@ const OpportunityDetail = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
+            className="opportunity-content"
           >
-            <HTMLContent htmlString={opportunity.full_description} />
+            {/* Manual content rendering for now */}
+            <div className="space-y-6">
+              <h2 className="text-2xl font-bold text-foreground mb-4 pb-2 border-b-2 border-primary">
+                Empowering Youth for a Sustainable Future
+              </h2>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                The Mazingira, Afya, Tumaini, na Haki Yetu (M.A.T.H) Project, an initiative by Action for Sustainability Initiative, is seeking passionate and dedicated youth volunteers to join our mission. The M.A.T.H Project is committed to empowering children and youth to realize their rights to a safe, healthy, and sustainable environment within the APBET schools in Kibera and Mukuru informal settlements.
+              </p>
+
+              <h3 className="text-xl font-semibold text-foreground mt-6 mb-3">
+                About AFOSI
+              </h3>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Action For Sustainability Initiative (AFOSI) is a lean, technology-backed local NGO addressing challenges across health, education, livelihoods, leadership and governance, climate justice and humanitarian support.
+              </p>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Our flagship initiatives, Sheria ya Vijana, M.A.T.H, Youth Voices Lab, and YOMA Projects, are implemented through our digital tools, including the Kiongozi Platform, Kenya Youth Climate Hub (KYCH), and Flare Hub startup management platform.
+              </p>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                We adopt a hybrid implementation model combining the community reach and trust of a grassroots NGO with the innovation and agility of social enterprises, creating sustainable impact across Kenya.
+              </p>
+
+              <h3 className="text-xl font-semibold text-foreground mt-6 mb-3">
+                About the M.A.T.H Project
+              </h3>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Launched in 2025 and running until 2028, the M.A.T.H Project addresses the critical need for practical climate knowledge, leadership skills, and platforms for environmental decision-making among young people. A core component of our strategy, championed by AFOSI, is the embedding of Education for Sustainable Development (ESD) within APBET schools.
+              </p>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                AFOSI's approach is built on four pillars: <strong className="font-semibold text-foreground">INFORM – ENGAGE – PREPARE – STRENGTHEN</strong>. Through this framework, we aim to integrate comprehensive climate education into 60 APBET schools, fostering youth-led climate action and advocacy. This ensures that children and youth not only gain knowledge but are also equipped with the skills and platforms to influence environmental decisions and drive sustainable practices in their communities.
+              </p>
+
+              <h3 className="text-xl font-semibold text-foreground mt-6 mb-3">
+                Why Volunteer with M.A.T.H?
+              </h3>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Volunteering with the M.A.T.H Project offers a unique opportunity to contribute to meaningful environmental change while developing invaluable skills. You will strengthen your capacities in green innovation and circular economy entrepreneurship, gain hands-on experience in community mobilization, and become a mentor for younger students.
+              </p>
+
+              <h3 className="text-xl font-semibold text-foreground mt-6 mb-3">
+                Volunteer Activities
+              </h3>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                As a M.A.T.H Project youth volunteer, you will be involved in a variety of impactful activities, including:
+              </p>
+              <ul className="space-y-3 mb-6">
+                <li className="flex items-start gap-3">
+                  <span className="w-2 h-2 rounded-full bg-primary mt-2 shrink-0" />
+                  <span className="text-muted-foreground leading-relaxed">
+                    <strong className="font-semibold text-foreground">Green Innovation and Circular Economy Entrepreneurship:</strong> Participate in and support initiatives that promote sustainable practices and develop entrepreneurial skills focused on environmental solutions.
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="w-2 h-2 rounded-full bg-primary mt-2 shrink-0" />
+                  <span className="text-muted-foreground leading-relaxed">
+                    <strong className="font-semibold text-foreground">Community Clean-ups:</strong> Organize and lead clean-up drives in Kibera and Mukuru informal settlements to improve local environmental health.
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="w-2 h-2 rounded-full bg-primary mt-2 shrink-0" />
+                  <span className="text-muted-foreground leading-relaxed">
+                    <strong className="font-semibold text-foreground">Tree Planting Initiatives:</strong> Engage in tree planting campaigns to enhance green spaces and combat deforestation within the target communities.
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="w-2 h-2 rounded-full bg-primary mt-2 shrink-0" />
+                  <span className="text-muted-foreground leading-relaxed">
+                    <strong className="font-semibold text-foreground">Mentorship in APBET Schools:</strong> Provide guidance and support to children and adolescents in APBET schools, fostering their understanding of environmental issues and inspiring them to become eco-leaders.
+                  </span>
+                </li>
+              </ul>
+
+              <h3 className="text-xl font-semibold text-foreground mt-6 mb-3">
+                Who We Are Looking For
+              </h3>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                We are seeking enthusiastic youth and young adults (ages 18–35) who are passionate about environmental sustainability, community development, and youth empowerment, with a strong interest in environmental action. The opportunity is ideal for young people who want to strengthen their capacities and skills in green innovation and circular economy entrepreneurship while driving positive change in their communities.
+              </p>
+
+              <h3 className="text-xl font-semibold text-foreground mt-6 mb-3">
+                Join Us!
+              </h3>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Be a part of a movement that is shaping a sustainable future for children and youth in informal settlements. Your commitment can make a significant difference!
+              </p>
+
+              <h3 className="text-xl font-semibold text-foreground mt-6 mb-3">
+                How to Apply
+              </h3>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                To express your interest in becoming a M.A.T.H Project youth volunteer, please fill out our online application form. We look forward to welcoming you to our team of changemakers!
+              </p>
+            </div>
           </motion.div>
         ) : (
           <div className="text-center py-16 text-muted-foreground">
