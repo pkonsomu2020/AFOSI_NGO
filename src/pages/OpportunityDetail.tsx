@@ -214,34 +214,7 @@ const OpportunityDetail = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="prose prose-slate dark:prose-invert max-w-none
-              prose-headings:font-heading prose-headings:text-foreground prose-headings:font-bold
-              prose-p:text-muted-foreground prose-p:leading-relaxed prose-p:mb-6
-              prose-li:text-muted-foreground prose-li:mb-2 prose-li:leading-relaxed
-              prose-strong:text-foreground prose-strong:font-semibold
-              prose-h1:text-3xl prose-h1:mt-12 prose-h1:mb-6 prose-h1:border-b prose-h1:border-border prose-h1:pb-3
-              prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-5 prose-h2:text-primary prose-h2:border-l-4 prose-h2:border-primary prose-h2:pl-4 prose-h2:bg-primary/5 prose-h2:py-3 prose-h2:rounded-r-lg
-              prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-4 prose-h3:text-secondary-foreground prose-h3:font-bold
-              prose-h4:text-lg prose-h4:mt-6 prose-h4:mb-3 prose-h4:text-foreground prose-h4:font-semibold
-              prose-ul:space-y-3 prose-ol:space-y-3 prose-ul:my-6 prose-ol:my-6
-              prose-li:pl-2
-              prose-hr:border-border prose-hr:my-8
-              prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:bg-accent/30 prose-blockquote:p-4 prose-blockquote:rounded-r-lg
-              prose-code:bg-accent prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm
-              prose-pre:bg-accent prose-pre:p-4 prose-pre:rounded-lg prose-pre:overflow-x-auto
-              prose-table:border-collapse prose-table:border prose-table:border-border
-              prose-th:border prose-th:border-border prose-th:bg-accent prose-th:p-3 prose-th:font-semibold
-              prose-td:border prose-td:border-border prose-td:p-3
-              [&>*:first-child]:mt-0
-              [&>*:last-child]:mb-0
-              [&_ul>li]:before:content-['•'] [&_ul>li]:before:text-primary [&_ul>li]:before:font-bold [&_ul>li]:before:mr-3
-              [&_ol>li]:marker:text-primary [&_ol>li]:marker:font-bold
-              [&_h2+p]:mt-2 [&_h3+p]:mt-2 [&_h4+p]:mt-2
-              [&_h2+ul]:mt-4 [&_h3+ul]:mt-3 [&_h4+ul]:mt-3
-              [&_p+h2]:mt-10 [&_p+h3]:mt-8 [&_p+h4]:mt-6
-              [&_ul+h2]:mt-10 [&_ul+h3]:mt-8 [&_ul+h4]:mt-6
-              [&_p+ul]:mt-4 [&_p+ol]:mt-4
-              text-base leading-7"
+            className="opportunity-content"
             dangerouslySetInnerHTML={{ __html: opportunity.full_description }}
           />
         ) : (
