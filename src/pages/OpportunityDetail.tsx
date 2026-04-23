@@ -39,8 +39,15 @@ const OpportunityDetail = () => {
   useEffect(() => {
     if (!slug) return;
     setLoading(true);
-    opportunitiesAPI
-      .getBySlug(slug)
+    
+    // Try to determine if the parameter is a UUID (ID) or a slug
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
+    
+    const apiCall = isUUID 
+      ? opportunitiesAPI.getById(slug)
+      : opportunitiesAPI.getBySlug(slug);
+    
+    apiCall
       .then((res) => setOpportunity(res.data))
       .catch(() => setError("Opportunity not found."))
       .finally(() => setLoading(false));
