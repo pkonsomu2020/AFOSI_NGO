@@ -274,8 +274,15 @@ const OpportunityDetail = () => {
       <ScrollToTop />
 
       {/* ── Hero Banner ── */}
-      <section className="relative py-12 md:py-20 bg-primary overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/afosi_pad.jpg')] bg-cover bg-center opacity-10" />
+      <section className="relative py-20 sm:py-24 md:py-32 overflow-hidden">
+        {/* Background photo */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: "url('/HERO_4.jpg')" }}
+        />
+        {/* Dark overlay — same as Opportunities listing page */}
+        <div className="absolute inset-0 bg-black/70" />
+
         <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -284,9 +291,9 @@ const OpportunityDetail = () => {
           >
             <Link
               to="/opportunities"
-              className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors mb-6 text-sm"
+              className="inline-flex items-center gap-2 text-white hover:text-primary transition-colors mb-8 group font-semibold text-sm"
             >
-              <ArrowLeft size={16} />
+              <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
               Back to Opportunities
             </Link>
 
@@ -341,18 +348,18 @@ const OpportunityDetail = () => {
             {isOpen ? (
               opportunity.apply_link ? (
                 <a href={opportunity.apply_link} target="_blank" rel="noopener noreferrer">
-                  <Button size="lg" variant="secondary" className="gap-2 font-semibold">
+                  <Button size="lg" className="gap-2 font-semibold bg-primary hover:bg-primary/90 text-white">
                     Apply Now
                     <ExternalLink size={16} />
                   </Button>
                 </a>
               ) : (
-                <Button size="lg" disabled className="gap-2 opacity-60 bg-white/20 text-white">
+                <Button size="lg" disabled className="gap-2 opacity-50 bg-white/20 text-white border border-white/30">
                   Apply Now
                 </Button>
               )
             ) : (
-              <Button size="lg" disabled className="gap-2 bg-white/10 text-white/60 cursor-not-allowed">
+              <Button size="lg" disabled className="gap-2 bg-white/10 text-white/50 cursor-not-allowed border border-white/20">
                 <Lock size={16} />
                 Applications Closed
               </Button>
