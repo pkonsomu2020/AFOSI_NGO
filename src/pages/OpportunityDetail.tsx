@@ -50,54 +50,44 @@ function toTitleCase(str: string) {
 }
 
 // ─── Heading detection ────────────────────────────────────────────────────────
-// A line is a heading if it is short, has no sentence-ending punctuation,
-// and is not a bullet point or a long paragraph.
-function isHeadingLine(line: string): boolean {
+// Only treat a line as a heading if it is clearly a label/title.
+// Key rule: must be followed by longer body text or bullets — not another short line.
+function isHeadingLine(line: string, nextLine: string): boolean {
   const trimmed = line.trim();
   if (!trimmed) return false;
-  if (trimmed.length > 80) return false;                        // too long to be a heading
-  if (/^[-•*]\s/.test(trimmed)) return false;                   // bullet point
-  if (/[.!?]$/.test(trimmed)) return false;                     // ends with sentence punctuation
-  if ((trimmed.match(/\s/g) || []).length > 8) return false;    // more than 8 words → paragraph
-  // Must start with a capital letter or be all-caps
-  if (!/^[A-Z]/.test(trimmed)) return false;
-  // Reject lines that look like sentences (contain comma mid-sentence with many words)
+  if (trimmed.length > 70) return false;                        // too long
+  if (/^[-•*]\s/.test(trimmed)) return false;                   // bullet
+  if (/[.!?,;]$/.test(trimmed)) return false;                   // ends with punctuation → sentence
+  if (!/^[A-Z]/.test(trimmed)) return false;                    // must start with capital
   const wordCount = trimmed.split(/\s+/).length;
-  if (wordCount >= 4 && trimmed.includes(',')) return false;
-  return true;
+  if (wordCount > 7) return false;                              // too many words
+  // Reject if colon appears mid-sentence with many words
+  if (trimmed.includes(':') && wordCount > 4) return false;
+  // Must be followed by a longer line (body text) or a bullet
+  if (!nextLine) return false;
+  const nextIsBullet = /^[-•*]\s/.test(nextLine.trim());
+  const nextIsLonger = nextLine.trim().length > trimmed.length + 10;
+  return nextIsBullet || nextIsLonger;
 }
 
 // ─── Parse plain text into sections ──────────────────────────────────────────
 function parseSections(text: string) {
-  const rawLines = text.split('\n');
-  // Pre-pass: collect all lines and mark which are headings
-  // A heading must be followed by non-heading content (prevents treating every short line as heading)
-  const tagged = rawLines.map(raw => ({ raw, line: raw.trim() }));
+  const tagged = text.split('\n').map(raw => raw.trim());
 
   const sections: { heading: string | null; items: string[] }[] = [];
   let current: { heading: string | null; items: string[] } = { heading: null, items: [] };
 
   for (let i = 0; i < tagged.length; i++) {
-    const { line } = tagged[i];
+    const line = tagged[i];
     if (!line) continue;
 
-    // Look ahead: next non-empty line
+    // Find next non-empty line for look-ahead
     let nextLine = '';
     for (let j = i + 1; j < tagged.length; j++) {
-      if (tagged[j].line) { nextLine = tagged[j].line; break; }
+      if (tagged[j]) { nextLine = tagged[j]; break; }
     }
 
-    const couldBeHeading = isHeadingLine(line);
-    // Confirm as heading only if next line is longer (i.e. it's followed by body text)
-    // OR it's the very last line (edge case) OR next line is also a heading
-    const confirmedHeading = couldBeHeading && (
-      !nextLine ||
-      nextLine.length > line.length ||
-      isHeadingLine(nextLine) ||
-      /^[-•*]\s/.test(nextLine)
-    );
-
-    if (confirmedHeading) {
+    if (isHeadingLine(line, nextLine)) {
       if (current.items.length > 0 || current.heading) {
         sections.push(current);
       }
