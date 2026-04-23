@@ -214,7 +214,7 @@ const OpportunityDetail = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="prose prose-lg max-w-none"
+            className="opportunity-content prose prose-lg max-w-none"
             dangerouslySetInnerHTML={{ __html: opportunity.full_description }}
           />
         ) : (
