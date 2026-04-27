@@ -1278,7 +1278,7 @@ link[rel="preload"][as="image"] { display: none; }
   display:flex;flex-direction:column;justify-content:flex-end;
   padding:120px 64px 80px;
   position:relative;overflow:hidden;
-  background:#0C0A08;
+  background:var(--bg);
   border-bottom:1px solid var(--border-af);
 }
 .proj-hero::before{
