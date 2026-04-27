@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { ArrowRight } from "lucide-react";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const projectsData = [
   {
@@ -152,7 +154,9 @@ const Projects = () => {
   }, [filteredProjects]);
 
   return (
-    <main>
+    <>
+      <Navbar />
+      <main>
       {/* PAGE HERO */}
       <header className="proj-hero">
         <div className="hero-eyebrow">Programs &amp; Initiatives</div>
@@ -310,6 +314,8 @@ const Projects = () => {
         </div>
       </section>
     </main>
+    <Footer />
+    </>
   );
 };
 

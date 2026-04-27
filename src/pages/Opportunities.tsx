@@ -5,6 +5,8 @@ import {
   Building2, Shield, Lock, Zap, TrendingUp, Calendar, ArrowRight, Send
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import { 
   getOpportunityStatus, 
@@ -769,7 +771,9 @@ const Opportunities = () => {
   }, [loading, filtered]);
 
   return (
-    <main>
+    <>
+      <Navbar />
+      <main>
       <ScrollToTop />
       {/* PAGE HERO */}
       <div className="opp-hero">
@@ -893,6 +897,8 @@ const Opportunities = () => {
         </div>
       </div>
     </main>
+    <Footer />
+    </>
   );
 };
 

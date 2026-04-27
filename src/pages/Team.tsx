@@ -1,4 +1,6 @@
 import { useEffect } from "react";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const Team = () => {
   useEffect(() => {
@@ -19,7 +21,9 @@ const Team = () => {
   }, []);
 
   return (
-    <main>
+    <>
+      <Navbar />
+      <main>
       {/* PAGE HERO */}
       <div className="team-hero">
         <div className="hero-line"></div>
@@ -281,6 +285,8 @@ const Team = () => {
         </div>
       </section>
     </main>
+    <Footer />
+    </>
   );
 };
 

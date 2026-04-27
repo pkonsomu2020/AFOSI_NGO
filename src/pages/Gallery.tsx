@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight, ZoomIn, X } from "lucide-react";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 // --- Data ---
 const carouselItems = [
@@ -131,7 +133,9 @@ const Gallery = () => {
   }, [filteredMasonry]);
 
   return (
-    <main>
+    <>
+      <Navbar />
+      <main>
       {/* HERO */}
       <div className="gallery-hero">
         <div className="hero-eyebrow">Gallery</div>
@@ -262,6 +266,8 @@ const Gallery = () => {
         <div id="lb-caption">{lightbox.caption}</div>
       </div>
     </main>
+    <Footer />
+    </>
   );
 };
 
