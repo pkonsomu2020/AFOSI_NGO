@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { 
   MapPin, Clock, CalendarDays, ArrowLeft, Briefcase, Users, 
   FileText, CheckCircle2, AlertCircle,
@@ -662,12 +662,22 @@ const Opportunities = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch opportunities from backend API
-  useEffect(() => {
-    fetchOpportunities();
-  }, []);
+  const getFullContent = (id: string): React.ReactNode => {
+    switch(id) {
+      case "erp-consultant":
+        return <ERPContent />;
+      case "field-officer":
+        return <FieldOfficerContent />;
+      case "external-audit":
+        return <ExternalAuditContent />;
+      case "assistant-finance":
+        return <AssistantFinanceContent />;
+      default:
+        return null;
+    }
+  };
 
-  const fetchOpportunities = async () => {
+  const fetchOpportunities = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -694,22 +704,12 @@ const Opportunities = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const getFullContent = (id: string): React.ReactNode => {
-    switch(id) {
-      case "erp-consultant":
-        return <ERPContent />;
-      case "field-officer":
-        return <FieldOfficerContent />;
-      case "external-audit":
-        return <ExternalAuditContent />;
-      case "assistant-finance":
-        return <AssistantFinanceContent />;
-      default:
-        return null;
-    }
-  };
+  // Fetch opportunities from backend API
+  useEffect(() => {
+    fetchOpportunities();
+  }, [fetchOpportunities]);
 
   // Filter out expired/closed opportunities automatically, then apply type filter
   const filtered = useMemo(() => {
