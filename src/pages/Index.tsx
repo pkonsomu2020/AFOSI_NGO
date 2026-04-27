@@ -1,6 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 import { ArrowRight, HeartPulse, Leaf, Briefcase, BookOpen, HandHeart, Landmark, MapPin, Phone, Mail, Globe } from "lucide-react";
 import TextReveal from "@/components/animations/TextReveal";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 // Helper function for counters
 function countUp(el: Element, target: number, suffix: string, dur = 1400) {
@@ -111,7 +113,7 @@ const Index = () => {
         </div>
       )}
 
-      {/* GLOBAL CURSOR IS NOW IN APP.TSX */}
+      <Navbar />
 
       <main>
         {/* HERO */}
@@ -485,6 +487,8 @@ const Index = () => {
           </div>
         </section>
       </main>
+
+      <Footer />
     </>
   );
 };
