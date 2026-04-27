@@ -1,13 +1,10 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import {
   MapPin, Clock, CalendarDays, ArrowLeft, Briefcase,
   ExternalLink, AlertCircle, CheckCircle2, Shield, Lock,
   Target, Users, Star, FileText, ChevronRight
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -146,17 +143,12 @@ function renderContent(text: string) {
         const mostlyBullets = section.items.length > 0 && bulletCount >= section.items.length / 2;
 
         return (
-          <motion.div
-            key={si}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: si * 0.04 }}
-          >
+          <div key={si} className="reveal" style={{ transitionDelay: `${si * 0.05}s` }}>
             {/* Section heading */}
             {section.heading && (
-              <div className={`flex items-center gap-3 mb-4 pb-3 border-b-2 ${accent}`}>
-                <Icon size={20} className="text-primary shrink-0" />
-                <h2 className="text-xl font-heading font-bold text-foreground">
+              <div className={`flex items-center gap-3 mb-4 pb-3 border-b border-border`}>
+                <Icon size={20} className="text-primary shrink-0" style={{ color: 'var(--or)' }} />
+                <h2 className="text-xl font-heading font-bold" style={{ fontFamily: "'Crimson Text', serif", fontSize: '24px', fontStyle: 'italic' }}>
                   {toTitleCase(section.heading)}
                 </h2>
               </div>
@@ -165,7 +157,7 @@ function renderContent(text: string) {
             {/* Content */}
             {section.items.length > 0 && (
               mostlyBullets ? (
-                <div className="bg-accent/20 rounded-xl p-5 space-y-2.5">
+                <div className="rounded-xl p-5 space-y-2.5" style={{ background: 'var(--bg2)' }}>
                   {section.items.map((line, li) => renderLine(line, li))}
                 </div>
               ) : (
@@ -174,7 +166,7 @@ function renderContent(text: string) {
                 </div>
               )
             )}
-          </motion.div>
+          </div>
         );
       })}
     </div>
@@ -217,13 +209,31 @@ const OpportunityDetail = () => {
     fetchOpportunity();
   }, [slug]);
 
+  useEffect(() => {
+    if (loading) return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add("on");
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    setTimeout(() => {
+      document.querySelectorAll(".reveal").forEach((el) => obs.observe(el));
+    }, 100);
+
+    return () => obs.disconnect();
+  }, [loading, opportunity]);
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background flex flex-col">
         <Navbar />
-        <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="flex-1 flex items-center justify-center min-h-[60vh]">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4" />
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4" style={{ borderColor: 'var(--or)' }} />
             <p className="text-muted-foreground">Loading opportunity...</p>
           </div>
         </div>
@@ -241,11 +251,9 @@ const OpportunityDetail = () => {
             <AlertCircle className="w-16 h-16 text-muted-foreground mx-auto" />
             <h2 className="text-2xl font-heading font-bold">Opportunity Not Found</h2>
             <p className="text-muted-foreground">This opportunity may have been removed or the link is incorrect.</p>
-            <Link to="/opportunities">
-              <Button className="mt-2">
-                <ArrowLeft size={16} className="mr-2" />
-                Back to Opportunities
-              </Button>
+            <Link to="/opportunities" className="btn-fill" style={{ display: 'inline-flex', marginTop: '16px' }}>
+              <ArrowLeft size={16} className="mr-2" />
+              Back to Opportunities
             </Link>
           </div>
         </div>
@@ -269,132 +277,80 @@ const OpportunityDetail = () => {
     "bg-primary text-primary-foreground";
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
+    <main className="min-h-screen" style={{ background: 'var(--bg)' }}>
       <ScrollToTop />
+      <Navbar />
 
       {/* ── Hero Banner ── */}
-      <section className="relative py-20 sm:py-24 md:py-32 overflow-hidden">
-        {/* Background photo */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/HERO_4.jpg')" }}
-        />
-        {/* Dark overlay — same as Opportunities listing page */}
-        <div className="absolute inset-0 bg-black/70" />
-
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <Link
-              to="/opportunities"
-              className="inline-flex items-center gap-2 text-white hover:text-primary transition-colors mb-8 group font-semibold text-sm"
-            >
-              <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-              Back to Opportunities
-            </Link>
-
-            {/* Badges */}
-            <div className="flex flex-wrap gap-2 mb-4">
-              <Badge className={typeBadgeClass}>
-                <Briefcase size={12} className="mr-1" />
-                {typeLabel}
-              </Badge>
-              <Badge className={
-                isOpen
-                  ? "bg-white/20 backdrop-blur-sm text-white border-0"
-                  : "bg-red-500/80 text-white border-0"
-              }>
-                {isOpen
-                  ? <><CheckCircle2 size={12} className="mr-1" />Open</>
-                  : <><Lock size={12} className="mr-1" />Closed</>
-                }
-              </Badge>
-              {isOpen && daysLeft <= 7 && daysLeft >= 0 && (
-                <Badge className="bg-orange-400/90 text-white border-0">
-                  <Clock size={12} className="mr-1" />
-                  {daysLeft === 0 ? "Closes Today!" : `${daysLeft} day${daysLeft > 1 ? "s" : ""} left`}
-                </Badge>
-              )}
-            </div>
-
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-white mb-4 leading-tight">
-              {opportunity.title}
-            </h1>
-            <p className="text-lg text-white/80 mb-8 leading-relaxed max-w-2xl">
-              {opportunity.description}
-            </p>
-
-            {/* Meta row */}
-            <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/70 mb-8">
-              <span className="flex items-center gap-1.5">
-                <MapPin size={15} className="text-white/60" />
-                {opportunity.location}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Clock size={15} className="text-white/60" />
-                {opportunity.duration}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <CalendarDays size={15} className="text-white/60" />
-                Deadline: {formatDeadline(opportunity.deadline)}
-              </span>
-            </div>
-
-            {/* Apply CTA */}
-            {isOpen ? (
-              opportunity.apply_link ? (
-                <a href={opportunity.apply_link} target="_blank" rel="noopener noreferrer">
-                  <Button size="lg" className="gap-2 font-semibold bg-primary hover:bg-primary/90 text-white">
-                    Apply Now
-                    <ExternalLink size={16} />
-                  </Button>
-                </a>
-              ) : (
-                <Button size="lg" disabled className="gap-2 opacity-50 bg-white/20 text-white border border-white/30">
-                  Apply Now
-                </Button>
-              )
-            ) : (
-              <Button size="lg" disabled className="gap-2 bg-white/10 text-white/50 cursor-not-allowed border border-white/20">
-                <Lock size={16} />
-                Applications Closed
-              </Button>
-            )}
-          </motion.div>
+      <div className="opp-hero" style={{ minHeight: '55vh', paddingBottom: '60px' }}>
+        <Link
+          to="/opportunities"
+          className="inline-flex items-center gap-2 transition-colors mb-12 font-semibold text-sm"
+          style={{ color: 'var(--fg)', textDecoration: 'none' }}
+        >
+          <ArrowLeft size={18} /> Back to Opportunities
+        </Link>
+        
+        <div className="flex flex-wrap gap-2 mb-6">
+          <div className={`job-badge ${opportunity.type === 'consulting' ? 'consulting' : 'employment'}`} style={{ marginBottom: 0 }}>
+            {typeLabel}
+          </div>
+          <div className="job-badge" style={{ marginBottom: 0, background: isOpen ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)', color: isOpen ? '#22c55e' : '#ef4444', border: '1px solid currentColor' }}>
+            {isOpen ? 'Open' : 'Closed'}
+          </div>
         </div>
-      </section>
+
+        <div className="opp-hero-line"></div>
+        <h1 className="opp-hero-title" style={{ fontSize: 'clamp(42px,6vw,72px)' }}>
+          <span className="t-fg">{opportunity.title}</span>
+        </h1>
+        <p className="opp-hero-sub" style={{ maxWidth: '800px', marginBottom: '32px' }}>
+          {opportunity.description}
+        </p>
+
+        {/* Meta row */}
+        <div className="flex flex-wrap gap-x-8 gap-y-3 text-sm" style={{ color: 'var(--fg2)' }}>
+          <span className="flex items-center gap-2">
+            <MapPin size={16} style={{ color: 'var(--or)' }} />
+            {opportunity.location}
+          </span>
+          <span className="flex items-center gap-2">
+            <Clock size={16} style={{ color: 'var(--or)' }} />
+            {opportunity.duration}
+          </span>
+          <span className="flex items-center gap-2">
+            <CalendarDays size={16} style={{ color: 'var(--or)' }} />
+            Deadline: {formatDeadline(opportunity.deadline)}
+          </span>
+        </div>
+      </div>
 
       {/* ── Body ── */}
-      <section className="py-12 md:py-16">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="grid md:grid-cols-3 gap-8">
+      <section className="opp-section" style={{ paddingTop: '80px', paddingBottom: '120px' }}>
+        <div className="max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-12">
 
             {/* Main content */}
             <div className="md:col-span-2">
               {opportunity.full_description && opportunity.full_description.trim() ? (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.1 }}
-                >
+                <div className="reveal">
                   {renderContent(opportunity.full_description)}
-                </motion.div>
+                </div>
               ) : (
-                <div className="text-center py-16 text-muted-foreground">
-                  <AlertCircle className="w-10 h-10 mx-auto mb-3 opacity-40" />
-                  <p>Full details for this opportunity have not been added yet.</p>
+                <div className="empty-state reveal" style={{ margin: 0, padding: '60px 24px' }}>
+                  <div className="empty-icon"><FileText size={48} /></div>
+                  <h3 className="empty-title" style={{ fontSize: '24px' }}>No Details Provided</h3>
+                  <p className="empty-text" style={{ fontSize: '14px', marginBottom: 0 }}>
+                    Full details for this opportunity have not been added yet.
+                  </p>
                 </div>
               )}
 
               {/* Safeguarding note */}
-              <div className="mt-10 p-5 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-xl flex items-start gap-3">
-                <Shield className="text-amber-600 shrink-0 mt-0.5" size={20} />
-                <p className="text-sm text-muted-foreground">
-                  <strong className="text-foreground">Safeguarding:</strong> AFOSI has zero tolerance of abuse and exploitation of vulnerable people. All employees and volunteers are expected to commit to protecting children, young people, and vulnerable adults from harm and to abide by our safeguarding policy.
+              <div className="mt-12 p-6 rounded-xl flex items-start gap-4 reveal" style={{ background: 'var(--bg3)', border: '1px solid var(--border)' }}>
+                <Shield style={{ color: 'var(--or)', flexShrink: 0 }} size={24} />
+                <p style={{ fontSize: '14px', color: 'var(--fg2)', lineHeight: 1.7 }}>
+                  <strong style={{ color: 'var(--fg)' }}>Safeguarding:</strong> AFOSI has zero tolerance of abuse and exploitation of vulnerable people. All employees and volunteers are expected to commit to protecting children, young people, and vulnerable adults from harm and to abide by our safeguarding policy.
                 </p>
               </div>
             </div>
@@ -402,99 +358,79 @@ const OpportunityDetail = () => {
             {/* Sidebar */}
             <div className="space-y-6">
 
-              {/* Quick info card */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
-                className="bg-card border border-border rounded-xl p-6"
-              >
-                <h3 className="text-lg font-heading font-bold text-foreground mb-4">
-                  Opportunity Details
-                </h3>
-                <div className="space-y-3 text-sm">
-                  <div>
-                    <span className="text-muted-foreground">Type</span>
-                    <p className="text-foreground font-medium mt-0.5">{typeLabel}</p>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">Location</span>
-                    <p className="text-foreground font-medium mt-0.5">{opportunity.location}</p>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">Duration</span>
-                    <p className="text-foreground font-medium mt-0.5">{opportunity.duration}</p>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">Deadline</span>
-                    <p className="text-foreground font-medium mt-0.5">{formatDeadline(opportunity.deadline)}</p>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">Status</span>
-                    <p className={`font-semibold mt-0.5 ${isOpen ? 'text-green-600' : 'text-red-500'}`}>
-                      {isOpen ? 'Open' : 'Closed'}
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-
               {/* Apply CTA card */}
-              {isOpen && (
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="bg-primary/10 border border-primary/20 rounded-xl p-6"
-                >
-                  <h3 className="text-lg font-heading font-bold text-foreground mb-2">
-                    Ready to Apply?
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Deadline: <span className="font-medium text-foreground">{formatDeadline(opportunity.deadline)}</span>
-                    {daysLeft > 0 && daysLeft <= 14 && (
-                      <span className="block text-orange-600 font-semibold mt-1">{daysLeft} days remaining</span>
-                    )}
-                  </p>
-                  {opportunity.apply_link ? (
-                    <a href={opportunity.apply_link} target="_blank" rel="noopener noreferrer">
-                      <Button className="w-full gap-2">
-                        Apply Now
-                        <ExternalLink size={15} />
-                      </Button>
+              <div className="rounded-xl p-8 reveal" style={{ background: 'var(--or)', color: '#F5EFE6' }}>
+                <h3 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '32px', letterSpacing: '1px', marginBottom: '16px' }}>
+                  {isOpen ? 'Ready to Apply?' : 'Opportunity Closed'}
+                </h3>
+                <p style={{ fontSize: '14px', lineHeight: 1.7, marginBottom: '24px', opacity: 0.9 }}>
+                  Deadline: <strong>{formatDeadline(opportunity.deadline)}</strong>
+                  {isOpen && daysLeft > 0 && daysLeft <= 14 && (
+                    <span style={{ display: 'block', marginTop: '4px', fontWeight: 600 }}>{daysLeft} days remaining</span>
+                  )}
+                </p>
+                
+                {isOpen ? (
+                  opportunity.apply_link ? (
+                    <a href={opportunity.apply_link} target="_blank" rel="noopener noreferrer" className="btn-white" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                      Apply Now <ExternalLink size={15} />
                     </a>
                   ) : (
-                    <Button disabled className="w-full opacity-60">
+                    <button className="btn-white" disabled style={{ width: '100%', opacity: 0.6, cursor: 'not-allowed' }}>
                       Apply Now
-                    </Button>
-                  )}
-                </motion.div>
-              )}
+                    </button>
+                  )
+                ) : (
+                  <button className="btn-ghost" disabled style={{ width: '100%', opacity: 0.6, cursor: 'not-allowed', color: '#F5EFE6', borderColor: 'rgba(245,239,230,0.3)', justifyContent: 'center' }}>
+                    <Lock size={16} /> Applications Closed
+                  </button>
+                )}
+              </div>
+
+              {/* Quick info card */}
+              <div className="rounded-xl p-8 reveal" style={{ background: 'var(--bg2)', border: '1px solid var(--border)', transitionDelay: '0.1s' }}>
+                <h3 style={{ fontFamily: "'Crimson Text', serif", fontSize: '22px', fontStyle: 'italic', fontWeight: 600, marginBottom: '20px', color: 'var(--fg)' }}>
+                  Summary
+                </h3>
+                <div className="space-y-4" style={{ fontSize: '14px' }}>
+                  <div>
+                    <span style={{ color: 'var(--silver)' }}>Type</span>
+                    <p style={{ color: 'var(--fg)', fontWeight: 500, marginTop: '2px' }}>{typeLabel}</p>
+                  </div>
+                  <div>
+                    <span style={{ color: 'var(--silver)' }}>Location</span>
+                    <p style={{ color: 'var(--fg)', fontWeight: 500, marginTop: '2px' }}>{opportunity.location}</p>
+                  </div>
+                  <div>
+                    <span style={{ color: 'var(--silver)' }}>Duration</span>
+                    <p style={{ color: 'var(--fg)', fontWeight: 500, marginTop: '2px' }}>{opportunity.duration}</p>
+                  </div>
+                  <div>
+                    <span style={{ color: 'var(--silver)' }}>Deadline</span>
+                    <p style={{ color: 'var(--fg)', fontWeight: 500, marginTop: '2px' }}>{formatDeadline(opportunity.deadline)}</p>
+                  </div>
+                </div>
+              </div>
 
               {/* Get Involved */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4 }}
-                className="bg-card border border-border rounded-xl p-6"
-              >
-                <h3 className="text-lg font-heading font-bold text-foreground mb-2">
+              <div className="rounded-xl p-8 reveal" style={{ background: 'var(--bg2)', border: '1px solid var(--border)', transitionDelay: '0.2s' }}>
+                <h3 style={{ fontFamily: "'Crimson Text', serif", fontSize: '22px', fontStyle: 'italic', fontWeight: 600, marginBottom: '12px', color: 'var(--fg)' }}>
                   Questions?
                 </h3>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p style={{ fontSize: '14px', color: 'var(--fg2)', lineHeight: 1.7, marginBottom: '24px' }}>
                   Interested in learning more about this opportunity or partnering with AFOSI?
                 </p>
-                <Button variant="outline" size="sm" className="w-full" asChild>
-                  <Link to="/#contact">Contact Us</Link>
-                </Button>
-              </motion.div>
+                <Link to="/#contact" className="btn-ghost" style={{ justifyContent: 'center' }}>
+                  Contact Us
+                </Link>
+              </div>
 
             </div>
           </div>
         </div>
       </section>
-
       <Footer />
-    </div>
+    </main>
   );
 };
 

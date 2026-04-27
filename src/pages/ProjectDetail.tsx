@@ -1,15 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { ArrowLeft, ExternalLink, CheckCircle2, Lightbulb, Users, Leaf, Rocket } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { ArrowLeft, ExternalLink, Users, Leaf, Rocket, Calendar, MapPin, Target, Globe, Heart, Download } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ScrollToTop from "@/components/ScrollToTop";
 
 // Icon mapping
 const iconMap: Record<string, any> = {
-  Lightbulb,
   Users,
   Leaf,
   Rocket,
@@ -63,12 +60,35 @@ const ProjectDetail = () => {
     }
   }, [slug]);
 
+  useEffect(() => {
+    if (loading) return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add("on");
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    setTimeout(() => {
+      document.querySelectorAll(".reveal").forEach((el) => obs.observe(el));
+      const heroBg = document.getElementById("heroBg");
+      if (heroBg) heroBg.classList.add("loaded");
+    }, 100);
+
+    return () => obs.disconnect();
+  }, [loading, project]);
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background flex flex-col">
         <Navbar />
-        <div className="container mx-auto px-4 py-20 text-center">
-          <p className="text-muted-foreground">Loading project...</p>
+        <div className="flex-1 flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4" style={{ borderColor: 'var(--or)' }} />
+            <p className="text-muted-foreground">Loading project...</p>
+          </div>
         </div>
         <Footer />
       </div>
@@ -82,198 +102,164 @@ const ProjectDetail = () => {
         <div className="container mx-auto px-4 py-20 text-center">
           <h1 className="text-3xl font-bold text-foreground mb-4">Project Not Found</h1>
           <p className="text-muted-foreground mb-6">The project you're looking for doesn't exist.</p>
-          <Button asChild>
-            <Link to="/projects">
-              <ArrowLeft size={16} className="mr-2" />
-              Back to Projects
-            </Link>
-          </Button>
+          <Link to="/projects" className="btn-fill" style={{ display: 'inline-flex' }}>
+            <ArrowLeft size={16} className="mr-2" />
+            Back to Projects
+          </Link>
         </div>
         <Footer />
       </div>
     );
   }
 
-  const Icon = iconMap[project.icon] || Lightbulb;
-
   return (
-    <div className="min-h-screen bg-background">
+    <main className="min-h-screen" style={{ background: 'var(--bg)' }}>
+      <ScrollToTop />
       <Navbar />
       
-      {/* Hero Section */}
-      <section className="relative py-12 md:py-20 bg-primary">
-        <div className="absolute inset-0 bg-[url('/afosi_pad.jpg')] bg-cover bg-center opacity-10"></div>
-        <div className="container mx-auto px-4 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <Link 
-              to="/projects" 
-              className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors"
-            >
-              <ArrowLeft size={20} />
-              Back to Projects
+      {/* ── FULL-BLEED HERO ── */}
+      <header className="detail-hero">
+        <div 
+          className="detail-hero-bg" 
+          id="heroBg" 
+          style={{ backgroundImage: `url('${project.image_url || '/afosi_pad.jpg'}')` }} 
+          role="img" 
+        />
+        <div className="detail-hero-overlay"></div>
+
+        {/* Breadcrumb */}
+        <div className="detail-breadcrumb">
+          <Link to="/projects">
+            <ArrowLeft size={14} style={{ display: 'inline', marginRight: '8px' }} />
+            Back to Projects
+          </Link>
+        </div>
+
+        {/* Hero content */}
+        <div className="detail-hero-content">
+          <div className="detail-eyebrow">{project.icon || 'Empowerment Program'}</div>
+          <h1 className="detail-hero-title">{project.title}</h1>
+          <p className="detail-hero-sub">{project.description || project.excerpt}</p>
+          <div className="detail-hero-stats">
+            {project.beneficiaries && (
+              <div className="detail-stat-badge">
+                <Users size={14} style={{ color: 'var(--or)' }} />
+                <strong>{project.beneficiaries}</strong> Beneficiaries
+              </div>
+            )}
+            {project.duration && (
+              <div className="detail-stat-badge">
+                <Calendar size={14} style={{ color: 'var(--or)' }} />
+                <strong>{project.duration}</strong>
+              </div>
+            )}
+          </div>
+        </div>
+      </header>
+
+      {/* ── INTRO + STICKY SIDEBAR ── */}
+      <div className="detail-body">
+        {/* LEFT: Main content */}
+        <main className="detail-main">
+          {project.full_content && project.full_content.trim() ? (
+            <div className="reveal">
+              <div className="s-label">About the Project</div>
+              <h2 className="detail-section-title">Overview</h2>
+              <div className="detail-body-text" style={{ whiteSpace: 'pre-line' }}>
+                {project.full_content}
+              </div>
+            </div>
+          ) : (
+            <div className="reveal">
+              <div className="s-label">About the Project</div>
+              <h2 className="detail-section-title">Overview</h2>
+              <p className="detail-body-text">{project.description}</p>
+            </div>
+          )}
+
+          {/* Highlights as Pull Quote / Core area */}
+          {project.highlights && project.highlights.length > 0 && (
+            <div className="reveal mt-12">
+              <div className="s-label">Highlights</div>
+              <div className="pull-quote">
+                {project.highlights.map((hl, i) => (
+                  <p key={i} style={{ marginBottom: i < project.highlights.length - 1 ? '16px' : 0 }}>
+                    {hl}
+                  </p>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          {project.link && project.is_external && (
+            <div className="reveal mt-12">
+              <a href={project.link} target="_blank" rel="noopener noreferrer" className="btn-fill">
+                Visit Project Website <ExternalLink size={16} />
+              </a>
+            </div>
+          )}
+        </main>
+
+        {/* RIGHT: Sticky sidebar */}
+        <aside className="detail-sidebar">
+          <div className="sidebar-card reveal">
+            <div className="sidebar-title">Project At a Glance</div>
+
+            {project.beneficiaries && (
+              <div className="sidebar-stat">
+                <div className="sidebar-stat-icon"><Users /></div>
+                <div>
+                  <div className="sidebar-stat-label">Beneficiaries</div>
+                  <div className="sidebar-stat-val">{project.beneficiaries} Youth</div>
+                </div>
+              </div>
+            )}
+
+            {project.duration && (
+              <div className="sidebar-stat">
+                <div className="sidebar-stat-icon"><Calendar /></div>
+                <div>
+                  <div className="sidebar-stat-label">Duration</div>
+                  <div className="sidebar-stat-val">{project.duration}</div>
+                </div>
+              </div>
+            )}
+
+            <div className="sidebar-stat">
+              <div className="sidebar-stat-icon"><Target /></div>
+              <div>
+                <div className="sidebar-stat-label">Program Type</div>
+                <div className="sidebar-stat-val">{project.icon || 'Empowerment'}</div>
+              </div>
+            </div>
+
+            <div className="sidebar-divider"></div>
+
+            <Link to="/#contact" className="sidebar-btn-fill">
+              <Heart size={14} /> Get Involved
             </Link>
             
-            <div className="flex items-start gap-6">
-              <div className="w-16 h-16 rounded-xl bg-white flex items-center justify-center shadow-lg shrink-0">
-                <Icon className="text-primary" size={32} />
-              </div>
-              
-              <div className="flex-1">
-                <h1 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-white mb-4">
-                  {project.title}
-                </h1>
-                
-                <div className="flex flex-wrap gap-3">
-                  {project.beneficiaries && (
-                    <Badge className="bg-white/20 backdrop-blur-sm text-white border-0">
-                      {project.beneficiaries} Youth
-                    </Badge>
-                  )}
-                  {project.duration && (
-                    <Badge className="bg-white/20 backdrop-blur-sm text-white border-0">
-                      {project.duration}
-                    </Badge>
-                  )}
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Content Section */}
-      <section className="py-12 md:py-16">
-        <div className="container mx-auto px-4 max-w-5xl">
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Main Content */}
-            <div className="md:col-span-2 space-y-8">
-              {/* Project Image */}
-              {project.image_url && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="rounded-2xl overflow-hidden shadow-xl"
-                >
-                  <img
-                    src={project.image_url}
-                    alt={project.title}
-                    className="w-full h-auto object-cover"
-                  />
-                </motion.div>
-              )}
-
-              {/* Full Content */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="prose prose-lg max-w-none"
-              >
-                <div className="text-foreground leading-relaxed whitespace-pre-line">
-                  {project.full_content || project.description}
-                </div>
-              </motion.div>
-
-              {/* Project Link */}
-              {project.link && project.is_external && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                >
-                  <Button variant="hero" size="lg" className="gap-2" asChild>
-                    <a href={project.link} target="_blank" rel="noopener noreferrer">
-                      Visit Project Website
-                      <ExternalLink size={18} />
-                    </a>
-                  </Button>
-                </motion.div>
-              )}
-            </div>
-
-            {/* Sidebar */}
-            <div className="space-y-6">
-              {/* Highlights */}
-              {project.highlights.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="bg-card border border-border rounded-xl p-6"
-                >
-                  <h3 className="text-lg font-heading font-bold text-foreground mb-4">
-                    Key Highlights
-                  </h3>
-                  <div className="space-y-3">
-                    {project.highlights.map((highlight, idx) => (
-                      <div key={idx} className="flex items-start gap-3">
-                        <CheckCircle2 size={20} className="text-primary shrink-0 mt-0.5" />
-                        <span className="text-sm text-foreground">{highlight}</span>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-
-              {/* Project Info */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4 }}
-                className="bg-card border border-border rounded-xl p-6"
-              >
-                <h3 className="text-lg font-heading font-bold text-foreground mb-4">
-                  Project Information
-                </h3>
-                <div className="space-y-3 text-sm">
-                  {project.beneficiaries && (
-                    <div>
-                      <span className="text-muted-foreground">Beneficiaries:</span>
-                      <p className="text-foreground font-medium">{project.beneficiaries} Youth</p>
-                    </div>
-                  )}
-                  {project.duration && (
-                    <div>
-                      <span className="text-muted-foreground">Duration:</span>
-                      <p className="text-foreground font-medium">{project.duration}</p>
-                    </div>
-                  )}
-                  <div>
-                    <span className="text-muted-foreground">Category:</span>
-                    <p className="text-foreground font-medium">{project.icon}</p>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* CTA */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.5 }}
-                className="bg-primary/10 border border-primary/20 rounded-xl p-6"
-              >
-                <h3 className="text-lg font-heading font-bold text-foreground mb-2">
-                  Get Involved
-                </h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Interested in supporting or partnering with this project?
-                </p>
-                <Button variant="outline" size="sm" className="w-full" asChild>
-                  <Link to="/#contact">Contact Us</Link>
-                </Button>
-              </motion.div>
-            </div>
+            <p className="sidebar-note">Part of AFOSI's broader SRHR and youth empowerment portfolio</p>
           </div>
+        </aside>
+      </div>
+
+      {/* ── CTA BANNER ── */}
+      <section className="detail-cta">
+        <h2 className="detail-cta-title reveal">Be Part of the <span>Change</span></h2>
+        <p className="detail-cta-sub reveal">Support our efforts in creating sustainable impact across Kenya.</p>
+        <div className="detail-cta-btns reveal">
+          <Link to="/#contact" className="btn-fill">
+            <Heart size={14} /> Get Involved
+          </Link>
+          <Link to="/projects" className="btn-ghost">
+            <ArrowLeft size={14} /> Back to Projects
+          </Link>
         </div>
       </section>
 
       <Footer />
-    </div>
+    </main>
   );
 };
 

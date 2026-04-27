@@ -1,73 +1,34 @@
-import { Moon, Sun, Monitor } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
-import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
-  const [isOpen, setIsOpen] = useState(false);
 
-  const themes = [
-    { value: "light" as const, label: "Light", icon: Sun },
-    { value: "dark" as const, label: "Dark", icon: Moon },
-    { value: "system" as const, label: "System", icon: Monitor },
-  ];
+  const toggleTheme = () => {
+    // If system is selected, we resolve it first
+    if (theme === "system") {
+      const isSystemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      setTheme(isSystemDark ? "light" : "dark");
+    } else {
+      setTheme(theme === "dark" ? "light" : "dark");
+    }
+  };
 
-  const currentTheme = themes.find((t) => t.value === theme) || themes[2];
-  const Icon = currentTheme.icon;
+  // We determine the active theme to conditionally render icons,
+  // matching the new design's logic where light theme shows sun and dark shows moon.
+  // Wait, the new design logic uses CSS display:none based on html[data-theme="light"],
+  // but since we are in React, we can just render conditionally.
+  // Actually, the new design uses .icon-moon and .icon-sun classes, but we can just use conditional rendering.
+  
+  const isLight = theme === "light" || (theme === "system" && !window.matchMedia("(prefers-color-scheme: dark)").matches);
 
   return (
-    <div className="relative">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-10 h-10 rounded-lg bg-accent hover:bg-accent/80 flex items-center justify-center transition-colors"
-        aria-label="Toggle theme"
-      >
-        <Icon size={20} className="text-foreground" />
-      </button>
-
-      <AnimatePresence>
-        {isOpen && (
-          <>
-            {/* Backdrop */}
-            <div
-              className="fixed inset-0 z-40"
-              onClick={() => setIsOpen(false)}
-            />
-
-            {/* Dropdown - centered below button, won't overflow on mobile */}
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
-              className="absolute mt-2 w-36 bg-card border border-border rounded-lg shadow-lg overflow-hidden z-50"
-              style={{ right: 0, maxWidth: '90vw' }}
-            >
-              {themes.map((t) => {
-                const ThemeIcon = t.icon;
-                return (
-                  <button
-                    key={t.value}
-                    onClick={() => {
-                      setTheme(t.value);
-                      setIsOpen(false);
-                    }}
-                    className={`w-full px-4 py-3 flex items-center gap-3 transition-colors ${
-                      theme === t.value
-                        ? "bg-primary text-primary-foreground"
-                        : "hover:bg-accent text-foreground"
-                    }`}
-                  >
-                    <ThemeIcon size={18} />
-                    <span className="font-semibold text-sm">{t.label}</span>
-                  </button>
-                );
-              })}
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-    </div>
+    <button
+      onClick={toggleTheme}
+      className="theme-toggle"
+      aria-label="Toggle theme"
+    >
+      {isLight ? <Sun size={18} /> : <Moon size={18} />}
+    </button>
   );
 }

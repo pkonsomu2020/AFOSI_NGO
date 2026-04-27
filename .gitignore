@@ -38,3 +38,7 @@ MD FILES/
 
 # Sensitive admin route files
 backend/routes/admin.js
+
+# User requested ignore folders
+AFOSI RE-DESIGN PROJECT/
+project writeups/

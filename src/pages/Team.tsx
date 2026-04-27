@@ -1,187 +1,286 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Users, Award, Briefcase, Monitor, BarChart2, DollarSign, Layers } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import ScrollToTop from "@/components/ScrollToTop";
-
-interface TeamMember {
-  name: string;
-  role: string;
-  image: string;
-}
-
-const boardMembers: TeamMember[] = [
-  { name: "Eva Nchogu", role: "Board Chairperson", image: "/TEAMS/eva.jpg" },
-  { name: "Winnie Osoro", role: "Board Treasurer", image: "/TEAMS/winnie.jpg" },
-  { name: "Lucy Mogesi", role: "Board Member", image: "/TEAMS/Lucy Mogesi.jpeg" },
-  { name: "Anne Nderitu", role: "Board Member", image: "/TEAMS/anne.jpg" },
-];
-
-const management: TeamMember[] = [
-  { name: "Eric Nyamwaro", role: "Executive Director", image: "/TEAMS/eric.jpg" },
-  { name: "Esther Mwikali", role: "National Coordinator", image: "/TEAMS/esther.jpg" },
-];
-
-const departments = [
-  {
-    name: "Programs Department",
-    icon: Layers,
-    members: [
-      { name: "Prisca Achieng", role: "Program Assistant", image: "/TEAMS/prisca.jpg" },
-      { name: "Davin Omollo", role: "Project Associate", image: "/TEAMS/davin.jpg" },
-      { name: "Ivy Awuor", role: "Programs", image: "/TEAMS/ivy.jpg" },
-      { name: "Felix Omondi", role: "Programs", image: "/TEAMS/FELIX OMONDI.png" },
-      { name: "Magdaline Watahi", role: "Programs", image: "/TEAMS/magda.jpg" },
-      { name: "Barbra Wanjiku", role: "Programs", image: "/TEAMS/Barbra Wanjiru.jpeg" },
-    ],
-  },
-  {
-    name: "MEAL Department",
-    icon: BarChart2,
-    members: [
-      { name: "Vanessa Wambui", role: "Data Specialist", image: "/TEAMS/vanessa-pic.jpeg" },
-      { name: "Fredrick Ongaki", role: "MEAL Specialist", image: "/TEAMS/ongaki.jpg" },
-    ],
-  },
-  {
-    name: "IT & Communication",
-    icon: Monitor,
-    members: [
-      { name: "Elisha Papa", role: "IT Specialist", image: "/TEAMS/papa.jpg" },
-      { name: "Virginia Kerubo", role: "Communications Lead", image: "/TEAMS/virginia.jpg" },
-      { name: "Joe Liban", role: "IT & Communication", image: "/placeholder.svg" },
-      { name: "Peter Onsomu", role: "IT & Communication", image: "/TEAMS/Peter Onsomu.jpg" },
-    ],
-  },
-  {
-    name: "Finance Department",
-    icon: DollarSign,
-    members: [
-      { name: "Elizabeth Muthoni", role: "Finance Officer", image: "/TEAMS/muthoni.jpg" },
-      { name: "Titus", role: "Finance", image: "/TEAMS/titus.jpeg" },
-    ],
-  },
-];
-
-const MemberCard = ({ member, delay = 0 }: { member: TeamMember; delay?: number }) => {
-  const [imgError, setImgError] = useState(false);
-  const initials = member.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.4, delay }}
-      className="group"
-    >
-      {/* Portrait card */}
-      <div className="relative rounded-2xl overflow-hidden aspect-[3/4] mb-3 shadow-sm bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/10 border border-border/50">
-        {!imgError ? (
-          <img
-            src={member.image}
-            alt={member.name}
-            className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
-            onError={() => setImgError(true)}
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <span className="text-5xl font-black text-orange-400/40">{initials}</span>
-          </div>
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-orange-600/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
-      </div>
-      {/* Name & role */}
-      <h4 className="text-sm font-bold text-foreground leading-tight">{member.name}</h4>
-      <p className="text-xs text-primary font-semibold uppercase tracking-wider mt-0.5">{member.role}</p>
-    </motion.div>
-  );
-};
-
-const SectionHeading = ({ icon: Icon, label }: { icon: any; label: string }) => (
-  <motion.div
-    initial={{ opacity: 0, x: -20 }}
-    whileInView={{ opacity: 1, x: 0 }}
-    viewport={{ once: true }}
-    className="flex items-center gap-3 mb-8"
-  >
-    <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full border border-primary/20">
-      <Icon size={15} className="text-primary" />
-      <span className="text-xs font-bold text-foreground uppercase tracking-widest">{label}</span>
-    </div>
-    <div className="flex-1 h-px bg-border" />
-  </motion.div>
-);
+import { useEffect } from "react";
 
 const Team = () => {
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("on");
+            obs.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    document.querySelectorAll(".reveal").forEach((el) => obs.observe(el));
+
+    return () => obs.disconnect();
+  }, []);
+
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <ScrollToTop />
-
-      <div className="container mx-auto px-6 sm:px-8 max-w-7xl pt-32 pb-20">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-16"
-        >
-          <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold tracking-widest uppercase mb-3">
-            Our People
-          </span>
-          <h1 className="text-4xl md:text-6xl font-black text-foreground leading-tight">
-            Meet the Team Behind <span className="text-primary">AFOSI</span>
-          </h1>
-          <p className="text-muted-foreground mt-4 max-w-2xl text-base">
-            A passionate group of professionals dedicated to creating sustainable impact across Kenya.
-          </p>
-        </motion.div>
-
-        {/* Board Members */}
-        <div className="mb-16">
-          <SectionHeading icon={Award} label="Board Members" />
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-            {boardMembers.map((m, i) => <MemberCard key={m.name} member={m} delay={i * 0.07} />)}
-          </div>
-        </div>
-
-        {/* Management */}
-        <div className="mb-16">
-          <SectionHeading icon={Briefcase} label="Management Team" />
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-            {management.map((m, i) => <MemberCard key={m.name} member={m} delay={i * 0.07} />)}
-          </div>
-        </div>
-
-        {/* Core Team — flat grid per department, no dropdown */}
-        <div>
-          <SectionHeading icon={Users} label="Core Team" />
-          <div className="space-y-14">
-            {departments.map((dept) => {
-              const Icon = dept.icon;
-              return (
-                <div key={dept.name}>
-                  {/* Department sub-label */}
-                  <div className="flex items-center gap-2 mb-6">
-                    <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <Icon size={14} className="text-primary" />
-                    </div>
-                    <span className="text-sm font-bold text-foreground">{dept.name}</span>
-                    <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
-                      {dept.members.length} members
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5">
-                    {dept.members.map((m, i) => <MemberCard key={m.name} member={m} delay={i * 0.06} />)}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+    <main>
+      {/* PAGE HERO */}
+      <div className="team-hero">
+        <div className="hero-line"></div>
+        <h1 className="team-hero-title">
+          <span className="t-fg">Meet the</span>
+          <br />
+          <span className="t-or">Team</span>
+        </h1>
+        <p className="team-hero-sub">
+          A passionate group of professionals dedicated to creating sustainable impact across Kenya.
+        </p>
       </div>
-    </div>
+
+      {/* BOARD MEMBERS */}
+      <section className="team-section">
+        <div className="s-label reveal">Leadership</div>
+        <h2 className="section-title reveal">
+          <span className="t-fg">Board</span> <span className="t-or">Members</span>
+        </h2>
+        <div className="team-grid reveal" style={{ transitionDelay: ".1s" }}>
+          <div className="team-card">
+            <div className="team-card-img">
+              <img src="https://afosi.org/TEAMS/eva.jpg" alt="Eva Nchogu" loading="lazy" />
+            </div>
+            <div className="team-card-body">
+              <div className="team-name">Eva Nchogu</div>
+              <div className="team-role">Board Chairperson</div>
+            </div>
+          </div>
+
+          <div className="team-card">
+            <div className="team-card-img">
+              <img src="https://afosi.org/TEAMS/winnie.jpg" alt="Winnie Osoro" loading="lazy" />
+            </div>
+            <div className="team-card-body">
+              <div className="team-name">Winnie Osoro</div>
+              <div className="team-role">Board Treasurer</div>
+            </div>
+          </div>
+
+          <div className="team-card">
+            <div className="team-card-img">
+              <img src="https://afosi.org/TEAMS/Lucy%20Mogesi.jpeg" alt="Lucy Mogesi" loading="lazy" />
+            </div>
+            <div className="team-card-body">
+              <div className="team-name">Lucy Mogesi</div>
+              <div className="team-role">Board Member</div>
+            </div>
+          </div>
+
+          <div className="team-card">
+            <div className="team-card-img">
+              <img src="https://afosi.org/TEAMS/anne.jpg" alt="Anne Nderitu" loading="lazy" />
+            </div>
+            <div className="team-card-body">
+              <div className="team-name">Anne Nderitu</div>
+              <div className="team-role">Board Member</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* MANAGEMENT TEAM */}
+      <section className="team-section alt">
+        <div className="s-label reveal">Leadership</div>
+        <h2 className="section-title reveal">
+          <span className="t-fg">Management</span> <span className="t-or">Team</span>
+        </h2>
+        <div className="team-grid two-col reveal" style={{ transitionDelay: ".1s" }}>
+          <div className="team-card">
+            <div className="team-card-img">
+              <img src="https://afosi.org/TEAMS/eric.jpg" alt="Eric Nyamwaro" loading="lazy" />
+            </div>
+            <div className="team-card-body">
+              <div className="team-name">Eric Nyamwaro</div>
+              <div className="team-role">Executive Director</div>
+            </div>
+          </div>
+
+          <div className="team-card">
+            <div className="team-card-img">
+              <img src="https://afosi.org/TEAMS/esther.jpg" alt="Esther Mwikali" loading="lazy" />
+            </div>
+            <div className="team-card-body">
+              <div className="team-name">Esther Mwikali</div>
+              <div className="team-role">National Coordinator</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CORE TEAM */}
+      <section className="team-section">
+        <div className="s-label reveal">Staff</div>
+        <h2 className="section-title reveal">
+          <span className="t-fg">Core</span> <span className="t-or">Team</span>
+        </h2>
+
+        {/* Programs */}
+        <div className="dept-label reveal">Programs Department</div>
+        <div className="team-grid three-col reveal" style={{ transitionDelay: ".08s" }}>
+          <div className="team-card">
+            <div className="team-card-img">
+              <img src="https://afosi.org/TEAMS/prisca.jpg" alt="Prisca Achieng" loading="lazy" />
+            </div>
+            <div className="team-card-body">
+              <div className="team-name">Prisca Achieng</div>
+              <div className="team-role">Program Assistant</div>
+            </div>
+          </div>
+
+          <div className="team-card">
+            <div className="team-card-img">
+              <img src="https://afosi.org/TEAMS/davin.jpg" alt="Davin Omollo" loading="lazy" />
+            </div>
+            <div className="team-card-body">
+              <div className="team-name">Davin Omollo</div>
+              <div className="team-role">Project Associate</div>
+            </div>
+          </div>
+
+          <div className="team-card">
+            <div className="team-card-img">
+              <img src="https://afosi.org/TEAMS/ivy.jpg" alt="Ivy Awuor" loading="lazy" />
+            </div>
+            <div className="team-card-body">
+              <div className="team-name">Ivy Awuor</div>
+              <div className="team-role">Programs</div>
+            </div>
+          </div>
+
+          <div className="team-card">
+            <div className="team-card-img">
+              <img src="https://afosi.org/TEAMS/FELIX%20OMONDI.png" alt="Felix Omondi" loading="lazy" />
+            </div>
+            <div className="team-card-body">
+              <div className="team-name">Felix Omondi</div>
+              <div className="team-role">Programs</div>
+            </div>
+          </div>
+
+          <div className="team-card">
+            <div className="team-card-img">
+              <img src="https://afosi.org/TEAMS/magda.jpg" alt="Magdaline Watahi" loading="lazy" />
+            </div>
+            <div className="team-card-body">
+              <div className="team-name">Magdaline Watahi</div>
+              <div className="team-role">Programs</div>
+            </div>
+          </div>
+
+          <div className="team-card">
+            <div className="team-card-img">
+              <img src="https://afosi.org/TEAMS/Barbra%20Wanjiru.jpeg" alt="Barbra Wanjiku" loading="lazy" />
+            </div>
+            <div className="team-card-body">
+              <div className="team-name">Barbra Wanjiku</div>
+              <div className="team-role">Programs</div>
+            </div>
+          </div>
+        </div>
+
+        {/* MEAL */}
+        <div className="dept-label reveal" style={{ marginTop: "64px" }}>
+          MEAL Department
+        </div>
+        <div className="team-grid two-col reveal" style={{ transitionDelay: ".08s" }}>
+          <div className="team-card">
+            <div className="team-card-img">
+              <img src="https://afosi.org/TEAMS/vanessa-pic.jpeg" alt="Vanessa Wambui" loading="lazy" />
+            </div>
+            <div className="team-card-body">
+              <div className="team-name">Vanessa Wambui</div>
+              <div className="team-role">Data Specialist</div>
+            </div>
+          </div>
+
+          <div className="team-card">
+            <div className="team-card-img">
+              <img src="https://afosi.org/TEAMS/ongaki.jpg" alt="Fredrick Ongaki" loading="lazy" />
+            </div>
+            <div className="team-card-body">
+              <div className="team-name">Fredrick Ongaki</div>
+              <div className="team-role">MEAL Specialist</div>
+            </div>
+          </div>
+        </div>
+
+        {/* IT & Comms */}
+        <div className="dept-label reveal" style={{ marginTop: "64px" }}>
+          IT &amp; Communication
+        </div>
+        <div className="team-grid reveal" style={{ transitionDelay: ".08s" }}>
+          <div className="team-card">
+            <div className="team-card-img">
+              <img src="https://afosi.org/TEAMS/papa.jpg" alt="Elisha Papa" loading="lazy" />
+            </div>
+            <div className="team-card-body">
+              <div className="team-name">Elisha Papa</div>
+              <div className="team-role">IT Specialist</div>
+            </div>
+          </div>
+
+          <div className="team-card">
+            <div className="team-card-img">
+              <img src="https://afosi.org/TEAMS/virginia.jpg" alt="Virginia Kerubo" loading="lazy" />
+            </div>
+            <div className="team-card-body">
+              <div className="team-name">Virginia Kerubo</div>
+              <div className="team-role">Communications Lead</div>
+            </div>
+          </div>
+
+          <div className="team-card">
+            <div className="team-card-img">
+              <div className="img-placeholder">JL</div>
+            </div>
+            <div className="team-card-body">
+              <div className="team-name">Joe Liban</div>
+              <div className="team-role">IT &amp; Communication</div>
+            </div>
+          </div>
+
+          <div className="team-card">
+            <div className="team-card-img">
+              <img src="https://afosi.org/TEAMS/Peter%20Onsomu.jpg" alt="Peter Onsomu" loading="lazy" />
+            </div>
+            <div className="team-card-body">
+              <div className="team-name">Peter Onsomu</div>
+              <div className="team-role">IT &amp; Communication</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Finance */}
+        <div className="dept-label reveal" style={{ marginTop: "64px" }}>
+          Finance Department
+        </div>
+        <div className="team-grid two-col reveal" style={{ transitionDelay: ".08s" }}>
+          <div className="team-card">
+            <div className="team-card-img">
+              <img src="https://afosi.org/TEAMS/muthoni.jpg" alt="Elizabeth Muthoni" loading="lazy" />
+            </div>
+            <div className="team-card-body">
+              <div className="team-name">Elizabeth Muthoni</div>
+              <div className="team-role">Finance Officer</div>
+            </div>
+          </div>
+
+          <div className="team-card">
+            <div className="team-card-img">
+              <img src="https://afosi.org/TEAMS/titus.jpeg" alt="Titus" loading="lazy" />
+            </div>
+            <div className="team-card-body">
+              <div className="team-name">Titus</div>
+              <div className="team-role">Finance</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 };
 

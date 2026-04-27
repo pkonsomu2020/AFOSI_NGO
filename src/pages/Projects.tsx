@@ -1,284 +1,315 @@
-import { motion } from "framer-motion";
-import { Lightbulb, Users, Leaf, Rocket, ArrowUpRight, CheckCircle2, ExternalLink, ArrowLeft, FolderKanban } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Link } from "react-router-dom";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import { useEffect, useState } from "react";
-import { projectsAPI } from "@/services/api";
+import { useState, useEffect } from "react";
+import { ArrowRight } from "lucide-react";
 
-// Icon mapping
-const iconMap: Record<string, any> = {
-  Lightbulb,
-  Users,
-  Leaf,
-  Rocket,
-};
-
-interface Project {
-  id: string;
-  title: string;
-  description: string;
-  image_url: string;
-  icon: string;
-  beneficiaries: string;
-  duration: string;
-  highlights: string[];
-  link: string;
-  is_external: boolean;
-  is_featured: boolean;
-  display_order: number;
-  has_subpage?: boolean;
-  excerpt?: string;
-  slug?: string;
-}
-
-const staticProjects: Project[] = [
+const projectsData = [
   {
-    id: "we-lead",
-    title: "We Lead",
-    description: "Strengthening the influence and position of young women whose sexual and reproductive health and rights are neglected the most.",
-    image_url: "/PROJECT-IMAGES/welead-project.jpg",
-    icon: "Users",
-    beneficiaries: "500+",
-    duration: "Ongoing",
-    highlights: ["Young women living with HIV", "Women with disabilities", "Displacement-affected youth"],
+    id: "01",
+    cat: "Empowerment",
+    title: "We Lead Project",
+    desc: "A bold initiative placing young women at the centre of change — building leadership, agency, and resilience among the most marginalised youth in Kenya.",
+    stats: [
+      { val: "500+", lbl: "Youth" },
+      { val: "Ongoing", lbl: "Status" }
+    ],
+    tags: ["Young women with HIV", "Women with disabilities", "Displacement-affected youth"],
     link: "/programs/we-lead",
-    is_external: false,
-    is_featured: true,
-    display_order: 1,
+    bg: "https://pmigmljjnyucethipdtk.supabase.co/storage/v1/object/public/afosi-projects/1776244075815-WE_LEAD_BG.jpg",
+    type: "feature"
   },
   {
-    id: "math-project",
+    id: "02",
+    cat: "Digital",
+    title: "Robotics & Creative Coding",
+    desc: "In collaboration with STEM Impact Center Kenya, this program introduces youth in informal settlements to robotics, creative coding, and digital innovation — developing critical thinking and problem-solving skills that prepare young people for careers in the digital economy.",
+    stats: [
+      { val: "300+", lbl: "Youth" },
+      { val: "12", lbl: "Months" }
+    ],
+    tags: ["STEM Education", "Hands-on Learning", "Innovation Skills"],
+    link: "/programs/robotics-coding",
+    bg: "https://afosi.org/PROJECT-IMAGES/robotics-coding-img.png",
+    type: "split"
+  },
+  {
+    id: "03",
+    cat: "Education",
     title: "The M.A.T.H Project",
-    description: "Mazingira, Afya, Tumaini, na Haki yetu — Education for Sustainable Development in 60 APBET schools in Kibera and Mukuru.",
-    image_url: "/afosi_pad2.jpg",
-    icon: "Leaf",
-    beneficiaries: "10,000+",
-    duration: "2025–2028",
-    highlights: ["60 APBET schools targeted", "ESD Policy advocacy", "Youth climate innovation"],
+    desc: "The M.A.T.H Project (Mazingira, Afya, Tumaini, na Haki yetu) is a three-year initiative (2025–2028) implemented in 60 APBET schools in Kibera and Mukuru, supporting the review and implementation of Kenya's Education for Sustainable Development (ESD) Policy.",
+    stats: [
+      { val: "10,000+", lbl: "Youth" },
+      { val: "2025–28", lbl: "Timeline" }
+    ],
+    tags: ["60 APBET schools", "ESD Policy advocacy", "Youth climate innovation"],
     link: "/programs/math-project",
-    is_external: false,
-    is_featured: true,
-    display_order: 2,
+    bg: "https://pmigmljjnyucethipdtk.supabase.co/storage/v1/object/public/afosi-projects/1776244146444-MATH_BG.jpg",
+    type: "split",
+    reverse: true,
+    alt: true
   },
   {
-    id: "sheria-ya-vijana",
+    id: "04",
+    cat: "Empowerment",
     title: "Sheria Ya Vijana",
-    description: "Empowering youth in Nairobi and Kwale to lead Kenya's twin green and digital transition through skills, leadership, and policy engagement.",
-    image_url: "/afosi_pad3.jpg",
-    icon: "Rocket",
-    beneficiaries: "5,875",
-    duration: "Ongoing",
-    highlights: ["Kiongozi AI platform", "Green & digital apprenticeships", "Youth-led enterprise grants"],
+    desc: "Sheria Ya Vijana empowers youth in Nairobi and Kwale by strengthening their skills, leadership, and participation in the green and digital economy through training, mentorship, digital tools, and policy engagement platforms.",
+    stats: [
+      { val: "5,875", lbl: "Youth" },
+      { val: "Ongoing", lbl: "Status" }
+    ],
+    tags: ["Kiongozi AI platform", "Green & digital apprenticeships", "Youth-led enterprise grants"],
     link: "/programs/sheria-ya-vijana",
-    is_external: false,
-    is_featured: true,
-    display_order: 3,
+    bg: "https://pmigmljjnyucethipdtk.supabase.co/storage/v1/object/public/afosi-projects/1776244163145-SHERIA_BG.jpg",
+    type: "split"
   },
   {
-    id: "yoma",
+    id: "05",
+    cat: "Digital",
     title: "YOMA — Youth Agency Marketplace",
-    description: "A digital marketplace creating pathways to improve youth employability through learning, earning, and climate innovation across Kenya.",
-    image_url: "/afosi_pad1.jpg",
-    icon: "Lightbulb",
-    beneficiaries: "69,000",
-    duration: "Ongoing",
-    highlights: ["Youth Climate Innovation Challenge", "Digital skills pathways", "YOMA Hub in Nairobi"],
+    desc: "YOMA is a digital marketplace that opens up a world of opportunities to young people. Through a unique digital identity, young people navigate opportunities to learn, earn, and impact their communities. Being scaled to reach 69,000 youth across Nairobi, Kisumu, and Mombasa.",
+    stats: [
+      { val: "69,000", lbl: "Youth" },
+      { val: "Ongoing", lbl: "Status" }
+    ],
+    tags: ["Youth Climate Innovation Challenge", "Digital skills pathways", "YOMA Hub in Nairobi"],
     link: "/programs/yoma",
-    is_external: false,
-    is_featured: true,
-    display_order: 4,
+    bg: "https://pmigmljjnyucethipdtk.supabase.co/storage/v1/object/public/afosi-projects/1776244186463-YOMA_BG.jpg",
+    type: "split",
+    reverse: true,
+    alt: true
   },
   {
-    id: "youth-voices-lab",
-    title: "Youth Voices Lab",
-    description: "Unheard to Influential — harnessing AI and digital advocacy to give voice to marginalized young women in Mukuru, Nairobi.",
-    image_url: "/afosi_pad.jpg",
-    icon: "Users",
-    beneficiaries: "150+",
-    duration: "12 months",
-    highlights: ["AI-driven storytelling tools", "Policy advocacy training", "15 intervention countries"],
-    link: "/programs/youth-voices-lab",
-    is_external: false,
-    is_featured: true,
-    display_order: 5,
+    id: "06",
+    cat: "Digital",
+    title: "Forest Explorer",
+    desc: "Forest Explorer is a game-based learning platform that uses interactive gameplay mechanics to teach educational concepts through exploration, challenges, and immersive digital environments.",
+    stats: [
+      { val: "100+", lbl: "Youth" },
+      { val: "Ongoing", lbl: "Status" }
+    ],
+    tags: ["Interactive gameplay mechanics", "Embedded learning objectives", "Engagement psychology"],
+    link: "https://forest-explorer-pi.vercel.app/",
+    bg: "https://pmigmljjnyucethipdtk.supabase.co/storage/v1/object/public/afosi-images/gallery/bcfaefa0-c598-4e67-ae04-ccb653c8dfe0.png",
+    type: "split",
+    external: true
   },
+  {
+    id: "07",
+    cat: "Health",
+    title: "Youth Voices Lab",
+    desc: "Unheard to Influential is a 12-month initiative harnessing AI and digital advocacy to give voice to young women living with HIV and young women with disabilities in Mukuru, Nairobi — transforming them from passive recipients of policy into active architects of change.",
+    stats: [
+      { val: "150+", lbl: "Youth" },
+      { val: "12", lbl: "Months" }
+    ],
+    tags: ["AI-driven storytelling tools", "Policy advocacy training", "15 intervention countries"],
+    link: "/programs/youth-voices-lab",
+    bg: "https://pmigmljjnyucethipdtk.supabase.co/storage/v1/object/public/afosi-projects/1776244201335-YOUTHVOICESLAB_BG.jpg",
+    type: "split",
+    reverse: true,
+    alt: true
+  },
+  {
+    id: "08",
+    cat: "Digital",
+    title: "AI-Powered Music-Based Learning",
+    desc: "The AI-Powered Music-Based Learning platform converts curriculum content into short, high-energy music videos using AI for lyric generation, producing 20–60 second videos optimized for short-form platforms.",
+    stats: [
+      { val: "100+", lbl: "Youth" },
+      { val: "Ongoing", lbl: "Status" }
+    ],
+    tags: ["AI lyric generation", "Short-form video", "Curriculum integration"],
+    link: "#",
+    bg: "https://pmigmljjnyucethipdtk.supabase.co/storage/v1/object/public/afosi-images/gallery/4a8211e1-5afe-4f56-a5ae-797efdfab615.png",
+    type: "split",
+    disabled: true
+  }
 ];
 
-const Projects = () => {
-  const [projects, setProjects] = useState<Project[]>(staticProjects);
+const filters = ["all", "Empowerment", "Education", "Digital", "Environment", "Health"];
 
+const Projects = () => {
+  const [activeFilter, setActiveFilter] = useState("all");
+
+  const filteredProjects = projectsData.filter(
+    (p) => activeFilter === "all" || p.cat === activeFilter
+  );
+
+  // Re-run observer when filter changes to catch newly revealed elements
   useEffect(() => {
-    projectsAPI.getAll()
-      .then(r => { if (r.data?.length) setProjects(r.data); })
-      .catch(() => {});
-  }, []);
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("on");
+            obs.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.08 }
+    );
+    document.querySelectorAll(".reveal").forEach((el) => obs.observe(el));
+
+    return () => obs.disconnect();
+  }, [filteredProjects]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      
-      {/* Hero Section */}
-      <section className="relative py-20 sm:py-24 md:py-32 lg:py-40 overflow-hidden">
-        {/* Background Image */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: "url('/HERO_4.jpg')",
-          }}
-        />
-        
-        {/* Black Overlay */}
-        <div className="absolute inset-0 bg-black/70" />
-        
-        {/* Content */}
-        <div className="container mx-auto px-4 sm:px-6 relative z-10">
-          <Link to="/" className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors mb-6 sm:mb-8 group">
-            <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-            <span className="text-sm font-semibold">Back to Home</span>
-          </Link>
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+    <main>
+      {/* PAGE HERO */}
+      <header className="proj-hero">
+        <div className="hero-eyebrow">Programs &amp; Initiatives</div>
+        <h1 className="proj-hero-title">
+          What We<br />
+          <span>Build</span>
+        </h1>
+        <p className="proj-hero-sub">
+          Eight transformative programs driving sustainable change across Kenya — from digital innovation to climate action.
+        </p>
+        <div className="hero-pills">
+          <div className="hero-pill">
+            <strong>8</strong> Active Programs
+          </div>
+          <div className="hero-pill">
+            <strong>69,000+</strong> Youth Reached
+          </div>
+        </div>
+      </header>
+
+      {/* FILTER STRIP */}
+      <div id="filter-strip" role="navigation" aria-label="Filter projects">
+        {filters.map((f) => (
+          <button
+            key={f}
+            className={`filter-pill ${activeFilter === f ? "active" : ""}`}
+            onClick={() => setActiveFilter(f)}
           >
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-4">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-sm shrink-0">
-                <FolderKanban className="text-white" size={24} />
+            {f}
+          </button>
+        ))}
+      </div>
+
+      {/* PROJECTS LIST */}
+      <div>
+        {filteredProjects.map((p, index) => {
+          const isFeature = p.type === "feature";
+          const classes = isFeature
+            ? "proj-feature reveal"
+            : `proj-split ${p.reverse ? "reverse" : ""} ${p.alt ? "alt" : ""} reveal`;
+
+          const Content = (
+            <div className={isFeature ? "proj-feature-content" : "proj-split-content"}>
+              <span className="proj-num" aria-hidden="true">
+                {p.id}
+              </span>
+              <div className="proj-cat">{p.cat}</div>
+              <h2 className="proj-title-lg">{p.title}</h2>
+              <p className="proj-desc-text">{p.desc}</p>
+              
+              <div className="proj-stats-row">
+                {p.stats.map((s, i) => (
+                  <div className="proj-stat" key={i}>
+                    <span className="proj-stat-val">{s.val}</span>
+                    <span className="proj-stat-lbl">{s.lbl}</span>
+                  </div>
+                ))}
               </div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-white leading-tight">
-                Our Projects
-              </h1>
+              
+              <div className="proj-tags">
+                {p.tags.map((t, i) => (
+                  <span className="proj-tag" key={i}>
+                    {t}
+                  </span>
+                ))}
+              </div>
+              
+              <a
+                href={p.link}
+                className="proj-link-btn"
+                aria-disabled={p.disabled}
+                target={p.external ? "_blank" : undefined}
+                rel={p.external ? "noopener noreferrer" : undefined}
+              >
+                {p.disabled ? "Coming Soon" : "Explore Project"} <span className="arr"><ArrowRight size={18} /></span>
+              </a>
             </div>
-            <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-2xl leading-relaxed">
-              Transformative initiatives making a real difference in communities across Kenya
-            </p>
-          </motion.div>
+          );
+
+          const Image = (
+            <div
+              className={isFeature ? "proj-feature-img" : "proj-split-img"}
+              style={{ backgroundImage: `url('${p.bg}')` }}
+              role="img"
+              aria-label={p.title}
+            ></div>
+          );
+
+          // We insert the impact strip right after project 04 (index visually based on ID, but array mapped so if filtered, might shift).
+          // The HTML put it after 04. Let's just put it if p.id === '04'
+          return (
+            <div key={p.id} style={{ display: 'contents' }}>
+              <article className={classes} data-category={p.cat}>
+                {isFeature ? (
+                  <>
+                    {Content}
+                    {Image}
+                  </>
+                ) : (
+                  <>
+                    {p.reverse ? (
+                      <>
+                        {Content}
+                        {Image}
+                      </>
+                    ) : (
+                      <>
+                        {Image}
+                        {Content}
+                      </>
+                    )}
+                  </>
+                )}
+              </article>
+              {p.id === "04" && (
+                <div className="impact-strip" aria-label="Impact statistics">
+                  <div>
+                    <div className="impact-stat-val">69,000+</div>
+                    <div className="impact-stat-lbl">Youth Reached</div>
+                  </div>
+                  <div>
+                    <div className="impact-stat-val">8</div>
+                    <div className="impact-stat-lbl">Active Programs</div>
+                  </div>
+                  <div>
+                    <div className="impact-stat-val">60+</div>
+                    <div className="impact-stat-lbl">Schools</div>
+                  </div>
+                  <div>
+                    <div className="impact-stat-val">10</div>
+                    <div className="impact-stat-lbl">Years of Impact</div>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* CTA SECTION */}
+      <section className="proj-cta reveal">
+        <div>
+          <h2 className="proj-cta-title">Want to Partner With Us?</h2>
+          <p className="proj-cta-sub">
+            Join us in creating sustainable change. Whether through funding, collaboration, or volunteering, your support makes a difference.
+          </p>
+        </div>
+        <div className="proj-cta-btns">
+          <a href="/#contact" className="btn-fill">
+            Become a Partner
+          </a>
+          <a href="/opportunities" className="btn-ghost">
+            View Opportunities
+          </a>
         </div>
       </section>
-
-      {/* Projects Grid */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto px-4 max-w-7xl">
-          <div className="grid sm:grid-cols-2 gap-6 sm:gap-8">
-              {projects.map((project, i) => {
-                const Icon = iconMap[project.icon] || Lightbulb;
-                return (
-                  <motion.div
-                    key={project.id}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: i * 0.1 }}
-                    className="group relative rounded-2xl overflow-hidden bg-card border border-border shadow-lg hover:shadow-2xl transition-all duration-500"
-                  >
-                    {/* Image with overlay */}
-                    <div className="relative h-48 sm:h-56 overflow-hidden">
-                      <img
-                        src={project.image_url}
-                        alt={project.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                      />
-                      
-                      {/* Icon */}
-                      <div className="absolute top-4 left-4 w-12 h-12 rounded-xl bg-primary flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                        <Icon className="text-white" size={24} />
-                      </div>
-
-                      {/* Stats badges */}
-                      <div className="absolute top-4 right-4 flex flex-col gap-2">
-                        <Badge className="bg-white/90 backdrop-blur-sm text-foreground border-0 shadow-lg text-xs">
-                          {project.beneficiaries} Youth
-                        </Badge>
-                        <Badge className="bg-white/90 backdrop-blur-sm text-foreground border-0 shadow-lg text-xs">
-                          {project.duration}
-                        </Badge>
-                      </div>
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-5 sm:p-6">
-                      <h3 className="text-xl sm:text-2xl font-heading font-bold text-foreground mb-3 group-hover:text-primary transition-colors leading-tight">
-                        {project.title}
-                      </h3>
-
-                      <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-                        {project.excerpt || project.description}
-                      </p>
-
-                      {/* Highlights */}
-                      <div className="space-y-2 mb-5">
-                        {project.highlights.map((highlight, idx) => (
-                          <div key={idx} className="flex items-center gap-2 text-xs sm:text-sm">
-                            <CheckCircle2 size={16} className="text-primary shrink-0" />
-                            <span className="text-muted-foreground">{highlight}</span>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Learn more button */}
-                      {project.is_external ? (
-                        <Button 
-                          variant="ghost" 
-                          className="w-full group/btn hover:bg-primary/10 text-primary font-semibold"
-                          asChild
-                        >
-                          <a href={project.link} target="_blank" rel="noopener noreferrer">
-                            Visit Website
-                            <ExternalLink size={16} className="ml-2 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
-                          </a>
-                        </Button>
-                      ) : (
-                        <Button 
-                          variant="ghost" 
-                          className="w-full group/btn hover:bg-primary/10 text-primary font-semibold"
-                          asChild
-                        >
-                          <Link to={project.link}>
-                            Learn More
-                            <ArrowUpRight size={16} className="ml-2 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
-                          </Link>
-                        </Button>
-                      )}
-                    </div>
-
-                    {/* Animated border on hover */}
-                    <div className="absolute inset-0 border-2 border-primary/0 group-hover:border-primary/30 rounded-2xl transition-colors pointer-events-none" />
-                  </motion.div>
-                );
-              })}
-            </div>
-
-          {/* CTA Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4 }}
-            className="mt-12 sm:mt-16 text-center bg-primary/10 rounded-2xl p-8 sm:p-12 border border-primary/20"
-          >
-            <h3 className="text-2xl sm:text-3xl font-heading font-bold text-foreground mb-4">
-              Want to Partner With Us?
-            </h3>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              Join us in creating sustainable change. Whether through funding, collaboration, or volunteering, your support makes a difference.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="hero" size="lg" className="shadow-xl" asChild>
-                <a href="/#contact">Become a Partner</a>
-              </Button>
-              <Button variant="outline" size="lg" className="shadow-lg" asChild>
-                <Link to="/opportunities">View Opportunities</Link>
-              </Button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      <Footer />
-    </div>
+    </main>
   );
 };
 

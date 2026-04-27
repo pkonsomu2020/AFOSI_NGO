@@ -44,6 +44,44 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --or: #E05A18;
+    --or2: #C24A10;
+    --or3: #8B3008;
+    --bg: #F7F3EE;
+    --bg2: #EDE7DE;
+    --bg3: #E2D9CE;
+    --fg: #1A1410;
+    --fg2: rgba(26,20,16,.65);
+    --fg3: rgba(26,20,16,.45);
+    --muted-af: rgba(26,20,16,.55);
+    --silver: #7A6E64;
+    --border-af: rgba(26,20,16,.1);
+    --border2: rgba(26,20,16,.08);
+    --nav-bg: rgba(247,243,238,.92);
+    --card-bg: #EDE7DE;
+    --card-hover: #E2D9CE;
+    --cta-bg: #EDE7DE;
+    --cta-stroke: rgba(26,20,16,.2);
+    --partner-color: rgba(26,20,16,.3);
+    --partner-hover: rgba(26,20,16,.75);
+    --ft-bg: #EDE7DE;
+    --ft-link: rgba(26,20,16,.55);
+    --ft-copy: rgba(26,20,16,.4);
+    --loader-bg: #F7F3EE;
+    --track-btn-border: rgba(26,20,16,.2);
+    --track-dot-bg: rgba(26,20,16,.2);
+    --about-overlay: linear-gradient(to right,transparent 60%,#F7F3EE);
+    --badge-shadow: #F7F3EE;
+    --stats-border: rgba(26,20,16,.1);
+    --hero-grad1: rgba(26,20,16,.85);
+    --hero-grad2: rgba(26,20,16,.4);
+    --vm1-bg: #C24A10;
+    --vm2-bg: #8B3008;
+    --cream: var(--fg);
+    --ink: var(--bg);
+    --ink2: var(--bg2);
+    --ink3: var(--bg3);
   }
 
   .dark {
@@ -74,6 +112,35 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --bg: #0C0A08;
+    --bg2: #181410;
+    --bg3: #221E1A;
+    --fg: #F5EFE6;
+    --fg2: rgba(245,239,230,.58);
+    --fg3: rgba(245,239,230,.38);
+    --muted-af: rgba(245,239,230,.5);
+    --silver: #7A6E64;
+    --border-af: rgba(245,239,230,.07);
+    --border2: rgba(245,239,230,.05);
+    --nav-bg: rgba(12,10,8,.88);
+    --card-bg: #221E1A;
+    --card-hover: #202020;
+    --cta-bg: #181410;
+    --cta-stroke: rgba(245,239,230,.15);
+    --partner-color: rgba(245,239,230,.18);
+    --partner-hover: rgba(245,239,230,.55);
+    --ft-bg: #181410;
+    --ft-link: rgba(245,239,230,.42);
+    --ft-copy: rgba(245,239,230,.2);
+    --loader-bg: #0C0A08;
+    --track-btn-border: rgba(245,239,230,.15);
+    --track-dot-bg: rgba(245,239,230,.2);
+    --about-overlay: linear-gradient(to right,transparent 60%,#0C0A08);
+    --badge-shadow: #0C0A08;
+    --stats-border: rgba(255,255,255,.07);
+    --hero-grad1: rgba(12,10,8,1);
+    --hero-grad2: rgba(12,10,8,.55);
   }
 }
 
@@ -87,7 +154,11 @@
     width: 100%;
   }
   body {
-    @apply bg-background text-foreground font-body antialiased;
+    @apply bg-background text-foreground antialiased;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
     font-feature-settings: 'kern' 1, 'liga' 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -95,7 +166,23 @@
     width: 100%;
     margin: 0;
     padding: 0;
+    transition: background .35s, color .35s;
   }
+
+  /* Reveal animations */
+  .reveal { opacity:0; transform:translateY(40px); transition:opacity .8s ease,transform .8s cubic-bezier(.16,1,.3,1); }
+  .reveal.on { opacity:1; transform:none; }
+
+  /* Custom Cursor override */
+  @media (pointer: fine) {
+    body, a, button, input, select, textarea {
+      cursor: none !important;
+    }
+  }
+
+  /* Utility classes from custom design */
+  .t-fg { color: var(--fg); }
+  .t-or { color: var(--or); }
   
   /* Prevent horizontal overflow */
   #root {

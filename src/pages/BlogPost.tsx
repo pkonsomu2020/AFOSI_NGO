@@ -1,8 +1,9 @@
+import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { ArrowLeft, Calendar, Clock, Share2, Facebook, Twitter, Linkedin } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { ArrowLeft, Calendar, Clock, Facebook, Twitter, Linkedin, Heart, Share2 } from "lucide-react";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import ScrollToTop from "@/components/ScrollToTop";
 
 interface BlogPostData {
   id: string;
@@ -294,169 +295,209 @@ const BlogPost = () => {
     );
   }
 
+  useEffect(() => {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add("on");
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    setTimeout(() => {
+      document.querySelectorAll(".reveal").forEach((el) => obs.observe(el));
+      const heroBg = document.getElementById("blogHeroBg");
+      if (heroBg) heroBg.classList.add("loaded");
+    }, 100);
+
+    return () => obs.disconnect();
+  }, [post]);
+
   const shareUrl = window.location.href;
   const shareText = `Check out this article: ${post.title}`;
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <section className="relative h-[50vh] sm:h-[60vh] overflow-hidden">
-        <img
-          src={post.image}
-          alt={post.title}
-          className="w-full h-full object-cover"
+    <main className="min-h-screen" style={{ background: 'var(--bg)' }}>
+      <ScrollToTop />
+      <Navbar />
+
+      {/* ── FULL-BLEED HERO ── */}
+      <header className="detail-hero">
+        <div 
+          className="detail-hero-bg" 
+          id="blogHeroBg" 
+          style={{ backgroundImage: `url('${post.image}')` }} 
+          role="img" 
         />
-        <div className="absolute inset-0 bg-black/60" />
-        
-        <div className="absolute inset-0 flex items-end">
-          <div className="container mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
-            <Link to="/#blog" className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors mb-6 group">
-              <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-              <span className="text-sm font-semibold">Back to Blog</span>
-            </Link>
-            
-            <Badge className="bg-primary/90 backdrop-blur-sm text-primary-foreground border-0 mb-4">
-              {post.category}
-            </Badge>
-            
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-white mb-4 leading-tight">
-              {post.title}
-            </h1>
-            
-            <div className="flex flex-wrap items-center gap-4 text-white/90 text-sm">
-              <div className="flex items-center gap-2">
-                <Calendar size={16} />
-                <span>{post.date}</span>
-              </div>
-              <span>•</span>
-              <div className="flex items-center gap-2">
-                <Clock size={16} />
-                <span>{post.readTime}</span>
-              </div>
+        <div className="detail-hero-overlay"></div>
+
+        {/* Breadcrumb */}
+        <div className="detail-breadcrumb">
+          <Link to="/#blog">
+            <ArrowLeft size={14} style={{ display: 'inline', marginRight: '8px' }} />
+            Back to Blog
+          </Link>
+        </div>
+
+        {/* Hero content */}
+        <div className="detail-hero-content">
+          <div className="detail-eyebrow">{post.category}</div>
+          <h1 className="detail-hero-title">{post.title}</h1>
+          
+          <div className="detail-hero-stats">
+            <div className="detail-stat-badge">
+              <Calendar size={14} style={{ color: 'var(--or)' }} />
+              {post.date}
+            </div>
+            <div className="detail-stat-badge">
+              <Clock size={14} style={{ color: 'var(--or)' }} />
+              {post.readTime}
             </div>
           </div>
         </div>
-      </section>
+      </header>
 
-      {/* Content Section */}
-      <section className="py-12 sm:py-16 md:py-20">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-4xl mx-auto">
-            {/* Share buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex items-center gap-3 mb-8 pb-8 border-b border-border"
+      {/* ── INTRO + STICKY SIDEBAR ── */}
+      <div className="detail-body">
+        {/* LEFT: Main content */}
+        <main className="detail-main">
+          
+          {/* Share buttons */}
+          <div className="reveal flex flex-wrap items-center gap-4 mb-12 pb-8" style={{ borderBottom: '1px solid var(--border)' }}>
+            <span style={{ fontSize: '12px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--silver)' }}>Share:</span>
+            <button
+              className="btn-ghost"
+              style={{ padding: '10px 20px', fontSize: '10px' }}
+              onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank')}
             >
-              <span className="text-sm font-semibold text-muted-foreground">Share:</span>
-              <Button
-                variant="outline"
-                size="sm"
-                className="gap-2"
-                onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank')}
-              >
-                <Facebook size={16} />
-                Facebook
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="gap-2"
-                onClick={() => window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`, '_blank')}
-              >
-                <Twitter size={16} />
-                Twitter
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="gap-2"
-                onClick={() => window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank')}
-              >
-                <Linkedin size={16} />
-                LinkedIn
-              </Button>
-            </motion.div>
+              <Facebook size={14} /> Facebook
+            </button>
+            <button
+              className="btn-ghost"
+              style={{ padding: '10px 20px', fontSize: '10px' }}
+              onClick={() => window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`, '_blank')}
+            >
+              <Twitter size={14} /> Twitter
+            </button>
+            <button
+              className="btn-ghost"
+              style={{ padding: '10px 20px', fontSize: '10px' }}
+              onClick={() => window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank')}
+            >
+              <Linkedin size={14} /> LinkedIn
+            </button>
+          </div>
 
-            {/* Introduction */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="prose prose-lg max-w-none mb-12"
-            >
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                {post.content.introduction}
+          {/* Introduction */}
+          <div className="reveal">
+            <p className="detail-body-text" style={{ fontSize: '18px', color: 'var(--fg)' }}>
+              {post.content.introduction}
+            </p>
+          </div>
+
+          {/* Sections */}
+          {post.content.sections.map((section, index) => (
+            <div key={index} className="reveal" style={{ marginTop: '48px' }}>
+              <h2 className="detail-section-title" style={{ fontSize: 'clamp(24px, 3vw, 36px)', marginBottom: '20px' }}>
+                {section.title}
+              </h2>
+              <p className="detail-body-text" style={{ marginBottom: section.points ? '24px' : '0' }}>
+                {section.content}
               </p>
-            </motion.div>
-
-            {/* Sections */}
-            {post.content.sections.map((section, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 + index * 0.1 }}
-                className="mb-12"
-              >
-                <h2 className="text-2xl sm:text-3xl font-heading font-bold text-foreground mb-4">
-                  {section.title}
-                </h2>
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  {section.content}
-                </p>
-                {section.points && (
-                  <ul className="space-y-3 ml-6">
+              {section.points && (
+                <div className="pull-quote" style={{ margin: '0 0 32px 0', background: 'var(--bg2)', padding: '24px 32px' }}>
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                     {section.points.map((point, idx) => (
-                      <li key={idx} className="text-muted-foreground leading-relaxed flex items-start gap-3">
-                        <span className="w-2 h-2 rounded-full bg-primary mt-2 shrink-0" />
+                      <li key={idx} style={{ 
+                        color: 'var(--fg2)', 
+                        fontSize: '15px', 
+                        lineHeight: 1.8, 
+                        display: 'flex', 
+                        gap: '12px', 
+                        marginBottom: idx < section.points!.length - 1 ? '16px' : '0' 
+                      }}>
+                        <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--or)', flexShrink: 0, marginTop: '10px' }} />
                         <span>{point}</span>
                       </li>
                     ))}
                   </ul>
-                )}
-              </motion.div>
-            ))}
+                </div>
+              )}
+            </div>
+          ))}
 
-            {/* Conclusion */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="bg-primary/5 rounded-2xl p-6 sm:p-8 border border-primary/20 mb-12"
-            >
-              <h2 className="text-2xl font-heading font-bold text-foreground mb-4">Conclusion</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                {post.content.conclusion}
-              </p>
-            </motion.div>
-
-            {/* CTA */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-              className="text-center bg-primary/10 rounded-2xl p-8 sm:p-12 border border-primary/20"
-            >
-              <h3 className="text-2xl sm:text-3xl font-heading font-bold text-foreground mb-4">
-                Want to Get Involved?
-              </h3>
-              <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                Join us in creating sustainable change. Whether through volunteering, partnerships, or donations, your support makes a difference.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button variant="hero" size="lg" asChild>
-                  <a href="/#contact">Contact Us</a>
-                </Button>
-                <Button variant="outline" size="lg" asChild>
-                  <Link to="/#blog">Read More Stories</Link>
-                </Button>
-              </div>
-            </motion.div>
+          {/* Conclusion */}
+          <div className="reveal" style={{ 
+            marginTop: '64px', 
+            padding: '40px', 
+            background: 'var(--bg3)', 
+            border: '1px solid var(--border)',
+            borderRadius: '12px'
+          }}>
+            <h2 className="detail-section-title" style={{ fontSize: '28px', marginBottom: '16px' }}>Conclusion</h2>
+            <p className="detail-body-text" style={{ margin: 0 }}>
+              {post.content.conclusion}
+            </p>
           </div>
+        </main>
+
+        {/* RIGHT: Sticky sidebar */}
+        <aside className="detail-sidebar">
+          <div className="sidebar-card reveal">
+            <div className="sidebar-title">Post Details</div>
+
+            <div className="sidebar-stat">
+              <div className="sidebar-stat-icon"><Calendar /></div>
+              <div>
+                <div className="sidebar-stat-label">Published</div>
+                <div className="sidebar-stat-val">{post.date}</div>
+              </div>
+            </div>
+
+            <div className="sidebar-stat">
+              <div className="sidebar-stat-icon"><Clock /></div>
+              <div>
+                <div className="sidebar-stat-label">Read Time</div>
+                <div className="sidebar-stat-val">{post.readTime}</div>
+              </div>
+            </div>
+
+            <div className="sidebar-stat">
+              <div className="sidebar-stat-icon"><Share2 /></div>
+              <div>
+                <div className="sidebar-stat-label">Category</div>
+                <div className="sidebar-stat-val">{post.category}</div>
+              </div>
+            </div>
+
+            <div className="sidebar-divider"></div>
+
+            <Link to="/#contact" className="sidebar-btn-fill">
+              <Heart size={14} /> Get Involved
+            </Link>
+            
+            <p className="sidebar-note">Support our mission by joining our initiatives or donating.</p>
+          </div>
+        </aside>
+      </div>
+
+      {/* ── CTA BANNER ── */}
+      <section className="detail-cta">
+        <h2 className="detail-cta-title reveal">Want to Get <span>Involved?</span></h2>
+        <p className="detail-cta-sub reveal">Join us in creating sustainable change. Whether through volunteering, partnerships, or donations, your support makes a difference.</p>
+        <div className="detail-cta-btns reveal">
+          <Link to="/#contact" className="btn-fill">
+            Contact Us
+          </Link>
+          <Link to="/#blog" className="btn-ghost">
+            Read More Stories
+          </Link>
         </div>
       </section>
-    </div>
+
+      <Footer />
+    </main>
   );
 };
 

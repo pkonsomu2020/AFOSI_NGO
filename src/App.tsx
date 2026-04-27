@@ -6,6 +6,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LazyMotion, domAnimation } from "framer-motion";
 import ScrollToHashElement from "@/components/ScrollToHashElement";
 import ChatWidget from "@/components/ChatWidget";
+import SmoothScroll from "@/components/SmoothScroll";
+import CustomCursor from "@/components/CustomCursor";
+
 import Index from "./pages/Index";
 import Gallery from "./pages/Gallery";
 import Opportunities from "./pages/Opportunities";
@@ -31,30 +34,32 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
-          <ChatWidget />
-          <ScrollToHashElement />
+        <SmoothScroll>
+          <CustomCursor />
+          <BrowserRouter>
+            <ChatWidget />
+            <ScrollToHashElement />
 
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/gallery" element={<Gallery />} />
-            <Route path="/opportunities" element={<Opportunities />} />
-            <Route path="/opportunities/:slug" element={<OpportunityDetail />} />
-            <Route path="/news" element={<News />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/projects/:slug" element={<ProjectDetail />} />
-            <Route path="/blog/:slug" element={<BlogPost />} />
-            <Route path="/programs/we-lead" element={<WeLeadProject />} />
-            <Route path="/programs/robotics-coding" element={<RoboticsCoding />} />
-            <Route path="/programs/math-project" element={<MathProject />} />
-            <Route path="/programs/sheria-ya-vijana" element={<SheriaYaVijana />} />
-            <Route path="/programs/yoma" element={<YomaProject />} />
-            <Route path="/programs/youth-voices-lab" element={<YouthVoicesLab />} />
-            <Route path="/team" element={<Team />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/gallery" element={<Gallery />} />
+              <Route path="/opportunities" element={<Opportunities />} />
+              <Route path="/opportunities/:slug" element={<OpportunityDetail />} />
+              <Route path="/news" element={<News />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/projects/:slug" element={<ProjectDetail />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/programs/we-lead" element={<WeLeadProject />} />
+              <Route path="/programs/robotics-coding" element={<RoboticsCoding />} />
+              <Route path="/programs/math-project" element={<MathProject />} />
+              <Route path="/programs/sheria-ya-vijana" element={<SheriaYaVijana />} />
+              <Route path="/programs/yoma" element={<YomaProject />} />
+              <Route path="/programs/youth-voices-lab" element={<YouthVoicesLab />} />
+              <Route path="/team" element={<Team />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </SmoothScroll>
       </TooltipProvider>
     </LazyMotion>
   </QueryClientProvider>

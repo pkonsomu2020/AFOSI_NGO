@@ -1,14 +1,10 @@
 import { useState, useEffect, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { 
   MapPin, Clock, CalendarDays, ArrowLeft, Briefcase, Users, 
   FileText, CheckCircle2, AlertCircle,
-  Building2, Shield, Lock
+  Building2, Shield, Lock, Zap, TrendingUp, Calendar, ArrowRight, Send
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
-import Navbar from "@/components/Navbar";
 import ScrollToTop from "@/components/ScrollToTop";
 import { 
   getOpportunityStatus, 
@@ -740,283 +736,163 @@ const Opportunities = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
-        <div className="container mx-auto px-4 sm:px-6 py-20">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center">
+        <div className="container mx-auto px-4 sm:px-6 py-20 text-center">
           <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center max-w-2xl mx-auto">
             <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-red-900 mb-2">Error Loading Opportunities</h3>
             <p className="text-red-700 mb-4">{error}</p>
-            <Button onClick={fetchOpportunities}>Try Again</Button>
+            <button className="btn-fill" onClick={fetchOpportunities}>Try Again</button>
           </div>
         </div>
       </div>
     );
   }
 
+  // Scroll Reveal Observer
+  useEffect(() => {
+    if (loading) return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add("on");
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    
+    setTimeout(() => {
+      document.querySelectorAll(".reveal").forEach((el) => obs.observe(el));
+    }, 100);
+
+    return () => obs.disconnect();
+  }, [loading, filtered]);
+
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      {/* Hero with Background Image */}
-      <section className="relative py-20 sm:py-24 md:py-32 lg:py-40 overflow-hidden">
-        {/* Background Image */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: "url('/HERO_4.jpg')",
-          }}
-        />
-        
-        {/* Black Overlay */}
-        <div className="absolute inset-0 bg-black/70" />
-        
-        {/* Content */}
-        <div className="container mx-auto px-4 sm:px-6 relative z-10">
-          <Link to="/" className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors mb-6 sm:mb-8 group">
-            <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-            <span className="text-sm font-semibold">Back to Home</span>
-          </Link>
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-4">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-sm shrink-0">
-                <Briefcase className="text-white" size={24} />
-              </div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-white leading-tight">
-                Career Opportunities
-              </h1>
-            </div>
-            <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-2xl leading-relaxed">
-              Join AFOSI in driving sustainable development and social impact. Explore career and consulting opportunities to make a difference.
-            </p>
-          </motion.div>
+    <main>
+      <ScrollToTop />
+      {/* PAGE HERO */}
+      <div className="opp-hero">
+        <div className="opp-hero-line"></div>
+        <h1 className="opp-hero-title">
+          <span className="t-fg">Career</span><br />
+          <span className="t-or">Opportunities</span>
+        </h1>
+        <p className="opp-hero-sub">
+          Join AFOSI in driving sustainable development and social impact across Kenya. Explore career and consulting opportunities to make a real difference.
+        </p>
+      </div>
+
+      {/* WHY JOIN SECTION */}
+      <section className="why-section">
+        <div className="s-label reveal">Why AFOSI</div>
+        <h2 className="opp-section-title reveal">
+          <span className="t-fg">Why</span> <span className="t-or">Join Us?</span>
+        </h2>
+        <div className="why-grid">
+          <div className="why-card reveal">
+            <div className="why-icon"><Zap size={20} /></div>
+            <div className="why-title">Innovation-Led</div>
+            <p className="why-desc">Work at the intersection of technology and social impact, building digital tools that reach thousands of youth across Kenya.</p>
+          </div>
+          <div className="why-card reveal" style={{ transitionDelay: ".08s" }}>
+            <div className="why-icon"><Users size={20} /></div>
+            <div className="why-title">Community First</div>
+            <p className="why-desc">Every role at AFOSI is rooted in community. Your work directly shapes the lives of young people in underserved communities.</p>
+          </div>
+          <div className="why-card reveal" style={{ transitionDelay: ".16s" }}>
+            <div className="why-icon"><TrendingUp size={20} /></div>
+            <div className="why-title">Real Impact</div>
+            <p className="why-desc">We measure success by tangible change — 69K+ youth reached, 60+ schools supported, and growing every year since 2014.</p>
+          </div>
         </div>
       </section>
 
-      {/* Filters & Content */}
-      <section className="container mx-auto px-4 sm:px-6 py-12 sm:py-16">
-        {/* Filter pills */}
-        <div className="flex flex-wrap gap-2 sm:gap-3 mb-8 sm:mb-12">
+      {/* OPENINGS SECTION */}
+      <section className="opp-section">
+        <div className="s-label">Current Openings</div>
+        <h2 className="opp-section-title reveal">
+          <span className="t-fg">Open</span> <span className="t-or">Positions</span>
+        </h2>
+        <p className="opp-intro reveal">If you think you might be a good fit for our team, we'd love to hear from you!</p>
+
+        {/* Filter Tabs */}
+        <div className="filter-tabs reveal">
           {filters.map((f) => (
             <button
               key={f.value}
               onClick={() => setActiveFilter(f.value)}
-              className={`px-4 sm:px-6 py-2 sm:py-3 rounded-full text-xs sm:text-sm font-semibold transition-all ${
-                activeFilter === f.value
-                  ? "bg-primary text-primary-foreground shadow-lg scale-105"
-                  : "bg-card text-foreground/70 hover:bg-muted border border-border hover:scale-105"
-              }`}
+              className={`filter-tab ${activeFilter === f.value ? "active" : ""}`}
             >
               {f.label}
             </button>
           ))}
         </div>
 
-        {/* Stats bar */}
-        <div className="flex items-center gap-2 sm:gap-3 mb-6 sm:mb-8 bg-accent/30 rounded-lg px-3 sm:px-4 py-2 sm:py-3 w-fit">
-          <Users size={16} className="text-primary sm:w-[18px] sm:h-[18px]" />
-          <span className="text-xs sm:text-sm font-semibold text-foreground">
-            {filtered.length} {filtered.length === 1 ? "opportunity" : "opportunities"} available
-          </span>
-        </div>
-
         {/* Empty state */}
         {filtered.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center py-20 bg-card rounded-2xl border border-border"
-          >
-            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-5">
-              <Briefcase size={28} className="text-muted-foreground" />
-            </div>
-            <h3 className="text-xl font-bold text-foreground mb-2">No Open Positions Right Now</h3>
-            <p className="text-muted-foreground max-w-md mx-auto text-sm leading-relaxed">
+          <div className="empty-state reveal">
+            <div className="empty-icon"><Briefcase size={56} /></div>
+            <h3 className="empty-title">No Open Positions Right Now</h3>
+            <p className="empty-text">
               There are no job openings at the moment. We regularly post new opportunities — check back soon or follow us on social media to be the first to know.
             </p>
-          </motion.div>
-        )}
-
-        {/* Cards */}
-        <div className="space-y-4 sm:space-y-6">
-          <AnimatePresence mode="popLayout">
-            {filtered.map((opp, i) => {
-              const config = typeConfig[opp.type];
-              const status = getOpportunityStatus(opp.deadline, opp.manuallyDisabled);
-              const statusConf = statusConfig[status];
-              const deadlineInfo = getDeadlineStatus(opp.deadline);
-              const canExpand = status === 'open';
-
-              return (
-                <motion.div
-                  key={opp.id}
-                  layout
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.3, delay: Math.min(i * 0.05, 0.2) }}
-                  style={{ willChange: 'transform, opacity' }}
-                  className={`bg-card rounded-xl sm:rounded-2xl border border-border shadow-sm transition-all overflow-hidden relative ${
-                    status === 'closed' 
-                      ? 'grayscale opacity-60 cursor-not-allowed' 
-                      : 'hover:shadow-xl'
-                  }`}
-                >
-                  {/* Locked Overlay for Expired Opportunities */}
-                  {status === 'closed' && (
-                    <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] z-10 flex items-center justify-center">
-                      <motion.div
-                        initial={{ scale: 0, rotate: -180 }}
-                        animate={{ scale: 1, rotate: 0 }}
-                        transition={{ 
-                          type: "spring",
-                          stiffness: 200,
-                          damping: 15,
-                          delay: 0.2 
-                        }}
-                        className="bg-red-500/90 backdrop-blur-sm rounded-full p-6 sm:p-8 shadow-2xl border-4 border-red-300/50"
-                      >
-                        <Lock className="w-12 h-12 sm:w-16 sm:h-16 text-white" strokeWidth={2.5} />
-                      </motion.div>
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.4 }}
-                        className="absolute bottom-6 sm:bottom-8 left-0 right-0 text-center"
-                      >
-                        <div className="bg-red-500/95 backdrop-blur-sm text-white px-6 py-3 rounded-full inline-block shadow-xl border-2 border-red-300/50">
-                          <p className="text-sm sm:text-base font-bold">
-                            {opp.manuallyDisabled ? 'OPPORTUNITY CLOSED' : 'DEADLINE PASSED'}
-                          </p>
-                          <p className="text-xs sm:text-sm opacity-90 mt-1">
-                            Applications are no longer accepted
-                          </p>
-                        </div>
-                      </motion.div>
-                    </div>
-                  )}
-
-                  <div className="p-4 sm:p-6 md:p-8">
-                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                      <Badge className={`${config.color} text-xs font-bold uppercase tracking-wider px-2 sm:px-3 py-1`}>
-                        {config.label}
-                      </Badge>
-                      <Badge className={`${statusConf.color} text-xs font-bold uppercase tracking-wider px-2 sm:px-3 py-1 flex items-center gap-1`}>
-                        {statusConf.icon}
-                        {statusConf.label}
-                      </Badge>
-                      {deadlineInfo.status === 'urgent' && status === 'open' && (
-                        <Badge className="bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 text-xs font-bold px-2 sm:px-3 py-1 flex items-center gap-1 animate-pulse">
-                          <Clock size={14} />
-                          <span className="hidden xs:inline">{deadlineInfo.message}</span>
-                          <span className="xs:hidden">{getDaysUntilDeadline(opp.deadline)}d</span>
-                        </Badge>
-                      )}
-                      {deadlineInfo.status === 'expired' && (
-                        <Badge className="bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 text-xs font-bold px-2 sm:px-3 py-1">
-                          {deadlineInfo.message}
-                        </Badge>
-                      )}
-                    </div>
-
-                    <h3 className="text-xl sm:text-2xl md:text-3xl font-heading font-bold text-foreground mb-2 sm:mb-3 leading-tight">
-                      {opp.title}
-                    </h3>
-                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-4 sm:mb-6">
-                      {opp.description}
-                    </p>
-
-                    <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
-                      <div className="flex items-center gap-2 sm:gap-3 bg-accent/20 rounded-lg p-2.5 sm:p-3">
-                        <MapPin size={16} className="text-primary shrink-0 sm:w-[18px] sm:h-[18px]" />
-                        <div className="min-w-0">
-                          <p className="text-xs text-muted-foreground">Location</p>
-                          <p className="text-xs sm:text-sm font-semibold text-foreground truncate">{opp.location}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2 sm:gap-3 bg-accent/20 rounded-lg p-2.5 sm:p-3">
-                        <Clock size={16} className="text-primary shrink-0 sm:w-[18px] sm:h-[18px]" />
-                        <div className="min-w-0">
-                          <p className="text-xs text-muted-foreground">Duration</p>
-                          <p className="text-xs sm:text-sm font-semibold text-foreground truncate">{opp.duration}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2 sm:gap-3 bg-accent/20 rounded-lg p-2.5 sm:p-3 xs:col-span-2 sm:col-span-1">
-                        <CalendarDays size={16} className="text-primary shrink-0 sm:w-[18px] sm:h-[18px]" />
-                        <div className="min-w-0">
-                          <p className="text-xs text-muted-foreground">Deadline</p>
-                          <p className="text-xs sm:text-sm font-semibold text-foreground truncate">{formatDeadline(opp.deadline)}</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Action buttons */}
-                    <div className="flex flex-wrap gap-2 sm:gap-3">
-                      {canExpand ? (
-                        <>
-                          <Link
-                            to={`/opportunities/${opp.slug || opp.id}`}
-                            className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg text-sm font-semibold transition-all"
-                          >
-                            <span className="hidden xs:inline">View Full Details</span>
-                            <span className="xs:hidden">Details</span>
-                          </Link>
-                          <Button variant="hero" size="lg" className="text-sm sm:text-base" asChild>
-                            <a href={opp.slug ? `/opportunities/${opp.slug}` : `mailto:info@afosi.org?subject=Application: ${opp.title}`}>
-                              Apply Now
-                            </a>
-                          </Button>
-                        </>
-                      ) : (
-                        <div className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 bg-muted rounded-lg text-muted-foreground">
-                          <AlertCircle size={16} className="shrink-0 sm:w-[18px] sm:h-[18px]" />
-                          <span className="text-xs sm:text-sm font-semibold">
-                            {opp.manuallyDisabled ? 'This opportunity has been closed' : 'Application deadline has passed'}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-
-                  </div>
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
-        </div>
-
-        {filtered.length === 0 && (
-          <div className="text-center py-12 sm:py-16">
-            <Briefcase size={40} className="mx-auto text-muted-foreground/40 mb-4 sm:w-12 sm:h-12" />
-            <p className="text-sm sm:text-base text-muted-foreground">No opportunities found in this category.</p>
           </div>
         )}
-      </section>
 
-      {/* CTA */}
-      <section className="bg-accent/30 border-t border-border py-12 sm:py-16 md:py-20">
-        <div className="container mx-auto px-4 sm:px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-foreground mb-3 sm:mb-4 leading-tight">
-              Don't see the right fit?
-            </h2>
-            <p className="text-sm sm:text-base md:text-lg text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto leading-relaxed">
-              Send us your CV and area of interest. We're always looking for passionate individuals to join our mission of creating sustainable change.
-            </p>
-            <Button variant="hero" size="lg" className="shadow-xl w-full sm:w-auto" asChild>
-              <a href="mailto:info@afosi.org?subject=General Application">Send Your CV</a>
-            </Button>
-          </motion.div>
+        {/* Job Cards */}
+        <div className="job-list reveal">
+          {filtered.map((opp) => {
+            const status = getOpportunityStatus(opp.deadline, opp.manuallyDisabled);
+            const canExpand = status === "open";
+
+            return (
+              <div 
+                key={opp.id} 
+                className="job-card"
+                style={!canExpand ? { opacity: 0.6, filter: 'grayscale(100%)', pointerEvents: 'none' } : {}}
+              >
+                <div className="job-card-left">
+                  <div className={`job-badge ${opp.type === 'consulting' ? 'consulting' : 'employment'}`}>
+                    {opp.type}
+                  </div>
+                  <h3 className="job-title">{opp.title}</h3>
+                  <div className="job-meta">
+                    <span className="job-meta-item"><MapPin size={13} /> {opp.location}</span>
+                    <span className="job-meta-item"><Clock size={13} /> {opp.duration}</span>
+                    <span className="job-meta-item"><Calendar size={13} /> Deadline: {formatDeadline(opp.deadline)}</span>
+                  </div>
+                  <p className="job-desc">{opp.description}</p>
+                </div>
+                <div className="job-card-right">
+                  <Link to={`/opportunities/${opp.slug || opp.id}`} className="btn-fill" style={!canExpand ? { pointerEvents: 'none' } : {}}>
+                    {canExpand ? "View Details" : "Closed"} <ArrowRight size={16} />
+                  </Link>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
-      <ScrollToTop />
-    </div>
+
+      {/* CTA SECTION */}
+      <div className="opp-cta reveal">
+        <div>
+          <h2 className="opp-cta-title">Don't See the Right Fit?</h2>
+          <p className="opp-cta-text">
+            Send us your CV and area of interest. We're always looking for passionate individuals to join our mission of creating sustainable change across Kenya.
+          </p>
+        </div>
+        <div className="opp-cta-btns">
+          <a href="mailto:info@afosi.org?subject=General%20Application" className="btn-white">
+            <Send size={16} /> Send Your CV
+          </a>
+          <Link to="/#projects" className="btn-ghost-white">
+            <ArrowRight size={16} /> View Our Work
+          </Link>
+        </div>
+      </div>
+    </main>
   );
 };
 

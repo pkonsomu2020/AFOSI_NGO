@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { ArrowLeft, CheckCircle2, Globe, Target, Lightbulb, Users, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowLeft, CheckCircle2, Heart, Users, Calendar, Target, Globe } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ScrollToTop from "@/components/ScrollToTop";
 import { projectsAPI } from "@/services/api";
 
 interface Project {
@@ -35,19 +34,7 @@ interface ProjectPageProps {
   fallbackBadgeColor: string;
 }
 
-const Reveal = ({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 28 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] }}
-    className={className}
-  >
-    {children}
-  </motion.div>
-);
-
-const ProjectPage = ({ slug, fallbackTitle, fallbackImage, fallbackBadge, fallbackBadgeColor }: ProjectPageProps) => {
+const ProjectPage = ({ slug, fallbackTitle, fallbackImage, fallbackBadge }: ProjectPageProps) => {
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -63,10 +50,37 @@ const ProjectPage = ({ slug, fallbackTitle, fallbackImage, fallbackBadge, fallba
       .finally(() => setLoading(false));
   }, [slug]);
 
+  useEffect(() => {
+    if (loading) return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add("on");
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    setTimeout(() => {
+      document.querySelectorAll(".reveal").forEach((el) => obs.observe(el));
+      const heroBg = document.getElementById("programHeroBg");
+      if (heroBg) heroBg.classList.add("loaded");
+    }, 100);
+
+    return () => obs.disconnect();
+  }, [loading, project]);
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
+      <div className="min-h-screen bg-background flex flex-col">
+        <Navbar />
+        <div className="flex-1 flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4" style={{ borderColor: 'var(--or)' }} />
+            <p className="text-muted-foreground">Loading program...</p>
+          </div>
+        </div>
+        <Footer />
       </div>
     );
   }
@@ -76,250 +90,189 @@ const ProjectPage = ({ slug, fallbackTitle, fallbackImage, fallbackBadge, fallba
   const excerpt = project?.excerpt || project?.description || "";
 
   return (
-    <div className="min-h-screen bg-background">
+    <main className="min-h-screen" style={{ background: 'var(--bg)' }}>
+      <ScrollToTop />
       <Navbar />
 
-      {/* HERO — full-width image, navbar floats over it, no text */}
-      <section className="relative h-[55vh] overflow-hidden">
-        <img src={image} alt={title} className="absolute inset-0 w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-black/50" />
-        {/* Back button */}
-        <div className="absolute bottom-6 left-6 z-10">
-          <Link to="/projects" className="inline-flex items-center gap-2 text-white/80 hover:text-white group text-sm font-semibold transition-colors">
-            <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+      {/* ── FULL-BLEED HERO ── */}
+      <header className="detail-hero">
+        <div 
+          className="detail-hero-bg" 
+          id="programHeroBg" 
+          style={{ backgroundImage: `url('${image}')` }} 
+          role="img" 
+        />
+        <div className="detail-hero-overlay"></div>
+
+        {/* Breadcrumb */}
+        <div className="detail-breadcrumb">
+          <Link to="/projects">
+            <ArrowLeft size={14} style={{ display: 'inline', marginRight: '8px' }} />
             Back to Projects
           </Link>
         </div>
-        {/* Badge */}
-        <div className="absolute bottom-6 right-6 z-10">
-          <span className={`text-xs font-bold tracking-widest uppercase px-3 py-1.5 rounded-full text-white ${fallbackBadgeColor}`}>
-            {fallbackBadge}
-          </span>
+
+        {/* Hero content */}
+        <div className="detail-hero-content">
+          <div className="detail-eyebrow">{fallbackBadge}</div>
+          <h1 className="detail-hero-title" style={{ fontSize: 'clamp(60px, 10vw, 140px)' }}>{title}</h1>
+          <p className="detail-hero-sub">{excerpt}</p>
+          
+          <div className="detail-hero-stats">
+            {project?.beneficiaries && (
+              <div className="detail-stat-badge">
+                <Users size={14} style={{ color: 'var(--or)' }} />
+                <strong>{project.beneficiaries}</strong> Beneficiaries
+              </div>
+            )}
+            {project?.duration && (
+              <div className="detail-stat-badge">
+                <Calendar size={14} style={{ color: 'var(--or)' }} />
+                <strong>{project.duration}</strong>
+              </div>
+            )}
+          </div>
+        </div>
+      </header>
+
+      {/* ── INTRO + STICKY SIDEBAR ── */}
+      <div className="detail-body">
+        {/* LEFT: Main content */}
+        <main className="detail-main">
+          
+          {/* Why It Matters */}
+          {project?.why_it_matters && (
+            <div className="reveal">
+              <div className="s-label">The Challenge</div>
+              <h2 className="detail-section-title">The Problem We're Solving</h2>
+              <p className="detail-body-text">{project.why_it_matters}</p>
+            </div>
+          )}
+
+          {/* Pull Quote / Key Solutions */}
+          {project?.key_solutions && (
+            <div className="pull-quote reveal mt-12 mb-12">
+              <p style={{ fontSize: '20px', fontStyle: 'normal' }}>{project.key_solutions}</p>
+            </div>
+          )}
+
+          {/* Who It Serves */}
+          {project?.who_it_serves && (
+            <div className="reveal mt-12 mb-12">
+              <div className="s-label">Who We Serve</div>
+              <p className="detail-body-text">{project.who_it_serves}</p>
+            </div>
+          )}
+
+          {/* Impact */}
+          {project?.impact?.filter(Boolean).length ? (
+            <div className="reveal mt-12">
+              <div className="s-label">Expected Outcomes</div>
+              <h2 className="detail-section-title">Impact & Results</h2>
+              <div className="target-grid" style={{ gridTemplateColumns: '1fr', gap: '20px' }}>
+                {project.impact.filter(Boolean).map((item, i) => (
+                  <div key={i} className="target-card" style={{ padding: '20px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+                    <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'rgba(224,90,24,0.1)', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <CheckCircle2 size={14} style={{ color: 'var(--or)' }} />
+                    </div>
+                    <p className="target-desc" style={{ margin: 0, fontSize: '15px' }}>{item}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+        </main>
+
+        {/* RIGHT: Sticky sidebar */}
+        <aside className="detail-sidebar">
+          <div className="sidebar-card reveal">
+            <div className="sidebar-title">Program At a Glance</div>
+
+            {project?.beneficiaries && (
+              <div className="sidebar-stat">
+                <div className="sidebar-stat-icon"><Users /></div>
+                <div>
+                  <div className="sidebar-stat-label">Beneficiaries</div>
+                  <div className="sidebar-stat-val">{project.beneficiaries}</div>
+                </div>
+              </div>
+            )}
+
+            {project?.duration && (
+              <div className="sidebar-stat">
+                <div className="sidebar-stat-icon"><Calendar /></div>
+                <div>
+                  <div className="sidebar-stat-label">Duration</div>
+                  <div className="sidebar-stat-val">{project.duration}</div>
+                </div>
+              </div>
+            )}
+
+            <div className="sidebar-stat">
+              <div className="sidebar-stat-icon"><Target /></div>
+              <div>
+                <div className="sidebar-stat-label">Program Type</div>
+                <div className="sidebar-stat-val">{fallbackBadge}</div>
+              </div>
+            </div>
+
+            {project?.partners?.filter(Boolean).length ? (
+              <div className="sidebar-stat">
+                <div className="sidebar-stat-icon"><Globe /></div>
+                <div>
+                  <div className="sidebar-stat-label">Partners</div>
+                  <div className="sidebar-stat-val">{project.partners.filter(Boolean).join(", ")}</div>
+                </div>
+              </div>
+            ) : null}
+
+            <div className="sidebar-divider"></div>
+
+            <Link to="/#contact" className="sidebar-btn-fill">
+              <Heart size={14} /> Get Involved
+            </Link>
+            
+            <p className="sidebar-note">Part of AFOSI's broader empowerment portfolio</p>
+          </div>
+        </aside>
+      </div>
+
+      {/* ── CORE ACTIVITIES ── */}
+      {project?.what_we_do?.filter(Boolean).length ? (
+        <section className="activities-section">
+          <div className="s-label reveal">What We Do</div>
+          <h2 className="detail-section-title reveal">Our Core Activities</h2>
+
+          <div className="activities-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
+            {project.what_we_do.filter(Boolean).map((item, i) => (
+              <div key={i} className="activity-card reveal" style={{ transitionDelay: `${i * 0.1}s` }}>
+                <div className="activity-num">{(i + 1).toString().padStart(2, '0')}</div>
+                <p className="activity-desc" style={{ fontSize: '15px' }}>{item}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {/* ── CTA BANNER ── */}
+      <section className="detail-cta">
+        <h2 className="detail-cta-title reveal">Be Part of the <span>Change</span></h2>
+        <p className="detail-cta-sub reveal">
+          {project?.call_to_action || "Support our efforts in creating sustainable impact across Kenya."}
+        </p>
+        <div className="detail-cta-btns reveal">
+          <Link to="/#contact" className="btn-fill">
+            <Heart size={14} /> Get Involved
+          </Link>
+          <Link to="/projects" className="btn-ghost">
+            <ArrowLeft size={14} /> Back to Projects
+          </Link>
         </div>
       </section>
 
-      {/* BODY — title + all content */}
-      <div id="content">
-
-        {/* Title & excerpt */}
-        <section className="py-16 border-b border-border">
-          <div className="container mx-auto px-6 max-w-6xl">
-            <Reveal>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-px bg-primary" />
-                <span className="text-xs font-bold tracking-widest uppercase text-primary">{fallbackBadge}</span>
-              </div>
-              <h1 className="text-4xl md:text-6xl font-black text-foreground leading-tight mb-5">{title}</h1>
-              {excerpt && (
-                <p className="text-lg text-muted-foreground leading-relaxed font-light max-w-3xl">{excerpt}</p>
-              )}
-            </Reveal>
-
-            {/* Stats */}
-            {(project?.beneficiaries || project?.duration) && (
-              <Reveal delay={0.1} className="flex flex-wrap gap-8 mt-10 pt-8 border-t border-border">
-                {project?.beneficiaries && (
-                  <div>
-                    <div className="text-3xl font-black text-primary">{project.beneficiaries}</div>
-                    <div className="text-xs text-muted-foreground uppercase tracking-wider mt-1">Beneficiaries</div>
-                  </div>
-                )}
-                {project?.duration && (
-                  <div>
-                    <div className="text-3xl font-black text-primary">{project.duration}</div>
-                    <div className="text-xs text-muted-foreground uppercase tracking-wider mt-1">Duration</div>
-                  </div>
-                )}
-                <div className="flex items-end gap-4 ml-auto">
-                  <a href="/#contact" className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-full font-semibold text-sm hover:bg-orange-600 transition-colors">
-                    Get Involved <ArrowRight size={16} />
-                  </a>
-                </div>
-              </Reveal>
-            )}
-          </div>
-        </section>
-
-        {/* Why It Matters */}
-        {project?.why_it_matters && (
-          <section className="py-20 border-t border-border">
-            <div className="container mx-auto px-6 max-w-6xl grid lg:grid-cols-3 gap-12 items-start">
-              <Reveal>
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-6 h-px bg-primary" />
-                  <span className="text-xs font-bold tracking-widest uppercase text-primary">Why It Matters</span>
-                </div>
-                <h2 className="text-3xl font-black text-foreground leading-tight">The Problem We're Solving</h2>
-              </Reveal>
-              <Reveal delay={0.1} className="lg:col-span-2">
-                <p className="text-lg text-muted-foreground leading-relaxed font-light">{project.why_it_matters}</p>
-              </Reveal>
-            </div>
-          </section>
-        )}
-
-        {/* What We Do */}
-        {project?.what_we_do?.filter(Boolean).length > 0 && (
-          <section className="py-20 bg-muted/30 border-t border-border">
-            <div className="container mx-auto px-6 max-w-6xl">
-              <Reveal className="mb-12">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-6 h-px bg-primary" />
-                  <span className="text-xs font-bold tracking-widest uppercase text-primary">What We Do</span>
-                </div>
-                <h2 className="text-3xl font-black text-foreground">Our Core Activities</h2>
-              </Reveal>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                {project.what_we_do.filter(Boolean).map((item, i) => (
-                  <Reveal key={i} delay={i * 0.07}>
-                    <div className="bg-background rounded-2xl p-6 border border-border hover:border-primary/40 hover:shadow-lg transition-all duration-300 h-full">
-                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                        <span className="text-primary font-black text-sm">{String(i + 1).padStart(2, '0')}</span>
-                      </div>
-                      <p className="text-foreground text-sm leading-relaxed">{item}</p>
-                    </div>
-                  </Reveal>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Key Solutions */}
-        {project?.key_solutions && (
-          <section className="py-20 border-t border-border">
-            <div className="container mx-auto px-6 max-w-6xl grid lg:grid-cols-3 gap-12 items-start">
-              <Reveal>
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-6 h-px bg-primary" />
-                  <span className="text-xs font-bold tracking-widest uppercase text-primary">Key Solutions</span>
-                </div>
-                <h2 className="text-3xl font-black text-foreground leading-tight">Programs & Platforms</h2>
-              </Reveal>
-              <Reveal delay={0.1} className="lg:col-span-2">
-                <div className="bg-muted/40 rounded-2xl p-8 border border-border">
-                  <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{project.key_solutions}</p>
-                </div>
-              </Reveal>
-            </div>
-          </section>
-        )}
-
-        {/* Who It Serves */}
-        {project?.who_it_serves && (
-          <section className="py-20 bg-gray-950 border-t border-border">
-            <div className="container mx-auto px-6 max-w-6xl grid lg:grid-cols-3 gap-12 items-start">
-              <Reveal>
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-6 h-px bg-orange-400" />
-                  <span className="text-xs font-bold tracking-widest uppercase text-orange-400">Who It Serves</span>
-                </div>
-                <h2 className="text-3xl font-black text-white leading-tight">Our Beneficiaries</h2>
-              </Reveal>
-              <Reveal delay={0.1} className="lg:col-span-2">
-                <p className="text-gray-300 text-lg leading-relaxed font-light">{project.who_it_serves}</p>
-              </Reveal>
-            </div>
-          </section>
-        )}
-
-        {/* Impact */}
-        {project?.impact?.filter(Boolean).length > 0 && (
-          <section className="py-20 border-t border-border">
-            <div className="container mx-auto px-6 max-w-6xl">
-              <Reveal className="mb-12">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-6 h-px bg-primary" />
-                  <span className="text-xs font-bold tracking-widest uppercase text-primary">Impact</span>
-                </div>
-                <h2 className="text-3xl font-black text-foreground">Expected Outcomes</h2>
-              </Reveal>
-              <div className="space-y-4">
-                {project.impact.filter(Boolean).map((item, i) => (
-                  <Reveal key={i} delay={i * 0.06}>
-                    <div className="flex items-start gap-5 p-6 bg-muted/30 rounded-2xl border border-border hover:border-primary/30 transition-colors">
-                      <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0 mt-0.5">
-                        <CheckCircle2 size={16} className="text-white" />
-                      </div>
-                      <p className="text-foreground leading-relaxed">{item}</p>
-                    </div>
-                  </Reveal>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Partners */}
-        {project?.partners?.filter(Boolean).length > 0 && (
-          <section className="py-20 bg-muted/30 border-t border-border">
-            <div className="container mx-auto px-6 max-w-6xl">
-              <Reveal className="mb-10">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-6 h-px bg-primary" />
-                  <span className="text-xs font-bold tracking-widest uppercase text-primary">Partners</span>
-                </div>
-                <h2 className="text-3xl font-black text-foreground">Who We Work With</h2>
-              </Reveal>
-              <Reveal delay={0.1}>
-                <div className="flex flex-wrap gap-3">
-                  {project.partners.filter(Boolean).map((p, i) => (
-                    <span key={i} className="px-4 py-2 bg-background border border-border text-foreground text-sm font-medium rounded-full hover:border-primary hover:text-primary transition-colors">
-                      {p}
-                    </span>
-                  ))}
-                </div>
-              </Reveal>
-            </div>
-          </section>
-        )}
-
-        {/* Highlights */}
-        {project?.highlights?.filter(Boolean).length > 0 && (
-          <section className="py-16 border-t border-border">
-            <div className="container mx-auto px-6 max-w-6xl">
-              <Reveal>
-                <div className="flex flex-wrap gap-3">
-                  {project.highlights.filter(Boolean).map((h, i) => (
-                    <span key={i} className="px-4 py-2 bg-primary/10 text-primary font-semibold rounded-full text-sm border border-primary/20">
-                      {h}
-                    </span>
-                  ))}
-                </div>
-              </Reveal>
-            </div>
-          </section>
-        )}
-
-        {/* CTA */}
-        <section className="py-24 bg-gray-950 border-t border-border relative overflow-hidden">          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-orange-500/15 via-transparent to-transparent pointer-events-none" />
-          <div className="container mx-auto px-6 max-w-4xl text-center relative z-10">
-            <Reveal>
-              <div className="flex items-center justify-center gap-2 mb-6">
-                <div className="w-6 h-px bg-orange-400" />
-                <span className="text-xs font-bold tracking-widest uppercase text-orange-400">Get Involved</span>
-                <div className="w-6 h-px bg-orange-400" />
-              </div>
-              <h2 className="text-4xl md:text-5xl font-black text-white mb-4 leading-tight">
-                Be Part of the Change
-              </h2>
-              {project?.call_to_action && (
-                <p className="text-gray-400 text-lg mb-10 max-w-2xl mx-auto leading-relaxed font-light">
-                  {project.call_to_action}
-                </p>
-              )}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-orange-500 hover:bg-orange-600 text-white rounded-full px-10 shadow-xl shadow-orange-500/30" asChild>
-                  <a href="/#contact">Contact Us</a>
-                </Button>
-              </div>
-            </Reveal>
-          </div>
-        </section>
-      </div>
-
       <Footer />
-    </div>
+    </main>
   );
 };
 
