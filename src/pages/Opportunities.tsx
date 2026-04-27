@@ -768,7 +768,7 @@ const Opportunities = () => {
     }, 100);
 
     return () => obs.disconnect();
-  }, [loading, filtered]);
+  }, [loading]);
 
   return (
     <>
