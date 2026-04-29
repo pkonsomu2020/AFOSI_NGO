@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
+import { opportunitiesAPI } from "@/services/api";
 import "./opportunities.css";
 
 type OpportunityType = "consulting" | "employment" | "volunteering";
@@ -24,15 +25,31 @@ const Opportunities = () => {
   const [activeFilter, setActiveFilter] = useState<"all" | OpportunityType>("all");
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/opportunities');
-        const data = await response.json();
-        setOpportunities(data.data || []);
+        setLoading(true);
+        setError(null);
+        const response = await opportunitiesAPI.getAll();
+        
+        // Filter out manually disabled and expired opportunities
+        const activeOpportunities = (response.data || []).filter((opp: Opportunity) => {
+          if (opp.manually_disabled) return false;
+          
+          // Check if deadline has passed
+          const deadlineDate = new Date(opp.deadline);
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          
+          return deadlineDate >= today;
+        });
+        
+        setOpportunities(activeOpportunities);
       } catch (error) {
         console.error('Error fetching opportunities:', error);
+        setError('Failed to load opportunities. Please try again later.');
         setOpportunities([]);
       } finally {
         setLoading(false);
