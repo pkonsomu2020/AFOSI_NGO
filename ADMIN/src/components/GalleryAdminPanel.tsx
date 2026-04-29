@@ -10,9 +10,10 @@ interface GalleryImage {
   src: string;
   category: string;
   alt: string;
+  featured?: boolean;
 }
 
-const categories = ["programs", "events", "projects"];
+const categories = ["Programs", "Community", "Youth", "Events", "Environment", "Partners", "Projects"];
 
 const GalleryAdminPanel = () => {
   const [images, setImages] = useState<GalleryImage[]>([]);
@@ -567,16 +568,30 @@ const ImageForm = ({
       <div>
         <label className="block text-sm font-semibold mb-2">Category</label>
         <select
-          value={data.category || 'programs'}
+          value={data.category || 'Programs'}
           onChange={(e) => onChange({ ...data, category: e.target.value })}
           className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary"
         >
           {categories.map((cat) => (
-            <option key={cat} value={cat} className="capitalize">
+            <option key={cat} value={cat}>
               {cat}
             </option>
           ))}
         </select>
+      </div>
+      <div>
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={data.featured || false}
+            onChange={(e) => onChange({ ...data, featured: e.target.checked })}
+            className="w-4 h-4 rounded border-border focus:ring-2 focus:ring-primary"
+          />
+          <span className="text-sm font-semibold">Featured (show in carousel)</span>
+        </label>
+        <p className="text-xs text-muted-foreground mt-1">
+          Featured images appear in the carousel on the gallery page
+        </p>
       </div>
       <div>
         <label className="block text-sm font-semibold mb-2">Description</label>

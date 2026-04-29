@@ -69,29 +69,43 @@ export const getImageById = async (req, res) => {
 // Create new image
 export const createImage = async (req, res) => {
   try {
-    const { src, category, alt } = req.body;
+    const { src, category, alt, title, description, image_url, featured } = req.body;
+
+    // Support both old and new field names
+    const imageUrl = image_url || src;
+    const imageTitle = title || alt;
+    const imageDescription = description || alt;
+    const imageFeatured = featured !== undefined ? featured : false;
 
     // Validation
-    if (!src || !category || !alt) {
+    if (!imageUrl || !category || !imageTitle) {
       return res.status(400).json({
         success: false,
-        message: 'All fields (src, category, alt) are required'
+        message: 'Required fields: image_url (or src), category, title (or alt)'
       });
     }
 
-    if (!['programs', 'events', 'projects'].includes(category)) {
+    // Normalize category to match frontend expectations
+    const normalizedCategory = category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
+    
+    const validCategories = ['Programs', 'Community', 'Youth', 'Events', 'Environment', 'Partners', 'Projects'];
+    if (!validCategories.includes(normalizedCategory)) {
       return res.status(400).json({
         success: false,
-        message: 'Category must be programs, events, or projects'
+        message: `Category must be one of: ${validCategories.join(', ')}`
       });
     }
 
     const { data, error } = await supabase
       .from('gallery_images')
       .insert([{
-        src,
-        category,
-        alt
+        src: imageUrl,
+        image_url: imageUrl,
+        category: normalizedCategory,
+        alt: imageDescription,
+        title: imageTitle,
+        description: imageDescription,
+        featured: imageFeatured
       }])
       .select()
       .single();
@@ -117,20 +131,44 @@ export const createImage = async (req, res) => {
 export const updateImage = async (req, res) => {
   try {
     const { id } = req.params;
-    const { src, category, alt } = req.body;
+    const { src, category, alt, title, description, image_url, featured } = req.body;
 
     const updateData = {};
-    if (src !== undefined) updateData.src = src;
+    
+    // Support both old and new field names
+    if (image_url !== undefined || src !== undefined) {
+      const url = image_url || src;
+      updateData.src = url;
+      updateData.image_url = url;
+    }
+    
     if (category !== undefined) {
-      if (!['programs', 'events', 'projects'].includes(category)) {
+      // Normalize category
+      const normalizedCategory = category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
+      const validCategories = ['Programs', 'Community', 'Youth', 'Events', 'Environment', 'Partners', 'Projects'];
+      
+      if (!validCategories.includes(normalizedCategory)) {
         return res.status(400).json({
           success: false,
-          message: 'Category must be programs, events, or projects'
+          message: `Category must be one of: ${validCategories.join(', ')}`
         });
       }
-      updateData.category = category;
+      updateData.category = normalizedCategory;
     }
-    if (alt !== undefined) updateData.alt = alt;
+    
+    if (alt !== undefined || description !== undefined) {
+      const desc = description || alt;
+      updateData.alt = desc;
+      updateData.description = desc;
+    }
+    
+    if (title !== undefined) {
+      updateData.title = title;
+    }
+    
+    if (featured !== undefined) {
+      updateData.featured = featured;
+    }
 
     const { data, error } = await supabase
       .from('gallery_images')
