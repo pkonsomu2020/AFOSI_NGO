@@ -1183,6 +1183,46 @@ link[rel="preload"][as="image"] { display: none; }
 .t-fg{color:var(--fg)}.t-or{color:var(--or)}
 .gallery-hero-sub{font-size:16px;line-height:1.75;color:var(--fg2);max-width:560px;}
 
+/* ── Gallery Filter Section ── */
+.filter-section{
+  position:sticky;top:0;z-index:500;
+  background:var(--bg2);
+  border-bottom:1px solid var(--border-af);
+  padding:0 64px;
+}
+.filter-bar{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  height:56px;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.filter-bar::-webkit-scrollbar{display:none;}
+.filter-pill{
+  font-size:11px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  padding:10px 24px;
+  border-radius:50px;
+  border:1px solid var(--border-af);
+  background:transparent;
+  color:var(--fg2);
+  cursor:pointer;
+  transition:all .25s;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.filter-pill:hover{
+  border-color:var(--or);
+  color:var(--or);
+}
+.filter-pill.active{
+  background:var(--or);
+  border-color:var(--or);
+  color:#fff;
+}
+
 /* ── Team Page Hero ── */
 .team-hero{
   min-height:55vh;display:flex;flex-direction:column;justify-content:flex-end;
