@@ -7,7 +7,6 @@ import { LazyMotion, domAnimation } from "framer-motion";
 import ScrollToHashElement from "@/components/ScrollToHashElement";
 import ChatWidget from "@/components/ChatWidget";
 import SmoothScroll from "@/components/SmoothScroll";
-import CustomCursor from "@/components/CustomCursor";
 
 import Index from "./pages/Index";
 import Gallery from "./pages/Gallery";
@@ -35,7 +34,6 @@ const App = () => (
         <Toaster />
         <Sonner />
         <SmoothScroll>
-          <CustomCursor />
           <BrowserRouter>
             <ChatWidget />
             <ScrollToHashElement />
