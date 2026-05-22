@@ -525,11 +525,27 @@
   height: 56px;
 }
 .nav-logo {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.6rem; letter-spacing: .06em;
-  color: var(--fg); text-decoration: none;
+  display: flex; align-items: center;
+  text-decoration: none;
+  height: 36px;
 }
-.nav-logo .o { color: var(--or); }
+.nav-logo-img {
+  height: 36px; width: auto;
+  object-fit: contain;
+  transition: opacity .3s;
+}
+/* Dark mode → show white logo */
+.dark .nav-logo-white { display: block; }
+.dark .nav-logo-color { display: none; }
+/* Light mode → show colored logo */
+:root:not(.dark) .nav-logo-white { display: none; }
+:root:not(.dark) .nav-logo-color { display: block; }
+/* Fallback: when nav is transparent over hero (dark bg), always show white */
+#nav:not(.stuck) .nav-logo-white { display: block; }
+#nav:not(.stuck) .nav-logo-color { display: none; }
+/* When stuck in light mode, switch to colored logo */
+:root:not(.dark) #nav.stuck .nav-logo-white { display: none; }
+:root:not(.dark) #nav.stuck .nav-logo-color { display: block; }
 .nav-links {
   display: flex; align-items: center; gap: 2rem;
   list-style: none; margin: 0; padding: 0;
@@ -581,6 +597,10 @@
   transition: color .2s;
 }
 #mob-menu a:hover { color: var(--or); }
+.mob-menu-logo {
+  position: absolute; top: 1.5rem; left: clamp(1.5rem, 4vw, 3rem);
+}
+.mob-menu-logo img { height: 36px; width: auto; }
 
 /* ── Hero ── */
 #hero {

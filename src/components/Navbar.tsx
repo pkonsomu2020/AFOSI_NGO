@@ -82,6 +82,9 @@ const Navbar = () => {
     <>
       {/* MOBILE MENU */}
       <div id="mob-menu" className={mobileOpen ? "open" : ""}>
+        <a href="/" onClick={handleLogoClick} className="mob-menu-logo">
+          <img src="/afosi_logo.png" alt="AFOSI" className="h-10 w-auto" />
+        </a>
         {navLinks.map((link) => (
           <a
             key={link.href}
@@ -104,7 +107,16 @@ const Navbar = () => {
       {/* NAV */}
       <nav id="nav" className={stuck ? "stuck" : ""}>
         <a href="/" onClick={handleLogoClick} className="nav-logo">
-          AF<span className="o">O</span>SI
+          <img
+            src="/afosi_logo_white.png"
+            alt="AFOSI"
+            className="nav-logo-img nav-logo-white"
+          />
+          <img
+            src="/afosi_logo.png"
+            alt="AFOSI"
+            className="nav-logo-img nav-logo-color"
+          />
         </a>
         <ul className="nav-links">
           {navLinks.map((link) => (
