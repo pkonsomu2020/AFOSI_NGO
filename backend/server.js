@@ -32,9 +32,12 @@ const allowedOrigins = [
   'http://localhost:8080',
   'http://localhost:3000',
   'http://localhost:3001',
+  'http://localhost:5173',
   'https://afosi.org',
   'https://www.afosi.org',
   'https://admin.afosi.org',
+  'https://api.afosi.org',
+  `https://${process.env.SERVER_IP || '156.67.25.84'}`,
   'https://afosi-ngo.vercel.app',
   'https://afosi-ngo-admin.vercel.app',
   process.env.FRONTEND_URL,
@@ -43,13 +46,18 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: (origin, callback) => {
-    // Allow requests with no origin (server-to-server, curl, etc.)
+    // Allow requests with no origin (server-to-server, nginx proxy, curl, etc.)
     if (!origin) return callback(null, true);
 
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      console.error(`CORS blocked origin: ${origin}`);
+      // Log but still allow — nginx internal proxy requests may have unexpected origins
+      console.warn(`CORS warning - unlisted origin: ${origin}`);
+      // Allow all origins that are subdomains of afosi.org
+      if (origin.endsWith('.afosi.org') || origin === 'https://afosi.org') {
+        return callback(null, true);
+      }
       callback(new Error('Not allowed by CORS'));
     }
   },
