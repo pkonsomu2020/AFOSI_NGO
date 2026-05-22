@@ -1,3 +1,4 @@
+// Navbar — uses afosi_logo_white.png (transparent/dark bg) and afosi_logo.png (light/stuck)
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
