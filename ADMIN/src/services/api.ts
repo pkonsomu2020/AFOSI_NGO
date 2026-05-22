@@ -86,14 +86,22 @@ export const galleryAPI = {
   },
   getById: (id: string) => fetchAPI(`/gallery/${id}`),
   create: (data: {
-    src: string;
-    category: 'programs' | 'events' | 'projects';
-    alt: string;
+    src?: string;
+    image_url?: string;
+    category: string;
+    alt?: string;
+    title?: string;
+    description?: string;
+    featured?: boolean;
   }) => fetchAPI('/gallery', { method: 'POST', body: JSON.stringify(data) }),
   update: (id: string, data: Partial<{
     src: string;
-    category: 'programs' | 'events' | 'projects';
+    image_url: string;
+    category: string;
     alt: string;
+    title: string;
+    description: string;
+    featured: boolean;
   }>) => fetchAPI(`/gallery/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   delete: (id: string) => fetchAPI(`/gallery/${id}`, { method: 'DELETE' }),
 };

@@ -7,7 +7,7 @@ const supabase = createClient(
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
   res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization');
 
@@ -16,29 +16,47 @@ export default async function handler(req, res) {
     return;
   }
 
-  try {
-    const { id, featured, limit, action } = req.query;
+  // Parse path segments after /api/projects
+  // e.g. /api/projects                    → []
+  //      /api/projects/:id                → [':id']
+  //      /api/projects/:id/toggle-featured → [':id', 'toggle-featured']
+  const rawUrl = req.url || '';
+  const urlWithoutQuery = rawUrl.split('?')[0];
+  const afterBase = urlWithoutQuery.replace(/^\/api\/projects\/?/, '');
+  const segments = afterBase ? afterBase.split('/').filter(Boolean) : [];
 
-    // GET all projects
+  const id = segments[0] && segments[0] !== 'toggle-featured' ? segments[0] : null;
+  const action = segments[1]; // 'toggle-featured' or undefined
+
+  // Query params for GET all
+  const queryString = rawUrl.includes('?') ? rawUrl.split('?')[1] : '';
+  const params = new URLSearchParams(queryString);
+  const featured = params.get('featured');
+  const limit = params.get('limit');
+
+  try {
+    // ── GET /api/projects ─────────────────────────────────────────────────
     if (req.method === 'GET' && !id) {
-      let query = supabase.from('projects').select('*').order('display_order', { ascending: true });
-      
+      let query = supabase
+        .from('projects')
+        .select('*')
+        .order('display_order', { ascending: true });
+
       if (featured === 'true') {
         query = query.eq('is_featured', true);
       }
-      
+
       if (limit) {
         query = query.limit(parseInt(limit));
       }
 
       const { data, error } = await query;
       if (error) throw error;
-
       return res.status(200).json({ success: true, data: data || [] });
     }
 
-    // GET single project
-    if (req.method === 'GET' && id) {
+    // ── GET /api/projects/:id ─────────────────────────────────────────────
+    if (req.method === 'GET' && id && !action) {
       const { data, error } = await supabase
         .from('projects')
         .select('*')
@@ -49,8 +67,8 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true, data });
     }
 
-    // POST create project
-    if (req.method === 'POST') {
+    // ── POST /api/projects ────────────────────────────────────────────────
+    if (req.method === 'POST' && !id) {
       const { data, error } = await supabase
         .from('projects')
         .insert([req.body])
@@ -61,8 +79,8 @@ export default async function handler(req, res) {
       return res.status(201).json({ success: true, data });
     }
 
-    // PUT update project
-    if (req.method === 'PUT' && id) {
+    // ── PUT /api/projects/:id ─────────────────────────────────────────────
+    if (req.method === 'PUT' && id && !action) {
       const { data, error } = await supabase
         .from('projects')
         .update(req.body)
@@ -74,7 +92,7 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true, data });
     }
 
-    // PATCH toggle featured
+    // ── PATCH /api/projects/:id/toggle-featured ───────────────────────────
     if (req.method === 'PATCH' && id && action === 'toggle-featured') {
       const { data: current, error: fetchError } = await supabase
         .from('projects')
@@ -95,7 +113,7 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true, data });
     }
 
-    // DELETE project
+    // ── DELETE /api/projects/:id ──────────────────────────────────────────
     if (req.method === 'DELETE' && id) {
       const { error } = await supabase
         .from('projects')
@@ -103,12 +121,12 @@ export default async function handler(req, res) {
         .eq('id', id);
 
       if (error) throw error;
-      return res.status(200).json({ success: true });
+      return res.status(200).json({ success: true, message: 'Deleted successfully' });
     }
 
     res.status(405).json({ success: false, message: 'Method not allowed' });
   } catch (error) {
-    console.error('API Error:', error);
+    console.error('Projects API Error:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 }

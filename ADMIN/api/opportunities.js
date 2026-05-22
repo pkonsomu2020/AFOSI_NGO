@@ -6,55 +6,41 @@ const supabase = createClient(
 );
 
 export default async function handler(req, res) {
-  // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization'
-  );
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization');
 
   if (req.method === 'OPTIONS') {
     res.status(200).end();
     return;
   }
 
+  // Parse path segments after /api/opportunities
+  // e.g. /api/opportunities          → []
+  //      /api/opportunities/:id      → [':id']
+  //      /api/opportunities/:id/toggle → [':id', 'toggle']
+  const rawUrl = req.url || '';
+  const urlWithoutQuery = rawUrl.split('?')[0];
+  const afterBase = urlWithoutQuery.replace(/^\/api\/opportunities\/?/, '');
+  const segments = afterBase ? afterBase.split('/').filter(Boolean) : [];
+
+  const id = segments[0] && segments[0] !== 'toggle' ? segments[0] : null;
+  const action = segments[1]; // 'toggle' or undefined
+
   try {
-    const { id, action, slug } = req.query;
-
-    // GET single opportunity by slug
-    if (req.method === 'GET' && slug) {
-      const { data, error } = await supabase
-        .from('opportunities')
-        .select('*')
-        .eq('slug', slug)
-        .single();
-
-      if (error) throw error;
-
-      return res.status(200).json({
-        success: true,
-        data
-      });
-    }
-
-    // GET all opportunities
-    if (req.method === 'GET' && !id && !slug) {
+    // ── GET /api/opportunities ────────────────────────────────────────────
+    if (req.method === 'GET' && !id) {
       const { data, error } = await supabase
         .from('opportunities')
         .select('*')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-
-      return res.status(200).json({
-        success: true,
-        data: data || []
-      });
+      return res.status(200).json({ success: true, data: data || [] });
     }
 
-    // GET single opportunity
+    // ── GET /api/opportunities/:id ────────────────────────────────────────
     if (req.method === 'GET' && id) {
       const { data, error } = await supabase
         .from('opportunities')
@@ -63,21 +49,16 @@ export default async function handler(req, res) {
         .single();
 
       if (error) throw error;
-
-      return res.status(200).json({
-        success: true,
-        data
-      });
+      return res.status(200).json({ success: true, data });
     }
 
-    // POST create opportunity
-    if (req.method === 'POST') {
-      // Validate opportunity type
+    // ── POST /api/opportunities ───────────────────────────────────────────
+    if (req.method === 'POST' && !id) {
       const { type } = req.body;
       if (type && !['employment', 'consulting', 'volunteering'].includes(type)) {
         return res.status(400).json({
           success: false,
-          message: 'Type must be either employment, consulting, or volunteering'
+          message: 'Type must be employment, consulting, or volunteering'
         });
       }
 
@@ -88,21 +69,16 @@ export default async function handler(req, res) {
         .single();
 
       if (error) throw error;
-
-      return res.status(201).json({
-        success: true,
-        data
-      });
+      return res.status(201).json({ success: true, data });
     }
 
-    // PUT update opportunity
-    if (req.method === 'PUT' && id) {
-      // Validate opportunity type if provided
+    // ── PUT /api/opportunities/:id ────────────────────────────────────────
+    if (req.method === 'PUT' && id && !action) {
       const { type } = req.body;
       if (type && !['employment', 'consulting', 'volunteering'].includes(type)) {
         return res.status(400).json({
           success: false,
-          message: 'Type must be either employment, consulting, or volunteering'
+          message: 'Type must be employment, consulting, or volunteering'
         });
       }
 
@@ -114,16 +90,11 @@ export default async function handler(req, res) {
         .single();
 
       if (error) throw error;
-
-      return res.status(200).json({
-        success: true,
-        data
-      });
+      return res.status(200).json({ success: true, data });
     }
 
-    // PATCH toggle status
+    // ── PATCH /api/opportunities/:id/toggle ───────────────────────────────
     if (req.method === 'PATCH' && id && action === 'toggle') {
-      // Get current status
       const { data: current, error: fetchError } = await supabase
         .from('opportunities')
         .select('manually_disabled')
@@ -132,7 +103,6 @@ export default async function handler(req, res) {
 
       if (fetchError) throw fetchError;
 
-      // Toggle status
       const { data, error } = await supabase
         .from('opportunities')
         .update({ manually_disabled: !current.manually_disabled })
@@ -141,14 +111,10 @@ export default async function handler(req, res) {
         .single();
 
       if (error) throw error;
-
-      return res.status(200).json({
-        success: true,
-        data
-      });
+      return res.status(200).json({ success: true, data });
     }
 
-    // DELETE opportunity
+    // ── DELETE /api/opportunities/:id ─────────────────────────────────────
     if (req.method === 'DELETE' && id) {
       const { error } = await supabase
         .from('opportunities')
@@ -156,19 +122,12 @@ export default async function handler(req, res) {
         .eq('id', id);
 
       if (error) throw error;
-
-      return res.status(200).json({
-        success: true,
-        message: 'Deleted successfully'
-      });
+      return res.status(200).json({ success: true, message: 'Deleted successfully' });
     }
 
     res.status(405).json({ success: false, message: 'Method not allowed' });
   } catch (error) {
-    console.error('API Error:', error);
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    console.error('Opportunities API Error:', error);
+    res.status(500).json({ success: false, message: error.message });
   }
 }

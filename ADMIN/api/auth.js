@@ -11,7 +11,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'afosi-ngo-super-secret-jwt-key-202
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
   res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization');
 
@@ -20,20 +20,10 @@ export default async function handler(req, res) {
     return;
   }
 
-  if (req.method === 'GET') {
-    const token = req.headers.authorization?.replace('Bearer ', '');
-    if (!token) {
-      return res.status(401).json({ success: false, message: 'No token provided' });
-    }
-    try {
-      const decoded = jwt.verify(token, JWT_SECRET);
-      return res.status(200).json({ success: true, data: decoded });
-    } catch {
-      return res.status(401).json({ success: false, message: 'Invalid or expired token' });
-    }
-  }
+  const url = req.url || '';
 
-  if (req.method === 'POST') {
+  // ── POST /api/auth/login ──────────────────────────────────────────────────
+  if (req.method === 'POST' && url.includes('/login')) {
     try {
       const { email, password } = req.body;
 
@@ -41,7 +31,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ success: false, message: 'Email and password are required' });
       }
 
-      // Fetch admin user
+      // Fetch admin user from Supabase
       const { data: adminUser, error } = await supabase
         .from('admin_users')
         .select('*')
@@ -50,6 +40,7 @@ export default async function handler(req, res) {
         .single();
 
       if (error || !adminUser) {
+        console.error('Admin user lookup failed:', error?.message);
         return res.status(401).json({ success: false, message: 'Invalid credentials' });
       }
 
@@ -59,7 +50,7 @@ export default async function handler(req, res) {
         return res.status(401).json({ success: false, message: 'Invalid credentials' });
       }
 
-      // Update last login
+      // Update last login timestamp
       await supabase
         .from('admin_users')
         .update({ last_login: new Date().toISOString() })
@@ -74,6 +65,7 @@ export default async function handler(req, res) {
 
       return res.status(200).json({
         success: true,
+        message: 'Login successful',
         data: {
           token,
           email: adminUser.email,
@@ -83,7 +75,21 @@ export default async function handler(req, res) {
       });
     } catch (error) {
       console.error('Login error:', error);
-      return res.status(500).json({ success: false, message: 'Server error' });
+      return res.status(500).json({ success: false, message: 'Server error during login' });
+    }
+  }
+
+  // ── GET /api/auth/verify ──────────────────────────────────────────────────
+  if (req.method === 'GET' && url.includes('/verify')) {
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    if (!token) {
+      return res.status(401).json({ success: false, message: 'No token provided' });
+    }
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET);
+      return res.status(200).json({ success: true, data: decoded });
+    } catch {
+      return res.status(401).json({ success: false, message: 'Invalid or expired token' });
     }
   }
 
