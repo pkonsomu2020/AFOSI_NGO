@@ -117,65 +117,72 @@ const Index = () => {
 
       <main>
         {/* HERO */}
-        <section id="hero">
-          <div className="hero-bg-slider">
+        <section id="hero" className="relative min-h-screen flex flex-col justify-center overflow-hidden">
+          {/* Background Image Slider with Overlay */}
+          <div className="absolute inset-0 z-0">
             {heroSlides.map((src, index) => (
               <div
                 key={index}
-                className={`hero-slide ${index === currentSlide ? "active" : ""}`}
-                style={{ backgroundImage: `url('${src}')` }}
+                className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? "opacity-100" : "opacity-0"}`}
+                style={{ backgroundImage: `url('${src}')`, backgroundSize: "cover", backgroundPosition: "center" }}
+              ></div>
+            ))}
+            <div className="absolute inset-0 hero-overlay"></div>
+          </div>
+
+          {/* Hero Content Container */}
+          <div className="relative z-10 container mx-auto px-6 md:px-12">
+            <div className="max-w-4xl">
+              {/* Badge / Subtitle */}
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-[2px] bg-[#e86c24]"></div>
+                <span className="text-[#e86c24] uppercase tracking-[0.3em] text-xs font-bold">Action for Sustainability Initiative</span>
+              </div>
+
+              {/* Headline with TextReveal */}
+              <div className="font-montserrat font-black uppercase tracking-tight text-4xl md:text-5xl lg:text-6xl leading-tight mb-4 drop-shadow-md flex flex-wrap gap-x-3 md:gap-x-4" id="heroTitle">
+                <TextReveal text="Empowering" className="text-white" delay={0.1} />
+                <TextReveal text="Young Minds" className="text-[#e86c24]" delay={0.3} />
+              </div>
+
+              {/* Description Paragraph & Actions */}
+              <div id="heroRow">
+                <p className="text-gray-300 text-base md:text-lg max-w-xl mb-6 leading-relaxed font-light">
+                  Driving sustainable change in Sub-Saharan Africa by equipping the next generation with AI-driven tools, green skills, and access to global climate finance.
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-4">
+                  {/* Primary Action */}
+                  <a href="#pillars" className="bg-[#e86c24] hover:bg-orange-700 text-white px-10 py-4 rounded-full font-bold uppercase tracking-wider text-sm flex items-center justify-center gap-3 transition-all duration-300 group shadow-lg w-fit">
+                    Explore Solutions
+                    <ArrowRight size={16} className="transform group-hover:translate-x-1 transition-transform" />
+                  </a>
+                  {/* Secondary Action */}
+                  <a href="#about" className="border border-white/20 bg-white/5 hover:bg-white/10 text-white px-10 py-4 rounded-full font-bold uppercase tracking-wider text-sm flex items-center justify-center gap-3 transition-all duration-300 shadow-lg w-fit">
+                    Who We Are <span className="opacity-50">→</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Decorative Bottom Gradient */}
+          <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black to-transparent opacity-60 z-0"></div>
+
+          {/* Carousel Indicators */}
+          <div className="absolute bottom-10 right-10 flex gap-3 z-10">
+            {heroSlides.map((_, index) => (
+              <div
+                key={index}
+                className={`w-2 h-2 rounded-full transition-colors ${index === currentSlide ? "bg-[#e86c24]" : "bg-white/30"}`}
               ></div>
             ))}
           </div>
-          <div className="hero-grad"></div>
-          <div className="hero-grain"></div>
-
-          <div className="hero-content">
-            <div className="split-title" id="heroTitle">
-              <TextReveal text="Empowering Youth" className="text-white" delay={0.2} />
-              <TextReveal text="through Innovation" className="text-orange-500" delay={0.4} />
-            </div>
-            <div className="hero-row" id="heroRow">
-              <p className="hero-sub">
-                Empowering youth through Health, Education, Environment, Leadership, and Livelihoods — powered by innovative technology and digital solutions across Kenya.
-              </p>
-              <div className="hero-actions">
-                <a href="#pillars" className="btn-fill">
-                  Explore Solutions
-                </a>
-                <a href="#about" className="btn-ghost">
-                  Who We Are{" "}
-                  <span className="arr">
-                    <ArrowRight size={16} />
-                  </span>
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div className="hero-scroll-ind">
-            <div className="scroll-line"></div>
-            <span>Scroll</span>
-          </div>
         </section>
 
-        {/* TICKER */}
-        <div className="ticker">
-          <div className="ticker-track">
-            {/* Repeated for infinite scroll */}
-            {[...Array(2)].map((_, i) => (
-              <div key={i} style={{ display: "contents" }}>
-                <div className="ticker-item">We Lead Project</div>
-                <div className="ticker-item">Sheria Ya Vijana</div>
-                <div className="ticker-item">M.A.T.H Project</div>
-                <div className="ticker-item">YOMA Marketplace</div>
-                <div className="ticker-item">Youth Voices Lab</div>
-                <div className="ticker-item">Robotics &amp; Coding</div>
-                <div className="ticker-item">Forest Explorer</div>
-                <div className="ticker-item">Kiongozi Platform</div>
-              </div>
-            ))}
-          </div>
+        {/* SECTION SEPARATOR */}
+        <div className="w-full py-16 flex justify-center">
+          <div className="w-2/3 h-[1px] bg-gradient-to-r from-transparent via-[#e86c24]/30 to-transparent"></div>
         </div>
 
         {/* ABOUT (sticky scroll) */}
@@ -183,21 +190,15 @@ const Index = () => {
           <div className="about-sticky">
             <img src="https://afosi.org/afosi_pad1.jpg" alt="AFOSI community work" />
             <div className="about-img-overlay"></div>
-            <div className="about-badge">
-              <strong>12+</strong>
-              <small>
-                Years of<br />
-                Impact
-              </small>
-            </div>
+
           </div>
           <div className="about-scroll">
             <div className="reveal">
               <div className="s-label">Who We Are</div>
-              <h2 className="about-title">
-                <TextReveal text="Building" className="word-black block" />
-                <TextReveal text="Resilient" className="word-orange block" delay={0.1} />
-                <TextReveal text="Communities" className="word-black block" delay={0.2} />
+              <h2 className="font-montserrat font-black uppercase tracking-tight text-3xl md:text-5xl leading-tight flex flex-wrap gap-x-2 md:gap-x-3 mb-6">
+                <TextReveal text="Building" className="text-[#1A1410]" />
+                <TextReveal text="Resilient" className="text-[#e86c24]" delay={0.1} />
+                <TextReveal text="Communities" className="text-[#1A1410]" delay={0.2} />
               </h2>
             </div>
             <p className="about-body reveal" style={{ transitionDelay: ".1s" }}>
@@ -236,9 +237,9 @@ const Index = () => {
           <div className="pillars-header">
             <div className="reveal-l">
               <div className="s-label">What We Do</div>
-              <h2 className="pillars-ttl">
-                <TextReveal text="Our" className="word-black block" />
-                <TextReveal text="Pillars" className="word-orange block" delay={0.1} />
+              <h2 className="font-montserrat font-black uppercase tracking-tight text-3xl md:text-5xl leading-tight flex flex-wrap gap-x-2 md:gap-x-3 mb-6">
+                <TextReveal text="Our" className="text-[#1A1410]" />
+                <TextReveal text="Pillars" className="text-[#e86c24]" delay={0.1} />
               </h2>
             </div>
             <p className="pillars-body reveal-r">
@@ -330,9 +331,9 @@ const Index = () => {
           <div className="proj-top reveal">
             <div>
               <div className="s-label">Featured Work</div>
-              <h2 className="proj-ttl">
-                <TextReveal text="Our" className="word-black block" />
-                <TextReveal text="Projects" className="word-orange block" delay={0.1} />
+              <h2 className="font-montserrat font-black uppercase tracking-tight text-3xl md:text-5xl leading-tight flex flex-wrap gap-x-2 md:gap-x-3 mb-6">
+                <TextReveal text="Our" className="text-[#1A1410]" />
+                <TextReveal text="Projects" className="text-[#e86c24]" delay={0.1} />
               </h2>
             </div>
             <a href="/projects" className="link-arr">
@@ -439,9 +440,9 @@ const Index = () => {
           <div className="contact-inner">
             <div className="contact-left reveal-l">
               <div className="s-label">Get In Touch</div>
-              <h2 className="contact-title">
-                <TextReveal text="Let's Create" className="ct-fg block" />
-                <TextReveal text="Change Together" className="ct-or block" delay={0.1} />
+              <h2 className="font-montserrat font-black uppercase tracking-tight text-3xl md:text-5xl leading-tight flex flex-wrap gap-x-2 md:gap-x-3 mb-6">
+                <TextReveal text="Let's Create" className="text-[#1A1410]" />
+                <TextReveal text="Change Together" className="text-[#e86c24]" delay={0.1} />
               </h2>
               <p className="contact-sub">Ready to make a difference? Whether you want to partner, volunteer, donate or simply learn more — we'd love to hear from you.</p>
             </div>

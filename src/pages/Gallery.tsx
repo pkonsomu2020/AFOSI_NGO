@@ -115,7 +115,7 @@ const Gallery = () => {
   return (
     <>
       <Navbar />
-      <main>
+      <main className="font-montserrat">
       {/* HERO */}
       <div className="gallery-hero">
         <div className="hero-eyebrow">Gallery</div>

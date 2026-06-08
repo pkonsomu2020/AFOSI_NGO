@@ -156,7 +156,7 @@ const Projects = () => {
   return (
     <>
       <Navbar />
-      <main>
+      <main className="font-montserrat">
       {/* PAGE HERO */}
       <header className="proj-hero">
         <div className="hero-eyebrow">Programs &amp; Initiatives</div>
@@ -200,9 +200,6 @@ const Projects = () => {
 
           const Content = (
             <div className={isFeature ? "proj-feature-content" : "proj-split-content"}>
-              <span className="proj-num" aria-hidden="true">
-                {p.id}
-              </span>
               <div className="proj-cat">{p.cat}</div>
               <h2 className="proj-title-lg">{p.title}</h2>
               <p className="proj-desc-text">{p.desc}</p>

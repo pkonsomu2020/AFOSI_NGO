@@ -1,5 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap');
 
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/Montserrat/Montserrat-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/Montserrat/Montserrat-Italic-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: italic;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -3155,4 +3168,32 @@ link[rel="preload"][as="image"] { display: none; }
   .activities-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.text-outline {
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.8);
+  color: transparent;
+}
+
+.hero-overlay {
+  background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.7) 100%);
+}
+
+/* FORCE MONTSERRAT ON REQUESTED PAGES */
+.font-montserrat * {
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.font-montserrat h1, 
+.font-montserrat h2, 
+.font-montserrat h3, 
+.font-montserrat h4, 
+.font-montserrat h5, 
+.font-montserrat h6,
+.font-montserrat .team-hero-title,
+.font-montserrat .section-title,
+.font-montserrat .proj-hero-title,
+.font-montserrat .proj-title-lg,
+.font-montserrat .gallery-hero-title {
+  font-style: normal !important;
 }

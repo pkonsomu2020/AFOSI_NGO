@@ -102,7 +102,7 @@ const Opportunities = () => {
   return (
     <>
       <Navbar />
-      <main>
+      <main className="font-montserrat">
         <ScrollToTop />
         
         {/* PAGE HERO */}

@@ -24,6 +24,7 @@ export default {
       fontFamily: {
         heading: ['"Sora"', 'sans-serif'],
         body: ['"Inter"', 'sans-serif'],
+        montserrat: ['"Montserrat"', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

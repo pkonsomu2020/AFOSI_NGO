@@ -23,7 +23,7 @@ const Team = () => {
   return (
     <>
       <Navbar />
-      <main>
+      <main className="font-montserrat">
       {/* PAGE HERO */}
       <div className="team-hero">
         <div className="hero-line"></div>
