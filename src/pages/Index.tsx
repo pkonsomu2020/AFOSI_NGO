@@ -26,9 +26,9 @@ const Index = () => {
   const [loadPct, setLoadPct] = useState(0);
 
   const heroSlides = [
-    "https://afosi.org/afosi_pad2.jpg",
-    "https://afosi.org/afosi_pad1.jpg",
-    "https://pmigmljjnyucethipdtk.supabase.co/storage/v1/object/public/afosi-projects/1776244075815-WE_LEAD_BG.jpg"
+    "/hero_1.jpg",
+    "/hero_2.jpg",
+    "/hero_3.jpg"
   ];
 
   // Loader Effect
@@ -117,15 +117,16 @@ const Index = () => {
 
       <main>
         {/* HERO */}
-        <section id="hero" className="relative min-h-screen flex flex-col justify-center overflow-hidden">
+        <section id="hero" className="relative min-h-[100svh] md:min-h-screen flex flex-col justify-center overflow-hidden">
           {/* Background Image Slider with Overlay */}
           <div className="absolute inset-0 z-0">
             {heroSlides.map((src, index) => (
-              <div
+              <img
                 key={index}
-                className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? "opacity-100" : "opacity-0"}`}
-                style={{ backgroundImage: `url('${src}')`, backgroundSize: "cover", backgroundPosition: "center" }}
-              ></div>
+                src={src}
+                alt="AFOSI Hero Background"
+                className={`absolute inset-0 w-full h-full object-cover object-[center_15%] sm:object-[center_20%] md:object-center transition-opacity duration-1000 ${index === currentSlide ? "opacity-100" : "opacity-0"}`}
+              />
             ))}
             <div className="absolute inset-0 hero-overlay"></div>
           </div>
