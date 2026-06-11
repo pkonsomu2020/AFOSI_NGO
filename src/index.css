@@ -1827,7 +1827,7 @@ link[rel="preload"][as="image"] { display: none; }
 }
 
 .opp-hero::before {
-  content: 'CAREERS';
+  content: 'NEWS';
   position: absolute;
   right: -20px;
   top: 50%;
