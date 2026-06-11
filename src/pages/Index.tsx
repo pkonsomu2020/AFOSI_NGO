@@ -3,6 +3,7 @@ import { ArrowRight, HeartPulse, Leaf, Briefcase, BookOpen, HandHeart, Landmark,
 import TextReveal from "@/components/animations/TextReveal";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import NewsSection from "@/components/NewsSection";
 
 // Helper function for counters
 function countUp(el: Element, target: number, suffix: string, dur = 1400) {
@@ -389,6 +390,9 @@ const Index = () => {
             </div>
           </div>
         </section>
+
+        {/* NEWS & REPORTS */}
+        <NewsSection />
 
         {/* CTA MARQUEE */}
         <div id="cta-marquee">
