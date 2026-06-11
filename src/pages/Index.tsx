@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { ArrowRight, HeartPulse, Leaf, Briefcase, BookOpen, HandHeart, Landmark, MapPin, Phone, Mail, Globe } from "lucide-react";
+import { ArrowRight, ArrowLeft, HeartPulse, Leaf, Briefcase, BookOpen, HandHeart, Landmark, MapPin, Phone, Mail, Globe } from "lucide-react";
 import TextReveal from "@/components/animations/TextReveal";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -126,7 +126,7 @@ const Index = () => {
                 key={index}
                 src={src}
                 alt="AFOSI Hero Background"
-                className={`absolute inset-0 w-full h-full object-cover object-[center_15%] sm:object-[center_20%] md:object-center transition-opacity duration-1000 ${index === currentSlide ? "opacity-100" : "opacity-0"}`}
+                className={`absolute inset-0 w-full h-full object-cover object-[center_15%] sm:object-[center_20%] md:object-center transition-opacity duration-1000 ${index === currentSlide ? "opacity-100 hero-zoom" : "opacity-0"}`}
               />
             ))}
             <div className="absolute inset-0 hero-overlay"></div>
@@ -247,6 +247,21 @@ const Index = () => {
             <p className="pillars-body reveal-r">
               Six interconnected areas of focus, each addressing a critical dimension of youth well-being and community resilience across Kenya.
             </p>
+          </div>
+
+          <div className="flex md:hidden justify-end px-6 mb-4 gap-2">
+            <button 
+              onClick={() => document.getElementById('pillarsTrack')?.scrollBy({ left: -280, behavior: 'smooth' })} 
+              className="w-10 h-10 flex items-center justify-center rounded-full border border-[#e86c24] text-[#e86c24] hover:bg-[#e86c24] hover:text-white transition-colors"
+            >
+              <ArrowLeft size={18} />
+            </button>
+            <button 
+              onClick={() => document.getElementById('pillarsTrack')?.scrollBy({ left: 280, behavior: 'smooth' })} 
+              className="w-10 h-10 flex items-center justify-center rounded-full border border-[#e86c24] text-[#e86c24] hover:bg-[#e86c24] hover:text-white transition-colors"
+            >
+              <ArrowRight size={18} />
+            </button>
           </div>
 
           <div className="pillars-track-wrap reveal">

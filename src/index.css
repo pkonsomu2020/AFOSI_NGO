@@ -1169,7 +1169,7 @@ link[rel="preload"][as="image"] { display: none; }
 }
 .gallery-hero::before{
   content:'GALLERY';position:absolute;right:-20px;top:50%;transform:translateY(-50%);
-  font-family:'Bebas Neue',sans-serif;font-size:260px;letter-spacing:-8px;
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(80px,18vw,260px);letter-spacing:-8px;
   color:rgba(224,90,24,.05);pointer-events:none;white-space:nowrap;line-height:1;
 }
 .gallery-hero::after{content:'';position:absolute;top:0;left:0;width:100%;height:3px;background:var(--or);}
@@ -1234,7 +1234,7 @@ link[rel="preload"][as="image"] { display: none; }
 }
 .team-hero::before{
   content:'TEAM';position:absolute;right:-10px;top:50%;transform:translateY(-50%);
-  font-family:'Bebas Neue',sans-serif;font-size:300px;letter-spacing:-10px;
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(90px,20vw,300px);letter-spacing:-10px;
   color:rgba(224,90,24,.05);pointer-events:none;white-space:nowrap;line-height:1;
 }
 .team-hero::after{content:'';position:absolute;top:0;left:0;width:100%;height:3px;background:var(--or);}
@@ -1327,7 +1327,7 @@ link[rel="preload"][as="image"] { display: none; }
 .proj-hero::before{
   content:'PROJECTS';
   position:absolute;right:-20px;top:50%;transform:translateY(-50%);
-  font-family:'Bebas Neue',sans-serif;font-size:clamp(160px,22vw,320px);
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(80px,18vw,320px);
   letter-spacing:-8px;line-height:1;
   color:rgba(224,90,24,.06);
   pointer-events:none;white-space:nowrap;
@@ -1833,7 +1833,7 @@ link[rel="preload"][as="image"] { display: none; }
   top: 50%;
   transform: translateY(-50%);
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 260px;
+  font-size: clamp(80px, 18vw, 260px);
   letter-spacing: -8px;
   color: rgba(224, 90, 24, 0.06);
   pointer-events: none;
@@ -3193,7 +3193,34 @@ link[rel="preload"][as="image"] { display: none; }
 .font-montserrat .team-hero-title,
 .font-montserrat .section-title,
 .font-montserrat .proj-hero-title,
-.font-montserrat .proj-title-lg,
 .font-montserrat .gallery-hero-title {
   font-style: normal !important;
+}
+
+@keyframes slowZoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.1); }
+}
+
+.hero-zoom {
+  animation: slowZoom 6s linear forwards;
+}
+
+@media (max-width: 1024px) {
+  .pillars-track {
+    animation: none !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+  }
+  .pillars-track::-webkit-scrollbar {
+    display: none;
+  }
+  .pillar-card {
+    scroll-snap-align: start;
+  }
+  .pillars-track > div:nth-child(2) {
+    display: none !important;
+  }
 }
