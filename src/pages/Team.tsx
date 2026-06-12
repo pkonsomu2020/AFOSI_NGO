@@ -66,7 +66,7 @@ const Team = () => {
 
           <div className="team-card">
             <div className="team-card-img">
-              <img src="https://afosi.org/TEAMS/Lucy%20Mogesi.jpeg" alt="Lucy Mogesi" loading="lazy" />
+              <img src="https://afosi.org/TEAMS/LUCY_2.jpeg" alt="Lucy Mogesi" loading="lazy" />
             </div>
             <div className="team-card-body">
               <div className="team-name">Lucy Mogesi</div>
@@ -95,7 +95,7 @@ const Team = () => {
         <div className="team-grid two-col reveal" style={{ transitionDelay: ".1s" }}>
           <div className="team-card">
             <div className="team-card-img">
-              <img src="https://afosi.org/TEAMS/eric.jpg" alt="Eric Nyamwaro" loading="lazy" />
+              <img src="https://afosi.org/TEAMS/ERIC_2.jpeg" alt="Eric Nyamwaro" loading="lazy" />
             </div>
             <div className="team-card-body">
               <div className="team-name">Eric Nyamwaro</div>

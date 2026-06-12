@@ -3193,7 +3193,8 @@ link[rel="preload"][as="image"] { display: none; }
 .font-montserrat .team-hero-title,
 .font-montserrat .section-title,
 .font-montserrat .proj-hero-title,
-.font-montserrat .gallery-hero-title {
+.font-montserrat .gallery-hero-title,
+.font-montserrat .opp-hero-title {
   font-style: normal !important;
 }
 

@@ -148,7 +148,7 @@ function renderContent(text: string) {
             {section.heading && (
               <div className={`flex items-center gap-3 mb-4 pb-3 border-b border-border`}>
                 <Icon size={20} className="text-primary shrink-0" style={{ color: 'var(--or)' }} />
-                <h2 className="text-xl font-heading font-bold" style={{ fontFamily: "'Crimson Text', serif", fontSize: '24px', fontStyle: 'italic' }}>
+                <h2 className="text-xl font-heading font-bold" style={{ fontSize: '24px' }}>
                   {toTitleCase(section.heading)}
                 </h2>
               </div>
@@ -277,7 +277,7 @@ const OpportunityDetail = () => {
     "bg-primary text-primary-foreground";
 
   return (
-    <main className="min-h-screen" style={{ background: 'var(--bg)' }}>
+    <main className="min-h-screen font-montserrat" style={{ background: 'var(--bg)' }}>
       <ScrollToTop />
       <Navbar />
 
