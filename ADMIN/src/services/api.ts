@@ -3,6 +3,53 @@ const API_BASE_URL = '/api';
 
 const getAuthToken = () => localStorage.getItem('afosi_admin_token');
 
+// ── Safe response parser ────────────────────────────────────────────────────────
+// The server occasionally returns plain-text errors (e.g. "Too many requests")
+// instead of JSON. Calling .json() on those throws a SyntaxError that surfaces
+// as the confusing "Unexpected token 'T'" crash. This helper always reads the
+// raw text first, then tries to parse it – so we always get a clean error.
+async function safeParseJSON(response: Response): Promise<any> {
+  const text = await response.text();
+  if (!text || text.trim() === '') return null;
+  try {
+    return JSON.parse(text);
+  } catch {
+    // Plain-text body (e.g. rate-limit message from nginx/Supabase)
+    throw new Error(text.trim());
+  }
+}
+
+// ── Exponential backoff retry ───────────────────────────────────────────────────
+// On HTTP 429 (Too Many Requests) the server sends a Retry-After header or
+// just returns too quickly. We wait and retry up to MAX_RETRIES times.
+const MAX_RETRIES = 3;
+const BASE_DELAY_MS = 1000;
+
+async function fetchWithRetry(
+  url: string,
+  config: RequestInit,
+  attempt = 0
+): Promise<Response> {
+  const response = await fetch(url, config);
+
+  if (response.status === 429 && attempt < MAX_RETRIES) {
+    const retryAfter = response.headers.get('Retry-After');
+    const delay = retryAfter
+      ? parseInt(retryAfter, 10) * 1000
+      : BASE_DELAY_MS * Math.pow(2, attempt); // 1 s → 2 s → 4 s
+
+    console.warn(`[API] Rate limited. Retrying in ${delay}ms (attempt ${attempt + 1}/${MAX_RETRIES})`);
+    await new Promise(resolve => setTimeout(resolve, delay));
+    return fetchWithRetry(url, config, attempt + 1);
+  }
+
+  return response;
+}
+
+// ── Track whether a logout redirect is already in flight ──────────────────────
+let isRedirectingToLogin = false;
+
+// ── Core fetch wrapper ────────────────────────────────────────────────────────
 async function fetchAPI(endpoint: string, options: RequestInit = {}) {
   const url = `${API_BASE_URL}${endpoint}`;
   const token = getAuthToken();
@@ -17,20 +64,42 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
   };
 
   try {
-    const response = await fetch(url, config);
-    const data = await response.json();
+    const response = await fetchWithRetry(url, config);
+
+    // ── 401 Unauthorized ───────────────────────────────────────────────────
+    // Clear stale credentials ONCE and reload — guard against reload loops.
+    if (response.status === 401 && !isRedirectingToLogin) {
+      isRedirectingToLogin = true;
+      localStorage.removeItem('afosi_admin_auth');
+      localStorage.removeItem('afosi_admin_token');
+      // Small delay so any pending state updates settle before reload
+      setTimeout(() => {
+        isRedirectingToLogin = false;
+        window.location.reload();
+      }, 300);
+      throw new Error('Session expired. Please log in again.');
+    }
+
+    // ── Parse response body safely ─────────────────────────────────────────
+    const data = await safeParseJSON(response);
 
     if (!response.ok) {
-      if (response.status === 401) {
-        localStorage.removeItem('afosi_admin_auth');
-        localStorage.removeItem('afosi_admin_token');
-        window.location.reload();
-      }
-      throw new Error(data.message || 'API request failed');
+      throw new Error(
+        (data && (data.message || data.error)) ||
+        `Request failed with status ${response.status}`
+      );
     }
 
     return data;
-  } catch (error) {
+  } catch (error: any) {
+    // Re-throw with a friendlier message for rate-limit errors that slipped through
+    if (
+      error.message &&
+      (error.message.toLowerCase().includes('too many') ||
+        error.message.toLowerCase().includes('rate limit'))
+    ) {
+      throw new Error('Too many requests. Please wait a moment and try again.');
+    }
     console.error('API Error:', error);
     throw error;
   }
@@ -206,8 +275,15 @@ async function uploadDirectToSupabase(file: File, bucket: string = 'afosi-images
   );
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || 'Upload failed');
+    const errorText = await response.text();
+    let errorMessage = 'Upload failed';
+    try {
+      const errorJson = JSON.parse(errorText);
+      errorMessage = errorJson.message || errorMessage;
+    } catch {
+      errorMessage = errorText || errorMessage;
+    }
+    throw new Error(errorMessage);
   }
 
   return {
