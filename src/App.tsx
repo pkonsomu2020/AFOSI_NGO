@@ -23,6 +23,7 @@ import SheriaYaVijana from "./pages/programs/SheriaYaVijana";
 import YomaProject from "./pages/programs/YomaProject";
 import YouthVoicesLab from "./pages/programs/YouthVoicesLab";
 import Team from "./pages/Team";
+import DeliveryPlatforms from "./pages/DeliveryPlatforms";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -54,6 +55,7 @@ const App = () => (
               <Route path="/programs/yoma" element={<YomaProject />} />
               <Route path="/programs/youth-voices-lab" element={<YouthVoicesLab />} />
               <Route path="/team" element={<Team />} />
+              <Route path="/platforms" element={<DeliveryPlatforms />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
