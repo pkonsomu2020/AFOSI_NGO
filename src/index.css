@@ -2686,9 +2686,9 @@ link[rel="preload"][as="image"] { display: none; }
 
 /* ── SECTION HEADINGS ── */
 .detail-section-title {
-  font-family: 'Crimson Text', serif;
-  font-style: italic;
-  font-weight: 600;
+  font-family: 'Montserrat', 'DM Sans', sans-serif;
+  font-style: normal;
+  font-weight: 700;
   font-size: clamp(28px, 3.5vw, 44px);
   line-height: 1.1;
   color: var(--fg);
