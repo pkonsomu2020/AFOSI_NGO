@@ -110,7 +110,7 @@ const Projects = () => {
   return (
     <>
       <Navbar />
-      <main>
+      <main className="font-montserrat">
 
         {/* ── PAGE HERO ── */}
         <header className="proj-hero">
@@ -123,10 +123,6 @@ const Projects = () => {
             Eight transformative programs driving sustainable change across Kenya —
             from digital innovation to climate action.
           </p>
-          <div className="hero-pills">
-            <div className="hero-pill"><strong>8</strong> Active Programs</div>
-            <div className="hero-pill"><strong>69,000+</strong> Youth Reached</div>
-          </div>
         </header>
 
         {/* ── FILTER STRIP ── */}
@@ -156,7 +152,6 @@ const Projects = () => {
                 link={p.link}
                 external={p.external}
                 disabled={p.disabled}
-                featured={p.featured}
                 className="reveal"
               />
             ))}
