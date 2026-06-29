@@ -90,7 +90,7 @@ const ProjectPage = ({ slug, fallbackTitle, fallbackImage, fallbackBadge }: Proj
   const excerpt = project?.excerpt || project?.description || "";
 
   return (
-    <main className="min-h-screen" style={{ background: 'var(--bg)' }}>
+    <main className="min-h-screen font-montserrat" style={{ background: 'var(--bg)' }}>
       <ScrollToTop />
       <Navbar />
 

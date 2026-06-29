@@ -11,7 +11,7 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <main className="min-h-screen" style={{ background: 'var(--bg)' }}>
+    <main className="min-h-screen font-montserrat" style={{ background: 'var(--bg)' }}>
       <Navbar />
       <div className="opp-hero" style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
         <h1 className="opp-hero-title" style={{ fontSize: 'clamp(80px, 15vw, 200px)' }}>

@@ -318,7 +318,7 @@ const BlogPost = () => {
   const shareText = `Check out this article: ${post.title}`;
 
   return (
-    <main className="min-h-screen" style={{ background: 'var(--bg)' }}>
+    <main className="min-h-screen font-montserrat" style={{ background: 'var(--bg)' }}>
       <ScrollToTop />
       <Navbar />
 
