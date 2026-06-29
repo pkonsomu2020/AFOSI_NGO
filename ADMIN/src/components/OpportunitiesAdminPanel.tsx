@@ -317,13 +317,19 @@ const OpportunityForm = ({
   };
 
   // Determine current application method from the stored apply_link value
+  // Stored values:
+  //   'mailto:careers@afosi.org'  → email
+  //   'internal'                  → default built-in page
+  //   anything else               → external URL
   const applyLink = data.apply_link || '';
-  const currentMode = applyLink.startsWith('mailto:') || !applyLink
-    ? 'email'
-    : applyLink === 'internal' || applyLink.startsWith('internal')
+  const currentMode =
+    applyLink === 'internal'
       ? 'internal'
-      : 'external';
+      : !applyLink || applyLink.startsWith('mailto:')
+        ? 'email'
+        : 'external';
 
+  // The actual URL value when in external mode
   const formUrl = currentMode === 'external' ? applyLink : '';
 
   const handleMethodChange = (mode: 'email' | 'external' | 'internal', value?: string) => {
@@ -332,7 +338,8 @@ const OpportunityForm = ({
     } else if (mode === 'internal') {
       onChange({ ...data, apply_link: 'internal' });
     } else {
-      onChange({ ...data, apply_link: value || '' });
+      // For external, store whatever URL was typed (or 'https://' as a starter)
+      onChange({ ...data, apply_link: value !== undefined ? value : 'https://' });
     }
   };
 
@@ -504,7 +511,7 @@ const OpportunityForm = ({
           {/* Option 3: External Form (URL) */}
           <button
             type="button"
-            onClick={() => handleMethodChange('external', formUrl)}
+            onClick={() => handleMethodChange('external', currentMode === 'external' ? formUrl : 'https://')}
             className={`w-full flex items-start gap-4 p-4 rounded-xl border-2 text-left transition-all ${
               currentMode === 'external'
                 ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/20 shadow-sm'
@@ -533,15 +540,22 @@ const OpportunityForm = ({
 
         {/* External URL input — shown only when External is selected */}
         {currentMode === 'external' && (
-          <div className="mt-3">
-            <label className="block text-xs font-semibold mb-1.5 text-muted-foreground uppercase tracking-wide">Form URL</label>
+          <div className="mt-3 p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-xl">
+            <label className="block text-xs font-bold mb-2 text-blue-700 dark:text-blue-300 uppercase tracking-wide">
+              🔗 Paste Your External Form URL
+            </label>
             <input
               type="url"
-              value={formUrl}
-              onChange={(e) => handleMethodChange('external', e.target.value)}
-              className={inputClass}
-              placeholder="https://forms.google.com/..."
+              value={formUrl === 'https://' ? '' : formUrl}
+              onChange={(e) => handleMethodChange('external', e.target.value || 'https://')}
+              onFocus={(e) => { if (e.target.value === 'https://') e.target.select(); }}
+              className={`${inputClass} border-blue-300 dark:border-blue-700 focus:ring-blue-500`}
+              placeholder="https://forms.google.com/d/your-form-id"
+              autoFocus
             />
+            <p className="text-xs text-blue-600 dark:text-blue-400 mt-1.5">
+              Supports Google Forms, Microsoft Forms, Typeform, JotForm, and any other URL.
+            </p>
           </div>
         )}
       </div>
