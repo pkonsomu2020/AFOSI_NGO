@@ -266,6 +266,12 @@ const OpportunityDetail = () => {
   const daysLeft = getDaysUntilDeadline(opportunity.deadline);
   const isOpen = status === "open";
 
+  // Detect application method from apply_link value
+  const isEmailApply = !opportunity.apply_link ||
+    opportunity.apply_link === 'mailto:careers@afosi.org' ||
+    opportunity.apply_link.startsWith('mailto:');
+  const applyEmail = 'careers@afosi.org';
+
   const typeLabel =
     opportunity.type === "consulting" ? "Consulting" :
     opportunity.type === "volunteering" ? "Volunteering / Mentorship" :
@@ -369,9 +375,17 @@ const OpportunityDetail = () => {
                     <span style={{ display: 'block', marginTop: '4px', fontWeight: 600 }}>{daysLeft} days remaining</span>
                   )}
                 </p>
-                
+
                 {isOpen ? (
-                  opportunity.apply_link ? (
+                  isEmailApply ? (
+                    <a
+                      href={`mailto:${applyEmail}?subject=Application: ${encodeURIComponent(opportunity.title)}`}
+                      className="btn-white"
+                      style={{ display: 'flex', justifyContent: 'center', width: '100%' }}
+                    >
+                      Apply via Email <ExternalLink size={15} />
+                    </a>
+                  ) : opportunity.apply_link ? (
                     <a href={opportunity.apply_link} target="_blank" rel="noopener noreferrer" className="btn-white" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
                       Apply Now <ExternalLink size={15} />
                     </a>
@@ -384,6 +398,16 @@ const OpportunityDetail = () => {
                   <button className="btn-ghost" disabled style={{ width: '100%', opacity: 0.6, cursor: 'not-allowed', color: '#F5EFE6', borderColor: 'rgba(245,239,230,0.3)', justifyContent: 'center' }}>
                     <Lock size={16} /> Applications Closed
                   </button>
+                )}
+
+                {/* Submission instruction */}
+                {isOpen && (
+                  <p style={{ fontSize: '12px', marginTop: '16px', opacity: 0.8, lineHeight: 1.6, textAlign: 'center' }}>
+                    {isEmailApply
+                      ? <>Send your CV & cover letter to <strong>{applyEmail}</strong> with the job title as the subject line.</>
+                      : <>Click <strong>Apply Now</strong> to open the online application form.</>
+                    }
+                  </p>
                 )}
               </div>
 

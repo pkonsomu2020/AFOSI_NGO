@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { 
-  Plus, Edit2, Trash2, Save, X, 
-  Calendar, MapPin, Clock, AlertCircle, CheckCircle2 
+import {
+  Plus, Edit2, Trash2, Save, X,
+  Calendar, MapPin, Clock, AlertCircle, CheckCircle2,
+  Mail, Link as LinkIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -291,13 +292,15 @@ const OpportunitiesAdminPanel = () => {
 
 // ─── Simple Form Component ────────────────────────────────────────────────────
 
-const OpportunityForm = ({ 
-  data, 
-  onChange, 
-  onSave, 
-  onCancel 
-}: { 
-  data: Partial<OpportunityData>; 
+const CAREERS_EMAIL = 'mailto:careers@afosi.org';
+
+const OpportunityForm = ({
+  data,
+  onChange,
+  onSave,
+  onCancel
+}: {
+  data: Partial<OpportunityData>;
   onChange: (data: Partial<OpportunityData>) => void;
   onSave: () => void;
   onCancel: () => void;
@@ -311,6 +314,18 @@ const OpportunityForm = ({
       updates.slug = generateSlug(title);
     }
     onChange(updates);
+  };
+
+  // Determine current application method from the stored apply_link value
+  const isEmailMode = !data.apply_link || data.apply_link === CAREERS_EMAIL || data.apply_link.startsWith('mailto:');
+  const formUrl = isEmailMode ? '' : (data.apply_link || '');
+
+  const handleMethodToggle = (mode: 'email' | 'form') => {
+    if (mode === 'email') {
+      onChange({ ...data, apply_link: CAREERS_EMAIL });
+    } else {
+      onChange({ ...data, apply_link: '' }); // clear so admin can enter a URL
+    }
   };
 
   const inputClass = "w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground";
@@ -392,39 +407,92 @@ const OpportunityForm = ({
         </div>
       </div>
 
-      {/* Slug + Apply Link */}
-      <div className="grid md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-semibold mb-1">
-            URL Slug
-            <span className="text-muted-foreground font-normal ml-1 text-xs">(auto-generated)</span>
-          </label>
-          <div className="flex items-center">
-            <span className="px-3 py-2 bg-muted border border-r-0 border-border rounded-l-lg text-xs text-muted-foreground whitespace-nowrap">
-              /opportunities/
-            </span>
-            <input
-              type="text"
-              value={data.slug || ''}
-              onChange={(e) => onChange({ ...data, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
-              className="flex-1 px-4 py-2 border border-border rounded-r-lg focus:outline-none focus:ring-2 focus:ring-primary bg-background text-sm"
-              placeholder="my-opportunity-slug"
-            />
-          </div>
-        </div>
-        <div>
-          <label className="block text-sm font-semibold mb-1">
-            Apply Link
-            <span className="text-muted-foreground font-normal ml-1 text-xs">(Google/Microsoft Forms URL)</span>
-          </label>
+      {/* URL Slug */}
+      <div>
+        <label className="block text-sm font-semibold mb-1">
+          URL Slug
+          <span className="text-muted-foreground font-normal ml-1 text-xs">(auto-generated)</span>
+        </label>
+        <div className="flex items-center">
+          <span className="px-3 py-2 bg-muted border border-r-0 border-border rounded-l-lg text-xs text-muted-foreground whitespace-nowrap">
+            /opportunities/
+          </span>
           <input
             type="text"
-            value={data.apply_link || ''}
-            onChange={(e) => onChange({ ...data, apply_link: e.target.value })}
-            className={inputClass}
-            placeholder="https://forms.google.com/..."
+            value={data.slug || ''}
+            onChange={(e) => onChange({ ...data, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
+            className="flex-1 px-4 py-2 border border-border rounded-r-lg focus:outline-none focus:ring-2 focus:ring-primary bg-background text-sm"
+            placeholder="my-opportunity-slug"
           />
         </div>
+      </div>
+
+      {/* Application Method Toggle */}
+      <div>
+        <label className="block text-sm font-semibold mb-2">
+          Application Method
+          <span className="text-muted-foreground font-normal ml-1 text-xs">(choose how applicants apply)</span>
+        </label>
+
+        {/* Toggle buttons */}
+        <div className="flex gap-3 mb-3">
+          <button
+            type="button"
+            onClick={() => handleMethodToggle('email')}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg border-2 text-sm font-semibold transition-all ${
+              isEmailMode
+                ? 'border-primary bg-primary text-white shadow-md'
+                : 'border-border bg-background text-muted-foreground hover:border-primary/50'
+            }`}
+          >
+            <Mail size={15} />
+            Email (careers@afosi.org)
+          </button>
+          <button
+            type="button"
+            onClick={() => handleMethodToggle('form')}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg border-2 text-sm font-semibold transition-all ${
+              !isEmailMode
+                ? 'border-primary bg-primary text-white shadow-md'
+                : 'border-border bg-background text-muted-foreground hover:border-primary/50'
+            }`}
+          >
+            <LinkIcon size={15} />
+            Online Form (URL)
+          </button>
+        </div>
+
+        {/* Conditional content */}
+        {isEmailMode ? (
+          <div className="flex items-start gap-3 p-4 rounded-lg bg-orange-50 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-800">
+            <Mail size={18} className="text-orange-600 mt-0.5 shrink-0" />
+            <div className="text-sm">
+              <p className="font-semibold text-orange-800 dark:text-orange-200">Email Application Active</p>
+              <p className="text-orange-700 dark:text-orange-300 mt-0.5">
+                The <strong>Apply Now</strong> button will open the applicant's email app addressed to{' '}
+                <strong>careers@afosi.org</strong>. The detail page will instruct applicants to send their
+                application to this email.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <div className="flex items-start gap-3 p-4 rounded-lg bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 mb-3">
+              <LinkIcon size={18} className="text-blue-600 mt-0.5 shrink-0" />
+              <p className="text-sm text-blue-800 dark:text-blue-200">
+                <strong>Online Form Active</strong> — paste your Google Forms / Microsoft Forms / Typeform URL below.
+                The <strong>Apply Now</strong> button will open this link in a new tab.
+              </p>
+            </div>
+            <input
+              type="url"
+              value={formUrl}
+              onChange={(e) => onChange({ ...data, apply_link: e.target.value })}
+              className={inputClass}
+              placeholder="https://forms.google.com/..."
+            />
+          </div>
+        )}
       </div>
 
       {/* Full Description */}
