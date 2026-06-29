@@ -3238,8 +3238,33 @@ link[rel="preload"][as="image"] { display: none; }
 .font-montserrat .section-title,
 .font-montserrat .proj-hero-title,
 .font-montserrat .gallery-hero-title,
-.font-montserrat .opp-hero-title {
+.font-montserrat .opp-hero-title,
+.font-montserrat .detail-hero-title {
   font-style: normal !important;
+}
+
+.font-montserrat .proj-hero-title {
+  font-weight: 800 !important;
+  letter-spacing: -1.5px !important;
+  line-height: 1.15 !important;
+  font-size: clamp(2.8rem, 6vw, 4.5rem) !important;
+  text-transform: none !important;
+}
+
+.font-montserrat .detail-hero-title {
+  font-weight: 800 !important;
+  letter-spacing: -1.5px !important;
+  line-height: 1.15 !important;
+  font-size: clamp(2.8rem, 6vw, 4.5rem) !important;
+  text-transform: none !important;
+}
+
+.font-montserrat .detail-hero-sub {
+  font-style: normal !important;
+  font-weight: 400 !important;
+  letter-spacing: normal !important;
+  line-height: 1.6 !important;
+  font-size: clamp(1rem, 1.8vw, 1.25rem) !important;
 }
 
 @keyframes slowZoom {
