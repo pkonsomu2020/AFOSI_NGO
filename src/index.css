@@ -3337,7 +3337,7 @@ link[rel="preload"][as="image"] { display: none; }
 /* ── Individual platform card ── */
 .platform-card {
   display: grid;
-  grid-template-columns: 380px 1fr;
+  grid-template-columns: 1.1fr 1fr;
   border-radius: 1.5rem;
   overflow: hidden;
   border: 1px solid var(--border-af);
@@ -3362,7 +3362,7 @@ link[rel="preload"][as="image"] { display: none; }
   transform: translateY(-6px);
 }
 .platform-card:nth-child(even) {
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: 1fr 1.1fr;
 }
 .platform-card:nth-child(even) .platform-card-img {
   order: 2;
@@ -3375,8 +3375,8 @@ link[rel="preload"][as="image"] { display: none; }
 .platform-card-img {
   position: relative;
   background-size: cover;
-  background-position: center;
-  min-height: 320px;
+  background-position: left top;
+  min-height: 350px;
   overflow: hidden;
 }
 

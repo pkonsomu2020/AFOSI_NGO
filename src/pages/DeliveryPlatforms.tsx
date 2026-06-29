@@ -15,7 +15,7 @@ const platforms = [
       "KYCH serves as a national digital platform for Kenya's youth climate movement, connecting ambition to systems change. It operates under AFOSI — Action for Sustainability Initiative, blending over a decade of evidence-based development with youth-first design.",
     tags: ["Climate Action", "Youth Movement", "Systems Change", "National Platform"],
     color: "#2D7D46",
-    bg: "kych.png",
+    bg: "/kych-img.png",
   },
   {
     id: "02",
@@ -28,7 +28,7 @@ const platforms = [
       "Afosihub is a digital innovation sandbox, designed to transition local youth from theoretical knowledge into building real-world software, AI, and civic technology solutions. It bridges the gap between community-driven social impact and agile tech startup acceleration by hosting digital management networks.",
     tags: ["Digital Innovation", "AI & Tech", "Civic Technology", "Startup Acceleration"],
     color: "#E05A18",
-    bg: "afosihub.jpg",
+    bg: "/afosihub-img.png",
   },
   {
     id: "03",
@@ -41,7 +41,7 @@ const platforms = [
       "Sheria ya Vijana (SYV) is a youth empowerment initiative that equips young Kenyans aged 15–35 with the skills, digital tools, and civic knowledge to lead Kenya's green and digital transition. Through the Kiongozi ya Vijana platform, we connect youth to learning, opportunities, and community-driven data.",
     tags: ["Youth Empowerment", "Green Economy", "Digital Skills", "Civic Knowledge"],
     color: "#1A6FA8",
-    bg: "kiongozi.jpeg",
+    bg: "/kiongozi-img.png",
   },
 ];
 

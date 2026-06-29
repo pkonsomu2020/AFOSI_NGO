@@ -15,7 +15,7 @@ const projectsData = [
     ],
     tags: ["Young women with HIV", "Women with disabilities", "Displacement-affected youth"],
     link: "/programs/we-lead",
-    bg: "https://pmigmljjnyucethipdtk.supabase.co/storage/v1/object/public/afosi-projects/1776244075815-WE_LEAD_BG.jpg",
+    bg: "/PROJECT-IMAGES/welead_img.jpg",
   },
   {
     id: "02",
@@ -41,7 +41,7 @@ const projectsData = [
     ],
     tags: ["60 APBET schools", "ESD Policy advocacy", "Youth climate innovation"],
     link: "/programs/math-project",
-    bg: "https://pmigmljjnyucethipdtk.supabase.co/storage/v1/object/public/afosi-projects/1776244146444-MATH_BG.jpg",
+    bg: "/PROJECT-IMAGES/math-bg.jpg",
   },
   {
     id: "04",
@@ -54,7 +54,7 @@ const projectsData = [
     ],
     tags: ["Kiongozi AI platform", "Green & digital apprenticeships", "Youth-led enterprise grants"],
     link: "/programs/sheria-ya-vijana",
-    bg: "https://pmigmljjnyucethipdtk.supabase.co/storage/v1/object/public/afosi-projects/1776244163145-SHERIA_BG.jpg",
+    bg: "/PROJECT-IMAGES/sheria-vijana.jpg",
   },
   {
     id: "05",
@@ -67,7 +67,7 @@ const projectsData = [
     ],
     tags: ["Youth Climate Innovation Challenge", "Digital skills pathways", "YOMA Hub in Nairobi"],
     link: "/programs/yoma",
-    bg: "https://pmigmljjnyucethipdtk.supabase.co/storage/v1/object/public/afosi-projects/1776244186463-YOMA_BG.jpg",
+    bg: "/PROJECT-IMAGES/yoma-bg.png",
   },
   {
     id: "06",
