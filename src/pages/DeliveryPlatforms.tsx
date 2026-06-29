@@ -79,10 +79,6 @@ const DeliveryPlatforms = () => {
             AFOSI operates a suite of purpose-built digital platforms — each designed
             to connect youth to learning, opportunity, and lasting impact across Kenya.
           </p>
-          <div className="hero-pills">
-            <div className="hero-pill"><strong>3</strong> Active Platforms</div>
-            <div className="hero-pill"><strong>69,000+</strong> Youth Served</div>
-          </div>
         </header>
 
         {/* ── PLATFORMS LIST ── */}
