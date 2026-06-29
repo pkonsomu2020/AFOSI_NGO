@@ -317,14 +317,22 @@ const OpportunityForm = ({
   };
 
   // Determine current application method from the stored apply_link value
-  const isEmailMode = !data.apply_link || data.apply_link === CAREERS_EMAIL || data.apply_link.startsWith('mailto:');
-  const formUrl = isEmailMode ? '' : (data.apply_link || '');
+  const applyLink = data.apply_link || '';
+  const currentMode = applyLink.startsWith('mailto:') || !applyLink
+    ? 'email'
+    : applyLink === 'internal' || applyLink.startsWith('internal')
+      ? 'internal'
+      : 'external';
 
-  const handleMethodToggle = (mode: 'email' | 'form') => {
+  const formUrl = currentMode === 'external' ? applyLink : '';
+
+  const handleMethodChange = (mode: 'email' | 'external' | 'internal', value?: string) => {
     if (mode === 'email') {
       onChange({ ...data, apply_link: CAREERS_EMAIL });
+    } else if (mode === 'internal') {
+      onChange({ ...data, apply_link: 'internal' });
     } else {
-      onChange({ ...data, apply_link: '' }); // clear so admin can enter a URL
+      onChange({ ...data, apply_link: value || '' });
     }
   };
 
@@ -429,65 +437,108 @@ const OpportunityForm = ({
 
       {/* Application Method Toggle */}
       <div>
-        <label className="block text-sm font-semibold mb-2">
+        <label className="block text-sm font-semibold mb-3">
           Application Method
           <span className="text-muted-foreground font-normal ml-1 text-xs">(choose how applicants apply)</span>
         </label>
 
-        {/* Toggle buttons */}
-        <div className="flex gap-3 mb-3">
+        {/* Card-style selector */}
+        <div className="grid gap-3">
+
+          {/* Option 1: Email */}
           <button
             type="button"
-            onClick={() => handleMethodToggle('email')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg border-2 text-sm font-semibold transition-all ${
-              isEmailMode
-                ? 'border-primary bg-primary text-white shadow-md'
-                : 'border-border bg-background text-muted-foreground hover:border-primary/50'
+            onClick={() => handleMethodChange('email')}
+            className={`w-full flex items-start gap-4 p-4 rounded-xl border-2 text-left transition-all ${
+              currentMode === 'email'
+                ? 'border-primary bg-primary/5 dark:bg-primary/10 shadow-sm'
+                : 'border-border bg-background hover:border-primary/40'
             }`}
           >
-            <Mail size={15} />
-            Email (careers@afosi.org)
+            <div className={`mt-0.5 p-2 rounded-lg shrink-0 ${
+              currentMode === 'email' ? 'bg-orange-100 dark:bg-orange-950/40 text-orange-600' : 'bg-muted text-muted-foreground'
+            }`}>
+              <Mail size={18} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-sm font-bold text-foreground">Email (careers@afosi.org)</p>
+                {currentMode === 'email' && (
+                  <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full shrink-0">Active</span>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                The Apply Now button opens the applicant's email app, pre-addressed to careers@afosi.org.
+              </p>
+            </div>
           </button>
+
+          {/* Option 2: Default Page (Built-in Form) */}
           <button
             type="button"
-            onClick={() => handleMethodToggle('form')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg border-2 text-sm font-semibold transition-all ${
-              !isEmailMode
-                ? 'border-primary bg-primary text-white shadow-md'
-                : 'border-border bg-background text-muted-foreground hover:border-primary/50'
+            onClick={() => handleMethodChange('internal')}
+            className={`w-full flex items-start gap-4 p-4 rounded-xl border-2 text-left transition-all ${
+              currentMode === 'internal'
+                ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/20 shadow-sm'
+                : 'border-border bg-background hover:border-emerald-400/50'
             }`}
           >
-            <LinkIcon size={15} />
-            Online Form (URL)
+            <div className={`mt-0.5 p-2 rounded-lg shrink-0 ${
+              currentMode === 'internal' ? 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600' : 'bg-muted text-muted-foreground'
+            }`}>
+              <CheckCircle2 size={18} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-sm font-bold text-foreground">Default Page (Built-in Form)</p>
+                {currentMode === 'internal' && (
+                  <span className="text-xs font-bold text-emerald-600 bg-emerald-100 dark:bg-emerald-950/40 px-2 py-0.5 rounded-full shrink-0">Active</span>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                Opens the AFOSI built-in application form page directly on the website. Submissions are emailed to careers@afosi.org via Resend.
+              </p>
+            </div>
           </button>
+
+          {/* Option 3: External Form (URL) */}
+          <button
+            type="button"
+            onClick={() => handleMethodChange('external', formUrl)}
+            className={`w-full flex items-start gap-4 p-4 rounded-xl border-2 text-left transition-all ${
+              currentMode === 'external'
+                ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/20 shadow-sm'
+                : 'border-border bg-background hover:border-blue-400/50'
+            }`}
+          >
+            <div className={`mt-0.5 p-2 rounded-lg shrink-0 ${
+              currentMode === 'external' ? 'bg-blue-100 dark:bg-blue-950/40 text-blue-600' : 'bg-muted text-muted-foreground'
+            }`}>
+              <LinkIcon size={18} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-sm font-bold text-foreground">External Online Form (URL)</p>
+                {currentMode === 'external' && (
+                  <span className="text-xs font-bold text-blue-600 bg-blue-100 dark:bg-blue-950/40 px-2 py-0.5 rounded-full shrink-0">Active</span>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                Redirects applicants to a third-party form (Google Forms, Typeform, Microsoft Forms, etc.).
+              </p>
+            </div>
+          </button>
+
         </div>
 
-        {/* Conditional content */}
-        {isEmailMode ? (
-          <div className="flex items-start gap-3 p-4 rounded-lg bg-orange-50 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-800">
-            <Mail size={18} className="text-orange-600 mt-0.5 shrink-0" />
-            <div className="text-sm">
-              <p className="font-semibold text-orange-800 dark:text-orange-200">Email Application Active</p>
-              <p className="text-orange-700 dark:text-orange-300 mt-0.5">
-                The <strong>Apply Now</strong> button will open the applicant's email app addressed to{' '}
-                <strong>careers@afosi.org</strong>. The detail page will instruct applicants to send their
-                application to this email.
-              </p>
-            </div>
-          </div>
-        ) : (
-          <div>
-            <div className="flex items-start gap-3 p-4 rounded-lg bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 mb-3">
-              <LinkIcon size={18} className="text-blue-600 mt-0.5 shrink-0" />
-              <p className="text-sm text-blue-800 dark:text-blue-200">
-                <strong>Online Form Active</strong> — paste your Google Forms / Microsoft Forms / Typeform URL below.
-                The <strong>Apply Now</strong> button will open this link in a new tab.
-              </p>
-            </div>
+        {/* External URL input — shown only when External is selected */}
+        {currentMode === 'external' && (
+          <div className="mt-3">
+            <label className="block text-xs font-semibold mb-1.5 text-muted-foreground uppercase tracking-wide">Form URL</label>
             <input
               type="url"
               value={formUrl}
-              onChange={(e) => onChange({ ...data, apply_link: e.target.value })}
+              onChange={(e) => handleMethodChange('external', e.target.value)}
               className={inputClass}
               placeholder="https://forms.google.com/..."
             />

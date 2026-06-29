@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
-  MapPin, Clock, CalendarDays, ArrowLeft, Briefcase,
-  ExternalLink, AlertCircle, CheckCircle2, Shield, Lock,
-  Target, Users, Star, FileText, ChevronRight
+  CalendarDays, Clock, MapPin, FileText, 
+  Shield, ExternalLink, Lock, AlertCircle, ArrowLeft, ArrowRight,
+  Target, Users, Star, ChevronRight, Briefcase, CheckCircle2
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -267,9 +267,11 @@ const OpportunityDetail = () => {
   const isOpen = status === "open";
 
   // Detect application method from apply_link value
-  const isEmailApply = !opportunity.apply_link ||
-    opportunity.apply_link === 'mailto:careers@afosi.org' ||
-    opportunity.apply_link.startsWith('mailto:');
+  const applyLink = opportunity.apply_link || '';
+  const isEmailApply = !applyLink ||
+    applyLink === 'mailto:careers@afosi.org' ||
+    applyLink.startsWith('mailto:');
+  const isInternalApply = applyLink === 'internal' || applyLink.startsWith('internal');
   const applyEmail = 'careers@afosi.org';
 
   const typeLabel =
@@ -385,6 +387,14 @@ const OpportunityDetail = () => {
                     >
                       Apply via Email <ExternalLink size={15} />
                     </a>
+                  ) : isInternalApply ? (
+                    <Link
+                      to={`/opportunities/${opportunity.slug}/apply`}
+                      className="btn-white"
+                      style={{ display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center', gap: '8px' }}
+                    >
+                      Apply Now <ArrowRight size={15} />
+                    </Link>
                   ) : opportunity.apply_link ? (
                     <a href={opportunity.apply_link} target="_blank" rel="noopener noreferrer" className="btn-white" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
                       Apply Now <ExternalLink size={15} />
@@ -405,7 +415,9 @@ const OpportunityDetail = () => {
                   <p style={{ fontSize: '12px', marginTop: '16px', opacity: 0.8, lineHeight: 1.6, textAlign: 'center' }}>
                     {isEmailApply
                       ? <>Send your CV & cover letter to <strong>{applyEmail}</strong> with the job title as the subject line.</>
-                      : <>Click <strong>Apply Now</strong> to open the online application form.</>
+                      : isInternalApply
+                        ? <>Fill in and submit the application form directly on this website.</>
+                        : <>Click <strong>Apply Now</strong> to open the online application form.</>
                     }
                   </p>
                 )}

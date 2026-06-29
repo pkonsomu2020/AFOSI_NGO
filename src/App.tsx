@@ -12,6 +12,7 @@ import Index from "./pages/Index";
 import Gallery from "./pages/Gallery";
 import Opportunities from "./pages/Opportunities";
 import OpportunityDetail from "./pages/OpportunityDetail";
+import OpportunityApply from "./pages/OpportunityApply";
 import BlogPost from "./pages/BlogPost";
 import News from "./pages/News";
 import Projects from "./pages/Projects";
@@ -44,6 +45,7 @@ const App = () => (
               <Route path="/gallery" element={<Gallery />} />
               <Route path="/opportunities" element={<Opportunities />} />
               <Route path="/opportunities/:slug" element={<OpportunityDetail />} />
+              <Route path="/opportunities/:slug/apply" element={<OpportunityApply />} />
               <Route path="/news" element={<News />} />
               <Route path="/projects" element={<Projects />} />
               <Route path="/projects/:slug" element={<ProjectDetail />} />
