@@ -4,6 +4,7 @@ import TextReveal from "@/components/animations/TextReveal";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import NewsSection from "@/components/NewsSection";
+import { projectsData } from "@/data/projectsData";
 
 // Helper function for counters
 function countUp(el: Element, target: number, suffix: string, dur = 1400) {
@@ -359,50 +360,35 @@ const Index = () => {
           </div>
 
           <div className="proj-grid">
-            <div className="proj-card reveal">
-              <div className="proj-img" style={{ backgroundImage: "url('https://pmigmljjnyucethipdtk.supabase.co/storage/v1/object/public/afosi-projects/1776244075815-WE_LEAD_BG.jpg')" }}></div>
-              <div className="proj-content">
-                <h3 className="proj-title">We Lead Project</h3>
-                <p className="proj-desc">Strengthening the influence of young women whose sexual and reproductive health and rights are neglected — targeting those living with HIV, facing disability, vulnerability, or displacement.</p>
-                <div className="proj-footer">
-                  <div className="proj-tags-inline">
-                    <span className="proj-tag-inline">SRHR</span>
-                    <span className="proj-tag-inline">500+ Youth</span>
+            {["01", "04", "03"]
+              .map(id => projectsData.find(p => p.id === id))
+              .filter(Boolean)
+              .map((p: any, index) => (
+                <div key={p.id} className="proj-card reveal" style={{ transitionDelay: `${index * 0.08}s` }}>
+                  <div className="proj-img" style={{ backgroundImage: `url('${p.bg}')` }}></div>
+                  <div className="proj-content">
+                    <h3 className="proj-title">{p.title}</h3>
+                    <p className="proj-desc">{p.desc}</p>
+                    <div className="proj-footer">
+                      <div className="proj-tags-inline">
+                        <span className="proj-tag-inline">{p.cat}</span>
+                        {p.tags && p.tags[0] && (
+                          <span className="proj-tag-inline">{p.tags[0]}</span>
+                        )}
+                      </div>
+                      {p.external ? (
+                        <a href={p.link} target="_blank" rel="noopener noreferrer" className="proj-link">
+                          <ArrowRight size={16} />
+                        </a>
+                      ) : (
+                        <a href={p.link} className="proj-link">
+                          <ArrowRight size={16} />
+                        </a>
+                      )}
+                    </div>
                   </div>
-                  <a href="/programs/we-lead" className="proj-link"><ArrowRight size={16} /></a>
                 </div>
-              </div>
-            </div>
-
-            <div className="proj-card reveal" style={{ transitionDelay: ".08s" }}>
-              <div className="proj-img" style={{ backgroundImage: "url('https://pmigmljjnyucethipdtk.supabase.co/storage/v1/object/public/afosi-projects/1776244163145-SHERIA_BG.jpg')" }}></div>
-              <div className="proj-content">
-                <h3 className="proj-title">Sheria Ya Vijana</h3>
-                <p className="proj-desc">Empowering youth in Nairobi and Kwale through skills, leadership, and participation in the green and digital economy via training, mentorship, digital tools, and policy engagement.</p>
-                <div className="proj-footer">
-                  <div className="proj-tags-inline">
-                    <span className="proj-tag-inline">Governance</span>
-                    <span className="proj-tag-inline">5,875 Youth</span>
-                  </div>
-                  <a href="/programs/sheria-ya-vijana" className="proj-link"><ArrowRight size={16} /></a>
-                </div>
-              </div>
-            </div>
-
-            <div className="proj-card reveal" style={{ transitionDelay: ".16s" }}>
-              <div className="proj-img" style={{ backgroundImage: "url('https://pmigmljjnyucethipdtk.supabase.co/storage/v1/object/public/afosi-projects/1776244146444-MATH_BG.jpg')" }}></div>
-              <div className="proj-content">
-                <h3 className="proj-title">The M.A.T.H Project</h3>
-                <p className="proj-desc">A three-year initiative in 60 APBET schools in Kibera and Mukuru, supporting Kenya's Education for Sustainable Development (ESD) Policy through climate innovation and youth advocacy.</p>
-                <div className="proj-footer">
-                  <div className="proj-tags-inline">
-                    <span className="proj-tag-inline">Climate</span>
-                    <span className="proj-tag-inline">10,000+ Youth</span>
-                  </div>
-                  <a href="/programs/math-project" className="proj-link"><ArrowRight size={16} /></a>
-                </div>
-              </div>
-            </div>
+              ))}
           </div>
         </section>
 
