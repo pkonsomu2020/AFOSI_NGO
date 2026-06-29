@@ -9,10 +9,6 @@ const projectsData = [
     cat: "Empowerment",
     title: "We Lead Project",
     desc: "A bold initiative placing young women at the centre of change — building leadership, agency, and resilience among the most marginalised youth in Kenya.",
-    stats: [
-      { val: "500+", lbl: "Youth" },
-      { val: "Ongoing", lbl: "Status" }
-    ],
     tags: ["Young women with HIV", "Women with disabilities", "Displacement-affected youth"],
     link: "/programs/we-lead",
     bg: "/PROJECT-IMAGES/welead_img.jpg",
@@ -22,10 +18,6 @@ const projectsData = [
     cat: "Digital",
     title: "Robotics & Creative Coding",
     desc: "In collaboration with STEM Impact Center Kenya, this program introduces youth in informal settlements to robotics, creative coding, and digital innovation — developing critical thinking and problem-solving skills.",
-    stats: [
-      { val: "300+", lbl: "Youth" },
-      { val: "12", lbl: "Months" }
-    ],
     tags: ["STEM Education", "Hands-on Learning", "Innovation Skills"],
     link: "/programs/robotics-coding",
     bg: "https://afosi.org/PROJECT-IMAGES/robotics-coding-img.png",
@@ -35,10 +27,6 @@ const projectsData = [
     cat: "Education",
     title: "The M.A.T.H Project",
     desc: "Mazingira, Afya, Tumaini, na Haki yetu — a three-year initiative in 60 APBET schools in Kibera and Mukuru, supporting Kenya's Education for Sustainable Development (ESD) Policy.",
-    stats: [
-      { val: "10,000+", lbl: "Youth" },
-      { val: "2025–28", lbl: "Timeline" }
-    ],
     tags: ["60 APBET schools", "ESD Policy advocacy", "Youth climate innovation"],
     link: "/programs/math-project",
     bg: "/PROJECT-IMAGES/math-bg.jpg",
@@ -48,10 +36,6 @@ const projectsData = [
     cat: "Empowerment",
     title: "Sheria Ya Vijana",
     desc: "Empowers youth in Nairobi and Kwale through skills, leadership, and participation in the green and digital economy via training, mentorship, digital tools, and policy engagement platforms.",
-    stats: [
-      { val: "5,875", lbl: "Youth" },
-      { val: "Ongoing", lbl: "Status" }
-    ],
     tags: ["Kiongozi AI platform", "Green & digital apprenticeships", "Youth-led enterprise grants"],
     link: "/programs/sheria-ya-vijana",
     bg: "/PROJECT-IMAGES/sheria-vijana.jpg",
@@ -61,10 +45,6 @@ const projectsData = [
     cat: "Digital",
     title: "YOMA — Youth Agency Marketplace",
     desc: "A digital marketplace opening opportunities to young people through a unique digital identity — enabling them to learn, earn, and impact their communities. Scaling to 69,000 youth.",
-    stats: [
-      { val: "69,000", lbl: "Youth" },
-      { val: "Ongoing", lbl: "Status" }
-    ],
     tags: ["Youth Climate Innovation Challenge", "Digital skills pathways", "YOMA Hub in Nairobi"],
     link: "/programs/yoma",
     bg: "/PROJECT-IMAGES/yoma-bg.png",
@@ -74,10 +54,6 @@ const projectsData = [
     cat: "Digital",
     title: "Forest Explorer",
     desc: "A game-based learning platform using interactive gameplay mechanics to teach educational concepts through exploration, challenges, and immersive digital environments.",
-    stats: [
-      { val: "100+", lbl: "Youth" },
-      { val: "Ongoing", lbl: "Status" }
-    ],
     tags: ["Interactive gameplay mechanics", "Embedded learning objectives", "Engagement psychology"],
     link: "https://forest-explorer-pi.vercel.app/",
     bg: "https://pmigmljjnyucethipdtk.supabase.co/storage/v1/object/public/afosi-images/gallery/bcfaefa0-c598-4e67-ae04-ccb653c8dfe0.png",
@@ -88,10 +64,6 @@ const projectsData = [
     cat: "Health",
     title: "Youth Voices Lab",
     desc: "Unheard to Influential — a 12-month initiative harnessing AI and digital advocacy to give voice to young women living with HIV and young women with disabilities in Mukuru, Nairobi.",
-    stats: [
-      { val: "150+", lbl: "Youth" },
-      { val: "12", lbl: "Months" }
-    ],
     tags: ["AI-driven storytelling tools", "Policy advocacy training", "15 intervention countries"],
     link: "/programs/youth-voices-lab",
     bg: "https://pmigmljjnyucethipdtk.supabase.co/storage/v1/object/public/afosi-projects/1776244201335-YOUTHVOICESLAB_BG.jpg",
@@ -101,10 +73,6 @@ const projectsData = [
     cat: "Digital",
     title: "AI-Powered Music-Based Learning",
     desc: "Converts curriculum content into short, high-energy music videos using AI for lyric generation, producing 20–60 second videos optimized for short-form platforms.",
-    stats: [
-      { val: "100+", lbl: "Youth" },
-      { val: "Ongoing", lbl: "Status" }
-    ],
     tags: ["AI lyric generation", "Short-form video", "Curriculum integration"],
     link: "#",
     bg: "https://pmigmljjnyucethipdtk.supabase.co/storage/v1/object/public/afosi-images/gallery/4a8211e1-5afe-4f56-a5ae-797efdfab615.png",
@@ -184,7 +152,6 @@ const Projects = () => {
                 category={p.cat}
                 title={p.title}
                 description={p.desc}
-                stats={p.stats}
                 tags={p.tags}
                 link={p.link}
                 external={p.external}
