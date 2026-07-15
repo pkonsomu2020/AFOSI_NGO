@@ -3521,3 +3521,178 @@ link[rel="preload"][as="image"] { display: none; }
   .platform-cta-row { flex-direction: column; align-items: flex-start; }
   .platform-visit-btn { width: 100%; justify-content: center; }
 }
+
+/* ========================================
+   DELIVERY PLATFORMS — NEW CARD DESIGN
+   ======================================== */
+
+/* Section wrapper */
+.platforms-section {
+  padding: clamp(3rem, 6vw, 6rem) clamp(1.5rem, 5vw, 5rem);
+  background: var(--bg2);
+}
+.platforms-list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+/* Platform card */
+.plat-card {
+  border-radius: clamp(18px, 3vw, 26px);
+  overflow: hidden;
+  padding: clamp(28px, 4.5vw, 56px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(28px, 4vw, 48px);
+  align-items: center;
+  box-shadow: 0 30px 70px -40px rgba(0,0,0,.5);
+}
+.plat-card.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity .7s ease, transform .7s cubic-bezier(.16,1,.3,1);
+}
+.plat-card.reveal.on {
+  opacity: 1;
+  transform: none;
+}
+
+/* Copy column */
+.plat-copy {
+  flex: 1 1 280px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.plat-category {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.plat-name {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  font-size: clamp(28px, 4.5vw, 48px);
+  line-height: 1.05;
+  color: #f4f0e6;
+  margin: 16px 0 0;
+}
+.plat-acronym-badge {
+  align-self: flex-start;
+  margin-top: 20px;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  color: #8fa596;
+  border: 1px solid rgba(143,165,150,.35);
+  border-radius: 6px;
+  padding: 6px 11px;
+}
+.plat-summary {
+  font-family: 'Inter', 'DM Sans', sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  color: rgba(232,236,225,.72);
+  margin: 22px 0 0;
+  max-width: 400px;
+}
+.plat-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px 20px;
+  margin-top: 30px;
+}
+.plat-visit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 14px 24px;
+  border-radius: 100px;
+  text-decoration: none;
+  transition: opacity .2s, transform .2s;
+  white-space: nowrap;
+}
+.plat-visit-btn:hover { opacity: .85; transform: translateY(-2px); }
+.plat-url {
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(232,236,225,.5);
+}
+
+/* Screenshot column */
+.plat-shot-wrap {
+  flex: 2 1 360px;
+  min-width: 0;
+  perspective: 1600px;
+  display: flex;
+  justify-content: center;
+}
+.plat-browser-wrap { width: 100%; }
+.plat-browser {
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  transform: rotateY(-14deg) rotateX(5deg) rotateZ(1deg);
+  box-shadow: -30px 40px 80px -30px rgba(0,0,0,.8);
+  border: 1px solid rgba(255,255,255,.1);
+  background: #151b2e;
+  transition: transform .55s cubic-bezier(.2,.7,.2,1),
+              box-shadow .55s cubic-bezier(.2,.7,.2,1),
+              border-color .55s;
+}
+.plat-browser:hover {
+  transform: rotateY(0) rotateX(0) rotateZ(0) translateY(-10px) scale(1.03);
+  box-shadow: -10px 44px 90px -28px rgba(0,0,0,.85);
+}
+.plat-browser-bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 11px 14px;
+  background: #151b2e;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.plat-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  display: block;
+}
+.plat-browser-screen {
+  position: relative;
+  min-height: 260px;
+  overflow: hidden;
+}
+.plat-screenshot {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  min-height: 260px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .plat-card { flex-direction: column; align-items: stretch; }
+  .plat-copy, .plat-shot-wrap { flex: 1 1 auto; width: 100%; }
+  .plat-browser { transform: none; }
+  .plat-browser:hover { transform: translateY(-6px) scale(1.01); }
+}
+@media (max-width: 640px) {
+  .platforms-section { padding: 2rem 1rem; }
+  .plat-card { padding: 1.75rem 1.25rem; }
+  .plat-actions { flex-direction: column; align-items: flex-start; }
+  .plat-visit-btn { width: 100%; justify-content: center; }
+}
