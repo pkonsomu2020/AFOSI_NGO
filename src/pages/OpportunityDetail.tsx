@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
   CalendarDays, Clock, MapPin, FileText, 
@@ -48,7 +48,7 @@ function toTitleCase(str: string) {
 
 // ─── Heading detection ────────────────────────────────────────────────────────
 // Only treat a line as a heading if it is clearly a label/title.
-// Key rule: must be followed by longer body text or bullets — not another short line.
+// Key rule: must be followed by longer body text or bullets - not another short line.
 function isHeadingLine(line: string, nextLine: string): boolean {
   const trimmed = line.trim();
   if (!trimmed) return false;
@@ -88,7 +88,7 @@ function parseSections(text: string) {
       if (current.items.length > 0 || current.heading) {
         sections.push(current);
       }
-      current = { heading: line.replace(/[:\-–—]+$/, '').trim(), items: [] };
+      current = { heading: line.replace(/[:\-–-]+$/, '').trim(), items: [] };
     } else {
       current.items.push(line);
     }
@@ -123,7 +123,7 @@ function renderLine(line: string, idx: number) {
 function renderContent(text: string) {
   const sections = parseSections(text);
 
-  // Single block with no headings — plain paragraphs
+  // Single block with no headings - plain paragraphs
   if (sections.length === 1 && !sections[0].heading) {
     return (
       <div className="space-y-4">

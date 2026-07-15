@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+﻿import { supabase } from "@/lib/supabase";
 
 export interface ChatMessage {
   role: "user" | "assistant" | "system";
@@ -73,7 +73,7 @@ AFOSI (Action For Sustainability Initiative) is a Nairobi-based NGO with 12+ yea
 - **Robotics & Coding** – /programs/robotics-coding
 
 ## Your database access
-You have real-time access to AFOSI's live database. Every message fetches the latest data, appended below under "Live Data from AFOSI Database". This includes active opportunities, published news, and projects. Always use this data to give accurate, specific answers — cite titles, deadlines, and details directly. Do not say you cannot access the database.
+You have real-time access to AFOSI's live database. Every message fetches the latest data, appended below under "Live Data from AFOSI Database". This includes active opportunities, published news, and projects. Always use this data to give accurate, specific answers - cite titles, deadlines, and details directly. Do not say you cannot access the database.
 
 ## Your behaviour
 - Be warm, concise, and encouraging. You represent AFOSI's values.
@@ -118,7 +118,7 @@ async function fetchLiveContext(): Promise<string> {
 
     if (news && news.length > 0) {
       const lines = news.map((n) =>
-        `- **${n.title}** (${n.category ?? "News"}) — ${n.summary ?? ""} [${n.published_date ?? ""}]`
+        `- **${n.title}** (${n.category ?? "News"}) - ${n.summary ?? ""} [${n.published_date ?? ""}]`
       );
       sections.push(`## Recent News\n${lines.join("\n")}`);
     }
@@ -136,7 +136,7 @@ async function fetchLiveContext(): Promise<string> {
 
     if (projects && projects.length > 0) {
       const lines = projects.map((p) =>
-        `- **${p.title}** [${p.status ?? "Active"}] — ${p.description ?? ""}`
+        `- **${p.title}** [${p.status ?? "Active"}] - ${p.description ?? ""}`
       );
       sections.push(`## Projects\n${lines.join("\n")}`);
     }
@@ -154,7 +154,7 @@ async function fetchLiveContext(): Promise<string> {
 
     if (gallery && gallery.length > 0) {
       const lines = gallery.map((g) =>
-        `- **${g.title}** (${g.category ?? "General"})${g.description ? ` — ${g.description}` : ""}`
+        `- **${g.title}** (${g.category ?? "General"})${g.description ? ` - ${g.description}` : ""}`
       );
       sections.push(`## Gallery\n${lines.join("\n")}`);
     }
@@ -167,7 +167,7 @@ async function fetchLiveContext(): Promise<string> {
 }
 
 // ---------------------------------------------------------------------------
-// Main export — all keys come from env, nothing hardcoded
+// Main export - all keys come from env, nothing hardcoded
 // ---------------------------------------------------------------------------
 export async function sendChatMessage(messages: ChatMessage[]): Promise<string> {
   const apiKey = import.meta.env.VITE_OPENAI_API_KEY as string | undefined;

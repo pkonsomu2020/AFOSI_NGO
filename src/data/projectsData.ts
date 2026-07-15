@@ -1,4 +1,4 @@
-export interface ProjectDataItem {
+﻿export interface ProjectDataItem {
   id: string;
   cat: string;
   title: string;
@@ -15,7 +15,7 @@ export const projectsData: ProjectDataItem[] = [
     id: "01",
     cat: "Empowerment",
     title: "We Lead Project",
-    desc: "A bold initiative placing young women at the centre of change — building leadership, agency, and resilience among the most marginalised youth in Kenya.",
+    desc: "A bold initiative placing young women at the centre of change - building leadership, agency, and resilience among the most marginalised youth in Kenya.",
     tags: ["Young women with HIV", "Women with disabilities", "Displacement-affected youth"],
     link: "/programs/we-lead",
     bg: "/PROJECT-IMAGES/welead_img.jpg",
@@ -24,7 +24,7 @@ export const projectsData: ProjectDataItem[] = [
     id: "02",
     cat: "Digital",
     title: "Robotics & Creative Coding",
-    desc: "In collaboration with STEM Impact Center Kenya, this program introduces youth in informal settlements to robotics, creative coding, and digital innovation — developing critical thinking and problem-solving skills.",
+    desc: "In collaboration with STEM Impact Center Kenya, this program introduces youth in informal settlements to robotics, creative coding, and digital innovation - developing critical thinking and problem-solving skills.",
     tags: ["STEM Education", "Hands-on Learning", "Innovation Skills"],
     link: "/programs/robotics-coding",
     bg: "https://afosi.org/PROJECT-IMAGES/robotics-coding-img.png",
@@ -33,7 +33,7 @@ export const projectsData: ProjectDataItem[] = [
     id: "03",
     cat: "Education",
     title: "The M.A.T.H Project",
-    desc: "Mazingira, Afya, Tumaini, na Haki yetu — a three-year initiative in 60 APBET schools in Kibera and Mukuru, supporting Kenya's Education for Sustainable Development (ESD) Policy.",
+    desc: "Mazingira, Afya, Tumaini, na Haki yetu - a three-year initiative in 60 APBET schools in Kibera and Mukuru, supporting Kenya's Education for Sustainable Development (ESD) Policy.",
     tags: ["60 APBET schools", "ESD Policy advocacy", "Youth climate innovation"],
     link: "/programs/math-project",
     bg: "/PROJECT-IMAGES/math-bg.jpg",
@@ -50,8 +50,8 @@ export const projectsData: ProjectDataItem[] = [
   {
     id: "05",
     cat: "Digital",
-    title: "YOMA — Youth Agency Marketplace",
-    desc: "A digital marketplace opening opportunities to young people through a unique digital identity — enabling them to learn, earn, and impact their communities. Scaling to 69,000 youth.",
+    title: "YOMA - Youth Agency Marketplace",
+    desc: "A digital marketplace opening opportunities to young people through a unique digital identity - enabling them to learn, earn, and impact their communities. Scaling to 69,000 youth.",
     tags: ["Youth Climate Innovation Challenge", "Digital skills pathways", "YOMA Hub in Nairobi"],
     link: "/programs/yoma",
     bg: "/PROJECT-IMAGES/yoma-bg.png",
@@ -70,7 +70,7 @@ export const projectsData: ProjectDataItem[] = [
     id: "07",
     cat: "Health",
     title: "Youth Voices Lab",
-    desc: "Unheard to Influential — a 12-month initiative harnessing AI and digital advocacy to give voice to young women living with HIV and young women with disabilities in Mukuru, Nairobi.",
+    desc: "Unheard to Influential - a 12-month initiative harnessing AI and digital advocacy to give voice to young women living with HIV and young women with disabilities in Mukuru, Nairobi.",
     tags: ["AI-driven storytelling tools", "Policy advocacy training", "15 intervention countries"],
     link: "/programs/youth-voices-lab",
     bg: "https://pmigmljjnyucethipdtk.supabase.co/storage/v1/object/public/afosi-projects/1776244201335-YOUTHVOICESLAB_BG.jpg",

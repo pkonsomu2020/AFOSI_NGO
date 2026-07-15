@@ -1,4 +1,4 @@
-// Use relative URLs - proxied to backend via nginx on cPanel, or serverless on Vercel
+﻿// Use relative URLs - proxied to backend via nginx on cPanel, or serverless on Vercel
 const API_BASE_URL = '/api';
 
 const getAuthToken = () => localStorage.getItem('afosi_admin_token');
@@ -67,7 +67,7 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
     const response = await fetchWithRetry(url, config);
 
     // ── 401 Unauthorized ───────────────────────────────────────────────────
-    // Clear stale credentials ONCE and reload — guard against reload loops.
+    // Clear stale credentials ONCE and reload - guard against reload loops.
     if (response.status === 401 && !isRedirectingToLogin) {
       isRedirectingToLogin = true;
       localStorage.removeItem('afosi_admin_auth');

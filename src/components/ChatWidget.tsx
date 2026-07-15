@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+﻿import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChatCircleDots,
@@ -35,7 +35,7 @@ const WELCOME: Message = {
   id: "welcome",
   role: "assistant",
   content:
-    "Hey! 👋 I'm here to help you learn about AFOSI — our programs, opportunities, events, and more. What would you like to know?",
+    "Hey! 👋 I'm here to help you learn about AFOSI - our programs, opportunities, events, and more. What would you like to know?",
   time: timestamp(),
 };
 
@@ -204,7 +204,7 @@ function Bubble({
           )}
         </div>
 
-        {/* Copy button — appears on hover for bot messages */}
+        {/* Copy button - appears on hover for bot messages */}
         {!isUser && (
           <AnimatePresence>
             {hovered && !msg.isError && (
@@ -344,7 +344,7 @@ const ChatWidget = () => {
   };
 
   // ---------------------------------------------------------------------------
-  // Panel styles — floating on desktop, bottom sheet on mobile
+  // Panel styles - floating on desktop, bottom sheet on mobile
   // ---------------------------------------------------------------------------
   const panelStyle: React.CSSProperties = isMobile
     ? {
@@ -435,7 +435,7 @@ const ChatWidget = () => {
                 <p className="font-heading font-semibold text-stone-900 dark:text-stone-50 text-sm leading-none mb-0.5">
                   Afosi
                 </p>
-                {/* Header status — changes to "typing…" when loading */}
+                {/* Header status - changes to "typing…" when loading */}
                 <AnimatePresence mode="wait">
                   {loading ? (
                     <motion.span
@@ -495,7 +495,7 @@ const ChatWidget = () => {
                 />
               ))}
 
-              {/* Quick reply chips — only before first user message */}
+              {/* Quick reply chips - only before first user message */}
               <AnimatePresence>
                 {showChips && !loading && (
                   <motion.div
@@ -596,7 +596,7 @@ const ChatWidget = () => {
       </AnimatePresence>
 
       {/* ------------------------------------------------------------------ */}
-      {/* Toggle button — bottom-24, above the back-to-top at bottom-8        */}
+      {/* Toggle button - bottom-24, above the back-to-top at bottom-8        */}
       {/* ------------------------------------------------------------------ */}
       <motion.button
         whileHover={{ scale: 1.07 }}

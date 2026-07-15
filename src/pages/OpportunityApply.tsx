@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { 
   ArrowLeft, ArrowRight, Upload, Check, AlertCircle
@@ -266,7 +266,7 @@ const OpportunityApply = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // ── Submit handler — calls our own backend which emails via Resend ────────────
+  // ── Submit handler - calls our own backend which emails via Resend ────────────
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const err = validateStep();
@@ -394,7 +394,7 @@ const OpportunityApply = () => {
                 <>
                   {step === 1 && (
                     <div className="space-y-5">
-                      <h3 className="text-base font-bold border-b border-border pb-2">Section 1 — Applicant Identity</h3>
+                      <h3 className="text-base font-bold border-b border-border pb-2">Section 1: Applicant Identity</h3>
                       <div>
                         <label className="block text-sm font-semibold mb-1">Full Name of Applicant <span className="text-red-500">*</span></label>
                         <input type="text" value={formData.fullName} onChange={e => set('fullName', e.target.value)} className={inputCls} placeholder="e.g. John Doe / Acme Services Ltd" />
@@ -436,7 +436,7 @@ const OpportunityApply = () => {
 
                   {step === 2 && (
                     <div className="space-y-5">
-                      <h3 className="text-base font-bold border-b border-border pb-2">Section 2 — Contact Information</h3>
+                      <h3 className="text-base font-bold border-b border-border pb-2">Section 2: Contact Information</h3>
                       <div>
                         <label className="block text-sm font-semibold mb-1">Primary Contact Person <span className="text-red-500">*</span></label>
                         <input type="text" value={formData.primaryContact} onChange={e => set('primaryContact', e.target.value)} className={inputCls} placeholder="e.g. Jane Smith" />
@@ -464,7 +464,7 @@ const OpportunityApply = () => {
 
                   {step === 3 && (
                     <div className="space-y-5">
-                      <h3 className="text-base font-bold border-b border-border pb-2">Section 3 — Areas of Specialisation</h3>
+                      <h3 className="text-base font-bold border-b border-border pb-2">Section 3: Areas of Specialisation</h3>
                       <div>
                         <label className="block text-sm font-semibold mb-2">Primary Area of Specialisation <span className="text-red-500">*</span></label>
                         <div className="grid sm:grid-cols-2 gap-2 bg-muted/20 p-4 rounded-xl border border-border">
@@ -492,7 +492,7 @@ const OpportunityApply = () => {
 
                   {step === 4 && (
                     <div className="space-y-5">
-                      <h3 className="text-base font-bold border-b border-border pb-2">Section 4 — Compliance & Uploads</h3>
+                      <h3 className="text-base font-bold border-b border-border pb-2">Section 4: Compliance & Uploads</h3>
                       <div className="grid sm:grid-cols-3 gap-4">
                         {[
                           { label: "Legally Registered?", key: "legallyRegistered", opts: ["Yes","No"] },
@@ -511,7 +511,7 @@ const OpportunityApply = () => {
                         <label className="block text-sm font-semibold mb-1">Bank Account Details <span className="text-red-500">*</span></label>
                         <input type="text" value={formData.bankAccountDetails} onChange={e => set('bankAccountDetails', e.target.value)} className={inputCls} placeholder="Bank Name, Account Name (must match registration)" />
                       </div>
-                      <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground pt-2">Document Uploads — PDF, JPG, PNG (max 10 MB each)</p>
+                      <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground pt-2">Document Uploads: PDF, JPG, PNG (max 10 MB each)</p>
                       {[
                         formData.applyingAs !== "Individual Consultant" && { key: "registrationCertificate", label: "Certificate of Registration / Incorporation", required: true },
                         { key: "taxComplianceCert", label: "Tax Compliance Certificate", required: true },
@@ -531,7 +531,7 @@ const OpportunityApply = () => {
 
                   {step === 5 && (
                     <div className="space-y-5">
-                      <h3 className="text-base font-bold border-b border-border pb-2">Section 5 — Consent & Declaration</h3>
+                      <h3 className="text-base font-bold border-b border-border pb-2">Section 5: Consent & Declaration</h3>
                       <label className="flex items-start gap-3 text-sm cursor-pointer p-4 bg-muted/20 border border-border rounded-xl">
                         <input type="checkbox" checked={formData.consentData} onChange={e => set('consentData', e.target.checked)} className="mt-1 accent-[#e86c24]" />
                         <span>I consent to AFOSI collecting, storing, and using my submitted information for prequalification, program engagement, and procurement purposes, in line with applicable data protection laws. <span className="text-red-500">*</span></span>
@@ -564,7 +564,7 @@ const OpportunityApply = () => {
                 <>
                   {step === 1 && (
                     <div className="space-y-5">
-                      <h3 className="text-base font-bold border-b border-border pb-2">Section 1 — Personal Details</h3>
+                      <h3 className="text-base font-bold border-b border-border pb-2">Section 1: Personal Details</h3>
                       <div>
                         <label className="block text-sm font-semibold mb-1">Full Name <span className="text-red-500">*</span></label>
                         <input type="text" value={formData.applicantName} onChange={e => set('applicantName', e.target.value)} className={inputCls} placeholder="e.g. John Doe" />
@@ -588,8 +588,8 @@ const OpportunityApply = () => {
 
                   {step === 2 && (
                     <div className="space-y-5">
-                      <h3 className="text-base font-bold border-b border-border pb-2">Section 2 — CV & Documents</h3>
-                      <p className="text-xs text-muted-foreground">Accepted: PDF, DOC, DOCX, JPG, PNG — max 10 MB each</p>
+                      <h3 className="text-base font-bold border-b border-border pb-2">Section 2: CV & Documents</h3>
+                      <p className="text-xs text-muted-foreground">Accepted: PDF, DOC, DOCX, JPG, PNG, max 10 MB each</p>
                       {[
                         { key: "jobCv", label: "CV / Resume", required: true },
                         { key: "jobCoverLetter", label: "Cover Letter Document", required: false },
@@ -608,7 +608,7 @@ const OpportunityApply = () => {
 
                   {step === 3 && (
                     <div className="space-y-5">
-                      <h3 className="text-base font-bold border-b border-border pb-2">Section 3 — Cover Letter & Review</h3>
+                      <h3 className="text-base font-bold border-b border-border pb-2">Section 3: Cover Letter & Review</h3>
                       <div>
                         <label className="block text-sm font-semibold mb-1">Cover Letter / Brief Pitch</label>
                         <textarea value={formData.coverLetterText} onChange={e => set('coverLetterText', e.target.value)} className={`${inputCls} text-sm`} rows={6} placeholder="Briefly pitch yourself and why you're the best fit for this role..." />

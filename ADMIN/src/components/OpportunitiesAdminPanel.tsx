@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Plus, Edit2, Trash2, Save, X,
@@ -357,7 +357,7 @@ const OpportunityForm = ({
             value={data.title || ''}
             onChange={(e) => handleTitleChange(e.target.value)}
             className={inputClass}
-            placeholder="e.g. District Coordinator — CGP Project"
+            placeholder="e.g. District Coordinator, CGP Project"
           />
         </div>
         <div>
@@ -538,7 +538,7 @@ const OpportunityForm = ({
 
         </div>
 
-        {/* External URL input — shown only when External is selected */}
+        {/* External URL input - shown only when External is selected */}
         {currentMode === 'external' && (
           <div className="mt-3 p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-xl">
             <label className="block text-xs font-bold mb-2 text-blue-700 dark:text-blue-300 uppercase tracking-wide">
@@ -567,7 +567,7 @@ const OpportunityForm = ({
           <span className="text-muted-foreground font-normal ml-1 text-xs">(shown on the detail page)</span>
         </label>
         <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mb-2 text-xs text-blue-800 dark:text-blue-200">
-          <strong>Tip:</strong> Use plain text. Start each section with a heading like <code>OVERVIEW</code>, <code>RESPONSIBILITIES</code>, <code>REQUIREMENTS</code>, <code>BENEFITS</code>, <code>HOW TO APPLY</code> — each on its own line. Bullet points: start lines with <code>-</code> or <code>•</code>.
+          <strong>Tip:</strong> Use plain text. Start each section with a heading like <code>OVERVIEW</code>, <code>RESPONSIBILITIES</code>, <code>REQUIREMENTS</code>, <code>BENEFITS</code>, <code>HOW TO APPLY</code>, each on its own line. Bullet points: start lines with <code>-</code> or <code>•</code>.
         </div>
         <textarea
           value={data.full_description || ''}

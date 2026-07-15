@@ -73,10 +73,10 @@ const blogPosts: Record<string, BlogPostData> = {
         },
         {
           title: "Community Ripple Effect",
-          content: "The impact of the We Lead Project extends beyond individual empowerment—it reshapes communities by creating a ripple effect of positive change. As these young women emerge as leaders, they inspire others in similar circumstances to challenge systemic barriers and work towards a more equitable society.",
+          content: "The impact of the We Lead Project extends beyond individual empowerment, it reshapes communities by creating a ripple effect of positive change. As these young women emerge as leaders, they inspire others in similar circumstances to challenge systemic barriers and work towards a more equitable society.",
         }
       ],
-      conclusion: "The We Lead Project is more than an empowerment program—it's a movement for social justice and gender equality. By investing in young women's leadership, we're building a future where every woman has the power to shape her own destiny and contribute to transforming her community."
+      conclusion: "The We Lead Project is more than an empowerment program, it's a movement for social justice and gender equality. By investing in young women's leadership, we're building a future where every woman has the power to shape her own destiny and contribute to transforming her community."
     }
   },
   "robotics-creative-coding": {
@@ -130,7 +130,7 @@ const blogPosts: Record<string, BlogPostData> = {
           content: "By introducing robotics and coding in informal settlements, we're breaking down barriers to technology access and creating new opportunities for youth who might otherwise be excluded from the digital economy. This program demonstrates that innovation can thrive anywhere when given the right support and resources."
         }
       ],
-      conclusion: "The Robotics and Creative Coding program is transforming how young people in informal settlements see themselves and their futures. By combining STEM education with community development principles, we're not just teaching coding—we're building the next generation of innovators, problem-solvers, and community leaders."
+      conclusion: "The Robotics and Creative Coding program is transforming how young people in informal settlements see themselves and their futures. By combining STEM education with community development principles, we're not just teaching coding, we're building the next generation of innovators, problem-solvers, and community leaders."
     }
   },
   "westo-recyclers": {
@@ -197,7 +197,7 @@ const blogPosts: Record<string, BlogPostData> = {
           content: "This initiative is a testament to how small-scale actions can drive meaningful change in urban communities. By demonstrating the viability of community-based recycling, Westo Recyclers serves as a model that can be replicated in other informal settlements across Nairobi and beyond."
         }
       ],
-      conclusion: "Westo Recyclers proves that environmental sustainability and economic empowerment can go hand in hand. By engaging communities as active participants in waste management, we're not just cleaning up neighborhoods—we're creating green jobs, fostering environmental stewardship, and building more resilient communities."
+      conclusion: "Westo Recyclers proves that environmental sustainability and economic empowerment can go hand in hand. By engaging communities as active participants in waste management, we're not just cleaning up neighborhoods, we're creating green jobs, fostering environmental stewardship, and building more resilient communities."
     }
   },
   "kiongozi-platform": {
@@ -273,7 +273,7 @@ const blogPosts: Record<string, BlogPostData> = {
           ]
         }
       ],
-      conclusion: "Kiongozi is more than a leadership platform—it's a movement to democratize leadership development and ensure that talent, not privilege, determines who gets to lead. By investing in emerging leaders from marginalized communities, we're building a more inclusive, equitable, and dynamic society where everyone has the opportunity to reach their full potential and contribute to positive change."
+      conclusion: "Kiongozi is more than a leadership platform, it's a movement to democratize leadership development and ensure that talent, not privilege, determines who gets to lead. By investing in emerging leaders from marginalized communities, we're building a more inclusive, equitable, and dynamic society where everyone has the opportunity to reach their full potential and contribute to positive change."
     }
   }
 };

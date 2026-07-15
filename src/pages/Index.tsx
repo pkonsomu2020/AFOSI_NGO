@@ -208,7 +208,7 @@ const Index = () => {
               Action For Sustainability Initiative (AFOSI) is a lean, technology-backed local NGO addressing challenges across health, education, livelihoods, leadership and governance, climate justice and humanitarian support.
             </p>
             <p className="about-body reveal" style={{ transitionDelay: ".18s" }}>
-              Our flagship initiatives — Sheria ya Vijana, M.A.T.H, Youth Voices Lab, and YOMA Projects — are implemented through our digital tools, including the Kiongozi Platform, Kenya Youth Climate Hub (KYCH), and Flare Hub startup management platform.
+              Our flagship initiatives, Sheria ya Vijana, M.A.T.H, Youth Voices Lab, and YOMA Projects, are implemented through our digital tools, including the Kiongozi Platform, Kenya Youth Climate Hub (KYCH), and Flare Hub startup management platform.
             </p>
             <p className="about-body reveal" style={{ transitionDelay: ".22s" }}>
               We adopt a hybrid implementation model combining the community reach and trust of a grassroots NGO with the innovation and agility of social enterprises, creating sustainable impact across Kenya.
@@ -415,7 +415,7 @@ const Index = () => {
             <div className="vm-label-top">Vision</div>
             <div className="vm-title reveal">A Sustainable World!</div>
             <p className="vm-body reveal" style={{ transitionDelay: ".1s" }}>
-              We envision a world where every young person — regardless of gender, ability or background — can harness their full potential to build sustainable, thriving communities.
+              We envision a world where every young person, regardless of gender, ability or background, can harness their full potential to build sustainable, thriving communities.
             </p>
           </div>
           <div className="vm-panel">
@@ -450,7 +450,7 @@ const Index = () => {
                 <TextReveal text="Let's Create" className="text-[#1A1410]" />
                 <TextReveal text="Change Together" className="text-[#e86c24]" delay={0.1} />
               </h2>
-              <p className="contact-sub">Ready to make a difference? Whether you want to partner, volunteer, donate or simply learn more — we'd love to hear from you.</p>
+              <p className="contact-sub">Ready to make a difference? Whether you want to partner, volunteer, donate or simply learn more, we'd love to hear from you.</p>
             </div>
 
             <div className="contact-right reveal-r">
@@ -461,7 +461,7 @@ const Index = () => {
                   <div className="cc-value">
                     Manga Hse, Kiambere RD
                     <br />
-                    Upper Hill — Nairobi, Kenya
+                    Upper Hill, Nairobi, Kenya
                   </div>
                 </div>
               </div>

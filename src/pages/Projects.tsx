@@ -45,7 +45,7 @@ const Projects = () => {
             <span>Build</span>
           </h1>
           <p className="proj-hero-sub">
-            Eight transformative programs driving sustainable change across Kenya —
+            Eight transformative programs driving sustainable change across Kenya,
             from digital innovation to climate action.
           </p>
         </header>

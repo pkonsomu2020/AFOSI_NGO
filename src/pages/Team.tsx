@@ -239,7 +239,12 @@ const Team = () => {
 
           <div className="team-card">
             <div className="team-card-img">
-              <div className="img-placeholder">JL</div>
+              <img
+                src="https://afosi.org/TEAMS/joe_liban.jpeg"
+                alt="Joe Liban"
+                loading="lazy"
+                onError={(e) => { e.currentTarget.src = "/afosi_pad.jpg"; }}
+              />
             </div>
             <div className="team-card-body">
               <div className="team-name">Joe Liban</div>

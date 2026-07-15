@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+﻿import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { Users, Award, Briefcase, ChevronDown, Monitor, BarChart2, DollarSign, Layers } from "lucide-react";
 
@@ -61,7 +61,7 @@ const departments = [
   },
 ];
 
-// Portrait card — same design as board/management
+// Portrait card - same design as board/management
 const TeamCard = ({ member }: { member: TeamMember }) => {
   const [imgError, setImgError] = useState(false);
   const initials = member.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();
@@ -238,7 +238,7 @@ const TeamSection = () => {
           <StaticGrid members={management} />
         </div>
 
-        {/* Core Team — 1 rep per department, same card design */}
+        {/* Core Team - 1 rep per department, same card design */}
         <div className="mb-14">
           <SectionLabel icon={Users} label="Core Team" />
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">

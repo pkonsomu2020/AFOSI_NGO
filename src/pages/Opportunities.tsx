@@ -137,7 +137,7 @@ const Opportunities = () => {
             <div className="why-card reveal" style={{ transitionDelay: '0.16s' }}>
               <div className="why-icon"><TrendingUp size={20} /></div>
               <div className="why-title">Real Impact</div>
-              <p className="why-desc">We measure success by tangible change — 69K+ youth reached, 60+ schools supported, and growing every year since 2014.</p>
+              <p className="why-desc">We measure success by tangible change, 69K+ youth reached, 60+ schools supported, and growing every year since 2014.</p>
             </div>
           </div>
         </section>

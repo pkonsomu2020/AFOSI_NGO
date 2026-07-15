@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { useState } from "react";
 
 const partners = [
@@ -56,7 +56,7 @@ const PartnersSection = () => {
         </motion.div>
       </div>
 
-      {/* Infinite marquee — row 1 left */}
+      {/* Infinite marquee - row 1 left */}
       <div className="relative mb-4">
         <div className="flex overflow-hidden">
           <motion.div
@@ -73,7 +73,7 @@ const PartnersSection = () => {
         <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-background to-transparent pointer-events-none z-10" />
       </div>
 
-      {/* Infinite marquee — row 2 right */}
+      {/* Infinite marquee - row 2 right */}
       <div className="relative">
         <div className="flex overflow-hidden">
           <motion.div

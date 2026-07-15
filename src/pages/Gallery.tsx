@@ -124,7 +124,7 @@ const Gallery = () => {
           <span className="t-fg">Story</span>
         </h1>
         <p className="gallery-hero-sub">
-          Moments of impact, community, and change — captured across our programs, events, and partnerships throughout Kenya.
+          Moments of impact, community, and change, captured across our programs, events, and partnerships throughout Kenya.
         </p>
       </div>
 

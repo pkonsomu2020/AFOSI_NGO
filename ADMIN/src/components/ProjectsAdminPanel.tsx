@@ -456,7 +456,7 @@ const ProjectsAdminPanel = () => {
                 onChange={(e) => setFormData({ ...formData, key_solutions: e.target.value })}
                 className="w-full px-3 py-2 border border-border rounded-md bg-background"
                 rows={4}
-                placeholder="Sub-platforms or programs (e.g. Kiongozi Platform — A digital platform connecting youth...)"
+                placeholder="Sub-platforms or programs (e.g. Kiongozi Platform, A digital platform connecting youth...)"
               />
             </div>
 
@@ -540,7 +540,7 @@ const ProjectsAdminPanel = () => {
                 onChange={(e) => setFormData({ ...formData, call_to_action: e.target.value })}
                 className="w-full px-3 py-2 border border-border rounded-md bg-background"
                 rows={2}
-                placeholder="e.g. Join — Become part of the movement. Partner — Collaborate with us."
+                placeholder="e.g. Join: Become part of the movement. Partner: Collaborate with us."
               />
             </div>
 

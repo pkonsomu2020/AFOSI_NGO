@@ -11,7 +11,7 @@ const platforms = [
     displayUrl: "kenyayouthclimatehub.org",
     category: "Climate & Environment",
     categoryColor: "#5fd67e",
-    summary: "A national digital platform for Kenya's youth climate movement, connecting ambition to systems change under AFOSI — Action for Sustainability Initiative.",
+    summary: "A national digital platform for Kenya's youth climate movement, connecting ambition to systems change under AFOSI, Action for Sustainability Initiative.",
     btnColor: "#5fd67e",
     btnText: "#0b1109",
     cardBg: "radial-gradient(120% 140% at 82% 15%, #1c3327 0%, #10160f 55%, #0b0f0a 100%)",
@@ -103,7 +103,7 @@ const DeliveryPlatforms = () => {
             <span>Platforms</span>
           </h1>
           <p className="platforms-hero-sub">
-            AFOSI operates a suite of purpose-built digital platforms — each designed
+            AFOSI operates a suite of purpose-built digital platforms, each designed
             to connect youth to learning, opportunity, and lasting impact across Kenya.
           </p>
           <div className="hero-pills">
