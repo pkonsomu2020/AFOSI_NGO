@@ -25,8 +25,8 @@ const platforms = [
     url: "https://afosihub.com/",
     displayUrl: "afosihub.com",
     category: "Digital Innovation",
-    categoryColor: "#1e7a3d",
     summary: "A digital innovation sandbox designed to transition local youth from theoretical knowledge into building real-world software, AI, and civic technology solutions. It bridges community-driven social impact and agile tech startup acceleration.",
+    categoryColor: "#1e7a3d",
     btnColor: "#1e7a3d",
     btnText: "#fff",
     cardBg: "radial-gradient(120% 140% at 82% 15%, #f5f0e8 0%, #ede8e0 55%, #e4ddd4 100%)",
@@ -48,30 +48,79 @@ const platforms = [
     screenshotImg: "/kiongozi_bg.png",
     lightCard: false,
   },
+  {
+    id: "04",
+    name: "Kiongozi Chat",
+    acronym: "KIONGOZI CHAT",
+    url: "https://play.google.com/store/apps/details?id=com.kiongozi.mobile&pcampaignid=web_share",
+    displayUrl: "play.google.com",
+    category: "Civic Tech & Learning",
+    categoryColor: "#69a737",
+    summary: "Kiongozi is Kenya's civic education and social learning platform, powered by AI and built for the next generation of change-makers. Connect, learn, and engage on governance, the Constitution, the green economy, and digital transformation.",
+    btnColor: "#69a737",
+    btnText: "#ffffff",
+    cardBg: "radial-gradient(120% 140% at 82% 15%, #0d2c42 0%, #061521 55%, #030a0f 100%)",
+    screenshotImg: "/Kiongozi_Chat.jpeg",
+    lightCard: false,
+    isApp: true,
+    playStoreUrl: "https://play.google.com/store/apps/details?id=com.kiongozi.mobile&pcampaignid=web_share",
+    appStoreUrl: "", // placeholder/coming soon
+  },
 ];
 
-const BrowserMockup = ({
+/* ── Media Mockup: browser for web platforms, phone for app platforms ── */
+const MediaMockup = ({
   imgSrc,
   alt,
   accentColor,
+  lightCard,
+  isApp,
 }: {
   imgSrc: string;
   alt: string;
   accentColor: string;
-}) => (
-  <div className="plat-browser-wrap">
-    <div className="plat-browser" style={{ borderColor: `${accentColor}33` }}>
-      <div className="plat-browser-bar">
-        <span className="plat-dot" style={{ background: "#ff5f57" }} />
-        <span className="plat-dot" style={{ background: "#febc2e" }} />
-        <span className="plat-dot" style={{ background: "#28c840" }} />
+  lightCard?: boolean;
+  isApp?: boolean;
+}) => {
+  if (isApp) {
+    return (
+      <div className="plat-app-mockup-wrap">
+        <div
+          className="plat-app-mockup"
+          style={{ boxShadow: `0 0 80px -20px ${accentColor}66, -20px 30px 70px -30px rgba(0,0,0,.7)` }}
+        >
+          <img src={imgSrc} alt={alt} className="plat-app-screenshot" />
+        </div>
       </div>
-      <div className="plat-browser-screen">
-        <img src={imgSrc} alt={alt} className="plat-screenshot" />
+    );
+  }
+  return (
+    <div className="plat-browser-wrap">
+      <div
+        className="plat-browser"
+        style={{
+          borderColor: lightCard ? "rgba(0,0,0,0.1)" : `${accentColor}33`,
+          background: lightCard ? "#f5f0e8" : "#151b2e",
+        }}
+      >
+        <div
+          className="plat-browser-bar"
+          style={{
+            background: lightCard ? "#e8e2d7" : "#151b2e",
+            borderColor: lightCard ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,.06)",
+          }}
+        >
+          <span className="plat-dot" style={{ background: "#ff5f57" }} />
+          <span className="plat-dot" style={{ background: "#febc2e" }} />
+          <span className="plat-dot" style={{ background: "#28c840" }} />
+        </div>
+        <div className="plat-browser-screen">
+          <img src={imgSrc} alt={alt} className="plat-screenshot" />
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const DeliveryPlatforms = () => {
   useEffect(() => {
@@ -107,11 +156,11 @@ const DeliveryPlatforms = () => {
             to connect youth to learning, opportunity, and lasting impact across Kenya.
           </p>
           <div className="hero-pills">
-            <div className="hero-pill"><strong>3</strong> Active Platforms</div>
+            <div className="hero-pill"><strong>4</strong> Active Platforms</div>
             <div className="hero-pill"><strong>69,000+</strong> Youth Served</div>
           </div>
         </header>
-
+ 
         {/* ── PLATFORM CARDS ── */}
         <section className="platforms-section">
           <div className="platforms-list">
@@ -153,15 +202,44 @@ const DeliveryPlatforms = () => {
                     {p.summary}
                   </p>
                   <div className="plat-actions">
-                    <a
-                      href={p.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="plat-visit-btn"
-                      style={{ background: p.btnColor, color: p.btnText }}
-                    >
-                      Visit Platform ↗
-                    </a>
+                    {p.isApp ? (
+                      <>
+                        <a
+                          href={p.playStoreUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="plat-visit-btn"
+                          style={{ background: p.btnColor, color: p.btnText }}
+                        >
+                          Google Play ↗
+                        </a>
+                        <a
+                          href="#"
+                          className="plat-visit-btn"
+                          style={{ 
+                            background: "rgba(255,255,255,0.08)", 
+                            color: "#f4f0e6",
+                            border: "1px solid rgba(255,255,255,0.15)"
+                          }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            alert("App Store version is coming soon! Kiongozi Chat will be available on iOS shortly.");
+                          }}
+                        >
+                          App Store (Coming Soon)
+                        </a>
+                      </>
+                    ) : (
+                      <a
+                        href={p.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="plat-visit-btn"
+                        style={{ background: p.btnColor, color: p.btnText }}
+                      >
+                        Visit Platform ↗
+                      </a>
+                    )}
                     <span
                       className="plat-url"
                       style={{
@@ -177,10 +255,12 @@ const DeliveryPlatforms = () => {
 
                 {/* Screenshot side */}
                 <div className="plat-shot-wrap">
-                  <BrowserMockup
+                  <MediaMockup
                     imgSrc={p.screenshotImg}
                     alt={`${p.name} screenshot`}
                     accentColor={p.categoryColor}
+                    lightCard={p.lightCard}
+                    isApp={(p as any).isApp}
                   />
                 </div>
               </div>

@@ -3682,6 +3682,32 @@ link[rel="preload"][as="image"] { display: none; }
   display: block;
   min-height: 260px;
 }
+/* App mockup (for Kiongozi Chat mobile app card) */
+.plat-app-mockup-wrap {
+  width: 100%;
+  perspective: 1600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.plat-app-mockup {
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  transform: rotateY(-14deg) rotateX(5deg) rotateZ(1deg);
+  transition: transform .55s cubic-bezier(.2,.7,.2,1),
+              box-shadow .55s cubic-bezier(.2,.7,.2,1);
+  border: 1px solid rgba(105,167,55,0.2);
+}
+.plat-app-mockup:hover {
+  transform: rotateY(0) rotateX(0) rotateZ(0) translateY(-10px) scale(1.03);
+}
+.plat-app-screenshot {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
 
 /* Responsive */
 @media (max-width: 1024px) {
@@ -3689,6 +3715,8 @@ link[rel="preload"][as="image"] { display: none; }
   .plat-copy, .plat-shot-wrap { flex: 1 1 auto; width: 100%; }
   .plat-browser { transform: none; }
   .plat-browser:hover { transform: translateY(-6px) scale(1.01); }
+  .plat-app-mockup { transform: none; }
+  .plat-app-mockup:hover { transform: translateY(-6px) scale(1.01); }
 }
 @media (max-width: 640px) {
   .platforms-section { padding: 2rem 1rem; }
@@ -3696,3 +3724,4 @@ link[rel="preload"][as="image"] { display: none; }
   .plat-actions { flex-direction: column; align-items: flex-start; }
   .plat-visit-btn { width: 100%; justify-content: center; }
 }
+
