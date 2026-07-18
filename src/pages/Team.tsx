@@ -175,15 +175,6 @@ const Team = () => {
             </div>
           </div>
 
-          <div className="team-card">
-            <div className="team-card-img">
-              <img src="https://afosi.org/TEAMS/Barbra%20Wanjiru.jpeg" alt="Barbra Wanjiku" loading="lazy" />
-            </div>
-            <div className="team-card-body">
-              <div className="team-name">Barbra Wanjiku</div>
-              <div className="team-role">Programs</div>
-            </div>
-          </div>
         </div>
 
         {/* MEAL */}
