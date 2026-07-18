@@ -248,7 +248,7 @@ const Team = () => {
             </div>
             <div className="team-card-body">
               <div className="team-name">Joe Liban</div>
-              <div className="team-role">IT &amp; Communication</div>
+              <div className="team-role">Software Engineer</div>
             </div>
           </div>
 
