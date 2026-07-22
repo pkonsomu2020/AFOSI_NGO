@@ -35,7 +35,7 @@ const platforms = [
   },
   {
     id: "03",
-    name: "Kiongozi ya Vijana",
+    name: "Kiongozi Platform",
     acronym: "KIONGOZI",
     url: "https://kiongozi.org/",
     displayUrl: "kiongozi.org",
