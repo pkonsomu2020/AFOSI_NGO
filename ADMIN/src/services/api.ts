@@ -126,7 +126,7 @@ export const opportunitiesAPI = {
     description: string;
     location: string;
     duration: string;
-    deadline: string;
+    deadline: string | null;
     slug?: string;
     full_description?: string;
     apply_link?: string;
@@ -137,7 +137,7 @@ export const opportunitiesAPI = {
     description: string;
     location: string;
     duration: string;
-    deadline: string;
+    deadline: string | null;
     manually_disabled: boolean;
     slug: string;
     full_description: string;

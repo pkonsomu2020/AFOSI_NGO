@@ -117,11 +117,11 @@ export const createOpportunity = async (req, res) => {
       full_description, apply_link, slug
     } = req.body;
 
-    // Validation
-    if (!title || !type || !description || !location || !duration || !deadline) {
+    // Validation - deadline is optional (omit it for an "Open — no deadline" opportunity)
+    if (!title || !type || !description || !location || !duration) {
       return res.status(400).json({
         success: false,
-        message: 'All fields are required: title, type, description, location, duration, deadline'
+        message: 'All fields are required: title, type, description, location, duration'
       });
     }
 
@@ -142,7 +142,7 @@ export const createOpportunity = async (req, res) => {
         description,
         location,
         duration,
-        deadline,
+        deadline: deadline || null,
         full_description: full_description || null,
         apply_link: apply_link || null,
         slug: finalSlug,
@@ -183,7 +183,7 @@ export const updateOpportunity = async (req, res) => {
     if (description !== undefined) updateData.description = description;
     if (location !== undefined) updateData.location = location;
     if (duration !== undefined) updateData.duration = duration;
-    if (deadline !== undefined) updateData.deadline = deadline;
+    if (deadline !== undefined) updateData.deadline = deadline || null;
     if (manually_disabled !== undefined) updateData.manually_disabled = manually_disabled;
     if (full_description !== undefined) updateData.full_description = full_description || null;
     if (apply_link !== undefined) updateData.apply_link = apply_link || null;

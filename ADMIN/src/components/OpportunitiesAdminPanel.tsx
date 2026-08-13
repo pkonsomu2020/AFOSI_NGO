@@ -22,7 +22,7 @@ interface OpportunityData {
   description: string;
   location: string;
   duration: string;
-  deadline: string;
+  deadline: string | null;
   manually_disabled: boolean;
   slug?: string;
   full_description?: string;
@@ -78,14 +78,14 @@ const OpportunitiesAdminPanel = () => {
         description: formData.description || '',
         location: formData.location || '',
         duration: formData.duration || '',
-        deadline: formData.deadline || '',
+        deadline: formData.deadline || null, // null = "Open — No Deadline"
         slug: formData.slug || '',
         full_description: formData.full_description || '',
         apply_link: formData.apply_link || '',
       };
 
-      if (!payload.title || !payload.description || !payload.location || !payload.duration || !payload.deadline) {
-        alert('Please fill in all required fields: Title, Description, Location, Duration, and Deadline.');
+      if (!payload.title || !payload.description || !payload.location || !payload.duration) {
+        alert('Please fill in all required fields: Title, Description, Location, and Duration.');
         return;
       }
 
@@ -216,6 +216,12 @@ const OpportunitiesAdminPanel = () => {
                           {status === 'open' ? <CheckCircle2 size={14} /> : <AlertCircle size={14} />}
                           <span className="ml-1">{status}</span>
                         </Badge>
+                        {!opp.deadline && (
+                          <Badge className="bg-blue-100 text-blue-700">
+                            <CheckCircle2 size={14} />
+                            <span className="ml-1">No Deadline</span>
+                          </Badge>
+                        )}
                         {isExpired && (
                           <Badge className="bg-amber-100 text-amber-700">
                             <AlertCircle size={14} />
@@ -343,6 +349,10 @@ const OpportunityForm = ({
     }
   };
 
+  // Open-ended = deadline explicitly cleared to null via the "Open — No Deadline" option below.
+  // (undefined/'' just means "not filled in yet" for a brand-new opportunity.)
+  const isOpenEnded = data.deadline === null;
+
   const inputClass = "w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground";
 
   return (
@@ -389,8 +399,8 @@ const OpportunityForm = ({
         />
       </div>
 
-      {/* Location, Duration, Deadline */}
-      <div className="grid md:grid-cols-3 gap-4">
+      {/* Location, Duration */}
+      <div className="grid md:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-semibold mb-1">Location <span className="text-red-500">*</span></label>
           <input
@@ -411,14 +421,82 @@ const OpportunityForm = ({
             placeholder="Full-time / 3 months"
           />
         </div>
-        <div>
-          <label className="block text-sm font-semibold mb-1">Deadline <span className="text-red-500">*</span></label>
-          <input
-            type="date"
-            value={data.deadline || ''}
-            onChange={(e) => onChange({ ...data, deadline: e.target.value })}
-            className={inputClass}
-          />
+      </div>
+
+      {/* Deadline: Set a Date vs Open (no deadline) */}
+      <div>
+        <label className="block text-sm font-semibold mb-3">
+          Deadline
+          <span className="text-muted-foreground font-normal ml-1 text-xs">(choose one)</span>
+        </label>
+
+        <div className="grid gap-3">
+
+          {/* Option 1: Set a Deadline */}
+          <button
+            type="button"
+            onClick={() => onChange({ ...data, deadline: isOpenEnded ? '' : (data.deadline || '') })}
+            className={`w-full flex items-start gap-4 p-4 rounded-xl border-2 text-left transition-all ${
+              !isOpenEnded
+                ? 'border-primary bg-primary/5 dark:bg-primary/10 shadow-sm'
+                : 'border-border bg-background hover:border-primary/40'
+            }`}
+          >
+            <div className={`mt-0.5 p-2 rounded-lg shrink-0 ${
+              !isOpenEnded ? 'bg-orange-100 dark:bg-orange-950/40 text-orange-600' : 'bg-muted text-muted-foreground'
+            }`}>
+              <Calendar size={18} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-sm font-bold text-foreground">Set a Deadline</p>
+                {!isOpenEnded && (
+                  <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full shrink-0">Active</span>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                The opportunity automatically closes at the end of the selected date.
+              </p>
+              {!isOpenEnded && (
+                <input
+                  type="date"
+                  value={data.deadline || ''}
+                  onChange={(e) => onChange({ ...data, deadline: e.target.value })}
+                  onClick={(e) => e.stopPropagation()}
+                  className={`${inputClass} mt-3`}
+                />
+              )}
+            </div>
+          </button>
+
+          {/* Option 2: Open — No Deadline */}
+          <button
+            type="button"
+            onClick={() => onChange({ ...data, deadline: null })}
+            className={`w-full flex items-start gap-4 p-4 rounded-xl border-2 text-left transition-all ${
+              isOpenEnded
+                ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/20 shadow-sm'
+                : 'border-border bg-background hover:border-emerald-400/50'
+            }`}
+          >
+            <div className={`mt-0.5 p-2 rounded-lg shrink-0 ${
+              isOpenEnded ? 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600' : 'bg-muted text-muted-foreground'
+            }`}>
+              <CheckCircle2 size={18} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-sm font-bold text-foreground">Open — No Deadline</p>
+                {isOpenEnded && (
+                  <span className="text-xs font-bold text-emerald-600 bg-emerald-100 dark:bg-emerald-950/40 px-2 py-0.5 rounded-full shrink-0">Active</span>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                Stays open indefinitely and never auto-closes. Use "Disable" on the list to close it manually.
+              </p>
+            </div>
+          </button>
+
         </div>
       </div>
 
